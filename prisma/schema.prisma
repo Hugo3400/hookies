@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Utilisateur Admin & Client
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  phone         String?
+  role          Role      @default(CLIENT)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  reservations  Reservation[]
+  orders        Order[]
+  reviews       Review[]
+  favorites     MenuItem[]
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+  DELIVERY
+  KIOSK
+}
+
+// Menu
+model MenuItem {
+  id            String    @id @default(cuid())
+  name          String
+  description   String    @db.Text
+  price         Float
+  category      String
+  image         String?
+  isAvailable   Boolean   @default(true)
+  preparationTime Int     @default(15)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  orderItems    OrderItem[]
+  favorites     User[]
+}
+
+// Réservations
+model Reservation {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date          DateTime
+  time          String
+  guestCount    Int
+  specialRequest String?   @db.Text
+  status        ReservationStatus @default(PENDING)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+// Commandes
+model Order {
+  id            String    @id @default(cuid())
+  userId        String?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orderNumber   String    @unique
+  totalPrice    Float
+  status        OrderStatus @default(PENDING)
+  type          OrderType @default(DINE_IN)
+  deliveryAddress String?
+  notes         String?   @db.Text
+  estimatedTime DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  orderItems    OrderItem[]
+  payment       Payment?
+}
+
+enum OrderType {
+  DINE_IN
+  TAKEAWAY
+  DELIVERY
+  KIOSK
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+model OrderItem {
+  id            String    @id @default(cuid())
+  orderId       String
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId    String
+  menuItem      MenuItem  @relation(fields: [menuItemId], references: [id])
+  quantity      Int
+  price         Float
+  specialRequest String?
+  
+  @@unique([orderId, menuItemId])
+}
+
+// Paiements
+model Payment {
+  id            String    @id @default(cuid())
+  orderId       String    @unique
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  transactionId String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  ONLINE
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// Avis clients
+model Review {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating        Int
+  comment       String?   @db.Text
+  createdAt     DateTime  @default(now())
+  
+  @@index([userId])
+}
+
+// Configuration
+model Configuration {
+  id            String    @id @default(cuid())
+  key           String    @unique
+  value         String    @db.LongText
+  updatedAt     DateTime  @updatedAt
+}

@@ -1,0 +1,37 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { verifyToken } from './auth';
+
+export interface AuthenticatedRequest extends NextApiRequest {
+  user?: {
+    userId: string;
+    role: string;
+  };
+}
+
+export const withAuth = (handler: (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>) => {
+  return async (req: AuthenticatedRequest, res: NextApiResponse) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (!token) {
+      return res.status(401).json({ error: 'Token manquant' });
+    }
+
+    const user = verifyToken(token);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Token invalide' });
+    }
+
+    req.user = user;
+    return handler(req, res);
+  };
+};
+
+export const withAdminAuth = (handler: (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>) => {
+  return withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
+    if (req.user?.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+    return handler(req, res);
+  });
+};
