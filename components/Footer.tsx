@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -26,10 +27,13 @@ export default function Footer() {
           >
             <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-amber-200">Navigation</h4>
             <ul className="space-y-2 text-sm text-slate-300/85">
-              <li><a href="#accueil" className="transition hover:text-amber-300">Accueil</a></li>
-              <li><a href="#services" className="transition hover:text-amber-300">Experience</a></li>
-              <li><a href="#menu" className="transition hover:text-amber-300">Carte</a></li>
-              <li><a href="#contact" className="transition hover:text-amber-300">Contact</a></li>
+              <li><Link href="/" className="transition hover:text-amber-300">Accueil</Link></li>
+              <li><Link href="/experience" className="transition hover:text-amber-300">Experience</Link></li>
+              <li><Link href="/menu" className="transition hover:text-amber-300">Carte</Link></li>
+              <li><Link href="/reservation" className="transition hover:text-amber-300">Reservation</Link></li>
+              <li><Link href="/livraison" className="transition hover:text-amber-300">Livraison</Link></li>
+              <li><Link href="/espace-client" className="transition hover:text-amber-300">Espace client</Link></li>
+              <li><Link href="/contact" className="transition hover:text-amber-300">Contact</Link></li>
             </ul>
           </motion.div>
 

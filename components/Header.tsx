@@ -23,21 +23,27 @@ export default function Header() {
           </motion.div>
 
           <nav className="hidden items-center gap-8 md:flex">
-            <Link href="#accueil" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
+            <Link href="/" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
               Accueil
             </Link>
-            <Link href="#services" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
+            <Link href="/experience" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
               Expérience
             </Link>
-            <Link href="#menu" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
+            <Link href="/menu" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
               Menu
             </Link>
-            <Link href="#contact" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
+            <Link href="/reservation" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              Reservation
+            </Link>
+            <Link href="/livraison" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              Livraison
+            </Link>
+            <Link href="/contact" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
               Contact
             </Link>
-            <button className="rounded-xl border border-amber-400/40 bg-amber-500/15 px-5 py-2.5 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
+            <Link href="/espace-client" className="rounded-xl border border-amber-400/40 bg-amber-500/15 px-5 py-2.5 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
               Espace client
-            </button>
+            </Link>
           </nav>
 
           <button
@@ -55,17 +61,29 @@ export default function Header() {
           animate={{ opacity: 1, y: 0 }}
           className="mx-4 mb-4 space-y-2 rounded-xl border border-amber-700/30 bg-slate-950/90 p-4 md:hidden"
         >
-          <Link href="#accueil" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+          <Link href="/" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
             Accueil
           </Link>
-          <Link href="#services" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+          <Link href="/experience" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
             Expérience
           </Link>
-          <Link href="#menu" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+          <Link href="/menu" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
             Menu
           </Link>
-          <Link href="#contact" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+          <Link href="/reservation" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            Reservation
+          </Link>
+          <Link href="/livraison" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            Livraison
+          </Link>
+          <Link href="/contact" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
             Contact
+          </Link>
+          <Link href="/espace-client" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            Espace client
+          </Link>
+          <Link href="/admin" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            Admin
           </Link>
         </motion.nav>
       )}

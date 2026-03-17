@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
+const forceDev = process.env.FORCE_DEV !== '0';
+const isDevRuntime = forceDev || process.env.NODE_ENV !== 'production';
+
 const nextConfig = {
   reactStrictMode: true,
+  distDir: isDevRuntime ? '.next-dev' : '.next',
   images: {
     unoptimized: true,
   },
