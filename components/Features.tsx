@@ -4,34 +4,28 @@ import { motion } from 'framer-motion';
 export default function Features() {
   const features = [
     {
-      icon: '🍴',
-      title: 'Menu Unique',
-      description: 'Découvrez nos plats thématiques inspirés de l\'univers pirate',
+      title: 'Cuisine Signature',
+      description: 'Cuissons braise, marinades maison et dressages haut de gamme inspires des routes maritimes.',
     },
     {
-      icon: '🎭',
-      title: 'Ambiance Immersive',
-      description: 'Une décoration authentique et une atmosphère unique',
+      title: 'Ambiance Cinematographique',
+      description: 'Lumiere cuivre, bois sombre et bande-son oceanique pour une immersion totale.',
     },
     {
-      icon: '📅',
-      title: 'Réservations Faciles',
-      description: 'Réservez votre table en quelques clics',
+      title: 'Reservation Instantanee',
+      description: 'Places salon, pont principal ou comptoir cocktail disponibles en quelques clics.',
     },
     {
-      icon: '🚚',
-      title: 'Livraison à Domicile',
-      description: 'Profitez de nos services de livraison rapides',
+      title: 'Livraison Premium',
+      description: 'Vos plats favoris en livraison rapide avec emballage isotherme et suivi en direct.',
     },
     {
-      icon: '👥',
-      title: 'Événements Privés',
-      description: 'Organisez vos événements dans notre établissement',
+      title: 'Evenements Prives',
+      description: 'Privatisation partielle ou totale pour anniversaires, equipes et celebrations.',
     },
     {
-      icon: '⭐',
-      title: 'Meilleure Qualité',
-      description: 'Des ingrédients frais et une préparation soignée',
+      title: 'Experience Digitale',
+      description: 'Borne de commande, espace client et suivi des reservations depuis mobile.',
     },
   ];
 
@@ -56,17 +50,18 @@ export default function Features() {
   };
 
   return (
-    <section className="py-20 bg-pirate-skull">
-      <div className="max-w-6xl mx-auto px-4">
+    <section id="services" className="px-4 py-20 md:px-6">
+      <div className="mx-auto w-full max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-14 text-center"
         >
-          <h2 className="text-5xl font-bold text-pirate-gold mb-4 font-pirate">Nos Services</h2>
-          <p className="text-gray-300 text-lg">Découvrez tout ce que Hookies a à vous offrir</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.26em] text-amber-200/80">L'experience Hookies</p>
+          <h2 className="font-display text-4xl font-black text-slate-100 md:text-5xl">Un restaurant pirate pense comme une marque premium</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-slate-300/85">Chaque detail est pense pour meler spectacle, confort et execution culinaire moderne.</p>
         </motion.div>
 
         <motion.div
@@ -74,17 +69,17 @@ export default function Features() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
         >
           {features.map((feature, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              className="bg-pirate-dark rounded-lg p-8 border-l-4 border-pirate-gold hover:shadow-lg hover:shadow-pirate-gold transition duration-300 transform hover:scale-105"
+              className="glass-card rounded-2xl p-7 transition duration-300 hover:-translate-y-1"
             >
-              <div className="text-5xl mb-4">{feature.icon}</div>
-              <h3 className="text-2xl font-bold text-pirate-gold mb-2">{feature.title}</h3>
-              <p className="text-gray-400">{feature.description}</p>
+              <div className="mb-4 h-1 w-10 rounded-full bg-amber-400/80" />
+              <h3 className="font-display text-2xl font-bold text-amber-100">{feature.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-slate-300/80">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>
