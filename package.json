@@ -10,7 +10,8 @@
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "fix:perms": "chown -R nexadev.fr_ufhv0exs9jb:psacln .next-dev && find .next-dev -type d -exec chmod 2775 {} \\; && find .next-dev -type f -exec chmod 664 {} \\;"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
