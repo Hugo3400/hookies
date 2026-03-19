@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { hasMailConfig, sendEmail } from '@/lib/email/mailer';
+import { buildContactAdminEmail } from '@/lib/email/templates';
 
 type ContactBody = {
   name?: string;
@@ -42,11 +43,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     to: adminEmail,
     subject,
     text,
-    html: `<p><strong>Nouveau message depuis la page contact:</strong></p>
-<p><strong>Nom:</strong> ${name}</p>
-<p><strong>Email:</strong> ${email}</p>
-<p><strong>Message:</strong></p>
-<p>${message.replace(/\n/g, '<br/>')}</p>`,
+    html: buildContactAdminEmail({
+      name,
+      email,
+      message,
+    }),
     replyTo: email,
   });
 

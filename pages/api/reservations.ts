@@ -3,6 +3,10 @@ import prisma from '@/lib/db/prisma';
 import { withAuth } from '@/lib/auth/middleware';
 import { AuthenticatedRequest } from '@/lib/auth/middleware';
 import { sendEmail } from '@/lib/email/mailer';
+import {
+  buildReservationAdminEmail,
+  buildReservationCustomerEmail,
+} from '@/lib/email/templates';
 
 function formatReservationDate(value: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
@@ -65,6 +69,14 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
             to: client.email,
             subject: '[Hookies] Reservation recue',
             text: customerText,
+            html: buildReservationCustomerEmail({
+              name: client.name,
+              email: client.email,
+              date: reservationDate,
+              time: reservation.time,
+              guestCount: reservation.guestCount,
+              specialRequest: reservation.specialRequest,
+            }),
           }),
         ];
 
@@ -84,6 +96,14 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
               to: adminEmail,
               subject: `[Hookies] Nouvelle reservation - ${client.name}`,
               text: adminText,
+              html: buildReservationAdminEmail({
+                name: client.name,
+                email: client.email,
+                date: reservationDate,
+                time: reservation.time,
+                guestCount: reservation.guestCount,
+                specialRequest: reservation.specialRequest,
+              }),
             })
           );
         }
