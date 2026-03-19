@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -37,15 +37,26 @@ type Reservation = {
   status: string;
 };
 
+type AuthMode = 'login' | 'register';
+
 export default function EspaceClientPage() {
+  const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loadingLogin, setLoadingLogin] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  const [loadingReservation, setLoadingReservation] = useState(false);
+  const [reservationDate, setReservationDate] = useState('');
+  const [reservationTime, setReservationTime] = useState('');
+  const [reservationGuestCount, setReservationGuestCount] = useState(2);
+  const [reservationSpecialRequest, setReservationSpecialRequest] = useState('');
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const totalOrders = orders.length;
@@ -72,20 +83,18 @@ export default function EspaceClientPage() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!token) return;
-
-    const fetchClientData = async () => {
+  const loadClientData = useCallback(
+    async (authToken: string) => {
       setLoadingData(true);
       setError(null);
 
       try {
         const [ordersRes, reservationsRes] = await Promise.all([
           fetch('/api/orders', {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${authToken}` },
           }),
           fetch('/api/reservations', {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${authToken}` },
           }),
         ]);
 
@@ -110,21 +119,41 @@ export default function EspaceClientPage() {
       } finally {
         setLoadingData(false);
       }
-    };
+    },
+    []
+  );
 
-    fetchClientData();
-  }, [token]);
+  useEffect(() => {
+    if (!token) return;
 
-  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
+    loadClientData(token);
+  }, [token, loadClientData]);
+
+  const saveSession = (sessionToken: string, sessionUser: AuthUser) => {
+    setToken(sessionToken);
+    setUser(sessionUser);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('hookies_token', sessionToken);
+      window.localStorage.setItem('hookies_user', JSON.stringify(sessionUser));
+    }
+  };
+
+  const handleAuthSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    setSuccessMessage(null);
     setLoadingLogin(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const endpoint = authMode === 'login' ? '/api/auth/login' : '/api/auth/register';
+      const payload = authMode === 'login'
+        ? { email, password }
+        : { name, email, password, phone };
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -134,17 +163,57 @@ export default function EspaceClientPage() {
         return;
       }
 
-      setToken(data.token);
-      setUser(data.user);
-
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem('hookies_token', data.token);
-        window.localStorage.setItem('hookies_user', JSON.stringify(data.user));
+      saveSession(data.token, data.user);
+      if (authMode === 'register') {
+        setSuccessMessage('Inscription reussie. Bienvenue a bord.');
       }
     } catch {
-      setError('Erreur reseau pendant la connexion.');
+      setError('Erreur reseau pendant l\'authentification.');
     } finally {
       setLoadingLogin(false);
+    }
+  };
+
+  const handleCreateReservation = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!token) return;
+
+    setLoadingReservation(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          date: reservationDate,
+          time: reservationTime,
+          guestCount: reservationGuestCount,
+          specialRequest: reservationSpecialRequest,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data?.error || 'Impossible de creer la reservation.');
+        return;
+      }
+
+      setSuccessMessage('Reservation enregistree avec succes.');
+      setReservationDate('');
+      setReservationTime('');
+      setReservationGuestCount(2);
+      setReservationSpecialRequest('');
+      await loadClientData(token);
+    } catch {
+      setError('Erreur reseau lors de la creation de reservation.');
+    } finally {
+      setLoadingReservation(false);
     }
   };
 
@@ -153,6 +222,7 @@ export default function EspaceClientPage() {
     setUser(null);
     setOrders([]);
     setReservations([]);
+    setSuccessMessage(null);
 
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('hookies_token');
@@ -199,9 +269,47 @@ export default function EspaceClientPage() {
             </div>
 
             {!token ? (
-              <form onSubmit={handleLogin} className="glass-card rounded-2xl p-6 md:p-8">
-                <h2 className="font-display text-2xl font-bold text-amber-100">Connexion</h2>
+              <form onSubmit={handleAuthSubmit} className="glass-card rounded-2xl p-6 md:p-8">
+                <div className="mb-4 flex gap-2 rounded-xl border border-amber-700/30 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode('login')}
+                    className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold ${authMode === 'login' ? 'bg-amber-500 text-slate-950' : 'text-slate-200'}`}
+                  >
+                    Connexion
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode('register')}
+                    className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold ${authMode === 'register' ? 'bg-amber-500 text-slate-950' : 'text-slate-200'}`}
+                  >
+                    Inscription
+                  </button>
+                </div>
+
+                <h2 className="font-display text-2xl font-bold text-amber-100">
+                  {authMode === 'login' ? 'Connexion' : 'Creer un compte'}
+                </h2>
                 <div className="mt-5 space-y-4">
+                  {authMode === 'register' && (
+                    <>
+                      <input
+                        type="text"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Nom complet"
+                        className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-400"
+                      />
+                      <input
+                        type="text"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="Telephone (optionnel)"
+                        className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-400"
+                      />
+                    </>
+                  )}
                   <input
                     type="email"
                     required
@@ -223,7 +331,9 @@ export default function EspaceClientPage() {
                     disabled={loadingLogin}
                     className="rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-60"
                   >
-                    {loadingLogin ? 'Connexion...' : 'Se connecter'}
+                    {loadingLogin
+                      ? (authMode === 'login' ? 'Connexion...' : 'Creation...')
+                      : (authMode === 'login' ? 'Se connecter' : 'Creer mon compte')}
                   </button>
                 </div>
               </form>
@@ -256,6 +366,49 @@ export default function EspaceClientPage() {
 
           {token && (
             <div className="mx-auto mt-6 grid w-full max-w-7xl gap-6 lg:grid-cols-2">
+              <div className="glass-card rounded-2xl p-6 lg:col-span-2">
+                <h3 className="font-display text-2xl font-bold text-amber-100">Nouvelle reservation</h3>
+                <form onSubmit={handleCreateReservation} className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <input
+                    type="date"
+                    required
+                    value={reservationDate}
+                    onChange={(e) => setReservationDate(e.target.value)}
+                    className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none"
+                  />
+                  <input
+                    type="time"
+                    required
+                    value={reservationTime}
+                    onChange={(e) => setReservationTime(e.target.value)}
+                    className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none"
+                  />
+                  <input
+                    type="number"
+                    min={1}
+                    required
+                    value={reservationGuestCount}
+                    onChange={(e) => setReservationGuestCount(Number(e.target.value))}
+                    placeholder="Nombre de personnes"
+                    className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={reservationSpecialRequest}
+                    onChange={(e) => setReservationSpecialRequest(e.target.value)}
+                    placeholder="Demande speciale (optionnel)"
+                    className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-400"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loadingReservation}
+                    className="rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-60 md:col-span-2 md:w-fit"
+                  >
+                    {loadingReservation ? 'Envoi en cours...' : 'Creer la reservation'}
+                  </button>
+                </form>
+              </div>
+
               <div className="glass-card rounded-2xl p-6">
                 <h3 className="font-display text-2xl font-bold text-amber-100">Dernieres commandes</h3>
                 {loadingData ? (

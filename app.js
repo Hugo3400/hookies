@@ -2,9 +2,9 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
-// Dev par defaut pour voir les changements en direct sur le domaine.
-// Mettre FORCE_DEV=0 pour revenir en mode production sans modifier ce fichier.
-const forceDev = process.env.FORCE_DEV !== '0';
+// Production par defaut pour la stabilite sur Plesk.
+// Mettre FORCE_DEV=1 pour activer le mode developpement sur le domaine.
+const forceDev = process.env.FORCE_DEV === '1';
 const dev = forceDev || process.env.NODE_ENV !== 'production';
 const app = next({
   dev,
