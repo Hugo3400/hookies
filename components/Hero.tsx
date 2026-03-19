@@ -66,11 +66,12 @@ export default function Hero() {
   return (
     <section id="accueil" className="paper-noise relative overflow-hidden px-4 pb-20 pt-12 md:px-6 md:pt-20">
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-35"
         style={{
-          backgroundImage: "linear-gradient(rgba(24,14,10,0.72), rgba(24,14,10,0.86)), url('/da/hero-bg.png')",
+          backgroundImage: "linear-gradient(rgba(24,14,10,0.78), rgba(24,14,10,0.9)), url('/da/hero-bg-clean.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundBlendMode: 'multiply',
         }}
       />
       <div className="map-overlay" />
