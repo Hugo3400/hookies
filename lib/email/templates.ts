@@ -28,8 +28,8 @@ function nlToBr(value: string): string {
 
 function cardRow(label: string, value: string): string {
   return `<tr>
-    <td style="padding:8px 0;color:#8f9db4;font-size:13px;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(label)}</td>
-    <td style="padding:8px 0;color:#f6e9d2;font-size:14px;font-family:Arial,Helvetica,sans-serif;text-align:right;">${escapeHtml(value)}</td>
+    <td style="padding:10px 0;color:#a0a8b8;font-size:12px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-weight:500;">${escapeHtml(label)}</td>
+    <td style="padding:10px 0;color:#fff;font-size:14px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-weight:600;text-align:right;">${escapeHtml(value)}</td>
   </tr>`;
 }
 
@@ -41,24 +41,31 @@ function baseEmailTemplate(title: string, subtitle: string, content: string): st
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${escapeHtml(title)}</title>
   </head>
-  <body style="margin:0;padding:0;background:#120d0a;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:radial-gradient(circle at top,#3e2617 0%,#120d0a 65%);padding:28px 12px;">
+  <body style="margin:0;padding:0;background:#0a0e13;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#0a0e13;padding:32px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;background:#1a120e;border:1px solid #7a4a2b;border-radius:14px;overflow:hidden;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#151b24;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+            <!-- Header pirate moderne -->
             <tr>
-              <td style="padding:22px 24px;background:linear-gradient(135deg,#c8863c,#8b552e);">
-                <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#1d120a;font-weight:700;font-family:Arial,Helvetica,sans-serif;">Hookies Restaurant</div>
-                <div style="margin-top:8px;font-size:26px;line-height:1.2;color:#fff4dd;font-weight:700;font-family:Georgia,'Times New Roman',serif;">${escapeHtml(title)}</div>
-                <div style="margin-top:8px;font-size:14px;line-height:1.45;color:#f8e7ca;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(subtitle)}</div>
+              <td style="padding:32px 28px;background:linear-gradient(135deg,#1a2332 0%,#0f1419 100%);border-bottom:3px solid #dc2626;">
+                <div style="text-align:center;">
+                  <div style="font-size:24px;letter-spacing:1px;margin-bottom:8px;">⚓ HOOKIES ⚓</div>
+                  <div style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#dc2626;font-weight:700;font-family:'Segoe UI',Helvetica,sans-serif;margin-bottom:12px;">Pirate Tavern</div>
+                  <div style="margin-top:12px;font-size:24px;line-height:1.3;color:#e5e7eb;font-weight:700;font-family:'Segoe UI',sans-serif;">${escapeHtml(title)}</div>
+                  <div style="margin-top:8px;font-size:14px;line-height:1.5;color:#9ca3af;font-family:'Segoe UI',sans-serif;">${escapeHtml(subtitle)}</div>
+                </div>
               </td>
             </tr>
+            <!-- Contenu -->
             <tr>
-              <td style="padding:22px 24px;">${content}</td>
+              <td style="padding:28px 28px;color:#d1d5db;font-family:'Segoe UI',sans-serif;">${content}</td>
             </tr>
+            <!-- Footer -->
             <tr>
-              <td style="padding:14px 24px;border-top:1px solid #3a2a1f;color:#8f9db4;font-size:12px;font-family:Arial,Helvetica,sans-serif;">
-                Hookies - Quai des Corsaires, Paris
+              <td style="padding:20px 28px;border-top:1px solid #2d3748;background:#0f1419;color:#6b7280;font-size:12px;font-family:'Segoe UI',sans-serif;text-align:center;">
+                <div style="margin-bottom:6px;">🏴 HOOKIES - Quai des Corsaires, Paris 🏴</div>
+                <div style="font-size:11px;color:#4b5563;margin-top:6px;">Bon voilage!</div>
               </td>
             </tr>
           </table>
@@ -71,63 +78,83 @@ function baseEmailTemplate(title: string, subtitle: string, content: string): st
 
 export function buildContactAdminEmail(input: ContactTemplateInput): string {
   const content = `
-    <p style="margin:0 0 14px;color:#e8d7bf;font-size:14px;line-height:1.55;font-family:Arial,Helvetica,sans-serif;">
-      Nouveau message recu depuis le formulaire de contact.
+    <p style="margin:0 0 16px;color:#d1d5db;font-size:14px;line-height:1.6;font-family:'Segoe UI',sans-serif;">
+      📮 Un nouveau message a ete recu depuis le formulaire de contact.
     </p>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-top:1px solid #3a2a1f;border-bottom:1px solid #3a2a1f;margin:0 0 14px;">
-      ${cardRow('Nom', input.name)}
-      ${cardRow('Email', input.email)}
-    </table>
-    <div style="margin:0;padding:14px;border:1px solid #3f2f23;border-radius:10px;background:#140f0c;color:#f6e9d2;font-size:14px;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
+    <div style="background:#1f2937;border-left:4px solid #dc2626;padding:16px;border-radius:6px;margin-bottom:16px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0;">
+        ${cardRow('Nom', input.name)}
+        ${cardRow('Email', input.email)}
+      </table>
+    </div>
+    <div style="margin:0;padding:16px;background:#0f1419;border:1px solid #374151;border-radius:8px;color:#e5e7eb;font-size:14px;line-height:1.6;font-family:'Segoe UI',sans-serif;">
+      <strong style="color:#fbbf24;">Message:</strong><br/><br/>
       ${nlToBr(input.message)}
     </div>
   `;
 
-  return baseEmailTemplate('Nouveau message contact', 'Un client souhaite etre recontacte.', content);
+  return baseEmailTemplate('Nouveau Message', 'Un client souhaite etre recontacte', content);
 }
 
 export function buildReservationCustomerEmail(input: ReservationTemplateInput): string {
   const requestValue = input.specialRequest && input.specialRequest.trim().length > 0
     ? input.specialRequest
-    : 'Aucune';
+    : 'Aucune demande';
 
   const content = `
-    <p style="margin:0 0 14px;color:#e8d7bf;font-size:14px;line-height:1.55;font-family:Arial,Helvetica,sans-serif;">
-      Bonjour <strong>${escapeHtml(input.name)}</strong>, votre reservation est bien enregistree.
-      Notre equipage vous confirmera rapidement.
+    <p style="margin:0 0 16px;color:#d1d5db;font-size:14px;line-height:1.6;font-family:'Segoe UI',sans-serif;">
+      Ahoy <strong style="color:#fbbf24;">${escapeHtml(input.name)}</strong>! ⚓<br/>
+      Votre reservation est enregistree. Notre equipage de corsaires confirme votre arrivee tres bientot.
     </p>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-top:1px solid #3a2a1f;border-bottom:1px solid #3a2a1f;margin:0 0 14px;">
-      ${cardRow('Date', input.date)}
-      ${cardRow('Heure', input.time)}
-      ${cardRow('Couverts', String(input.guestCount))}
-      ${cardRow('Demande speciale', requestValue)}
-    </table>
-    <p style="margin:0;color:#b9c7dd;font-size:13px;line-height:1.5;font-family:Arial,Helvetica,sans-serif;">
-      Si besoin, repondez directement a cet email pour modifier votre reservation.
+    <div style="background:#1f2937;border:2px solid #dc2626;border-radius:8px;padding:20px;margin:16px 0;">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;font-weight:700;margin-bottom:8px;">Vos Details</div>
+      </div>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0;">
+        ${cardRow('📅 Date', input.date)}
+        ${cardRow('⏰ Heure', input.time)}
+        ${cardRow('👥 Couverts', String(input.guestCount))}
+        ${cardRow('📝 Demande Speciale', requestValue)}
+      </table>
+    </div>
+    <p style="margin:16px 0 0;padding:16px;background:#0f1419;border-left:3px solid #fbbf24;color:#9ca3af;font-size:13px;line-height:1.5;font-family:'Segoe UI',sans-serif;border-radius:4px;">
+      ✉️ Si vous devez modifier votre reservation, repondez simplement a cet email.
     </p>
   `;
 
-  return baseEmailTemplate('Reservation recue', 'Votre table se prepare a bord de Hookies.', content);
+  return baseEmailTemplate('Reservation Confirmee!', 'Votre table vous attend a bord de HOOKIES', content);
 }
 
 export function buildReservationAdminEmail(input: ReservationTemplateInput): string {
   const requestValue = input.specialRequest && input.specialRequest.trim().length > 0
     ? input.specialRequest
-    : 'Aucune';
+    : 'Aucune demande';
 
   const content = `
-    <p style="margin:0 0 14px;color:#e8d7bf;font-size:14px;line-height:1.55;font-family:Arial,Helvetica,sans-serif;">
-      Nouvelle reservation a traiter.
+    <p style="margin:0 0 16px;color:#d1d5db;font-size:14px;line-height:1.6;font-family:'Segoe UI',sans-serif;">
+      ⚔️ Alerte! Une nouvelle reservation a traiter immediatement.
     </p>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-top:1px solid #3a2a1f;border-bottom:1px solid #3a2a1f;margin:0 0 14px;">
-      ${cardRow('Client', input.name)}
-      ${cardRow('Email', input.email)}
-      ${cardRow('Date', input.date)}
-      ${cardRow('Heure', input.time)}
-      ${cardRow('Couverts', String(input.guestCount))}
-      ${cardRow('Demande speciale', requestValue)}
-    </table>
+    <div style="background:#3b2221;border:2px solid #dc2626;border-radius:8px;padding:20px;margin:16px 0;">
+      <div style="margin-bottom:16px;">
+        <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#fbbf24;font-weight:700;margin-bottom:8px;">Informations Client</div>
+      </div>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0;">
+        ${cardRow('Client', input.name)}
+        ${cardRow('Email', input.email)}
+      </table>
+    </div>
+    <div style="background:#1f2937;border:1px solid #374151;border-radius:8px;padding:20px;margin:16px 0;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0;">
+        ${cardRow('📅 Date', input.date)}
+        ${cardRow('⏰ Heure', input.time)}
+        ${cardRow('👥 Couverts', String(input.guestCount))}
+        ${cardRow('📝 Demande Speciale', requestValue)}
+      </table>
+    </div>
+    <div style="padding:12px 16px;background:#1f2937;border-left:4px solid #fbbf24;border-radius:4px;font-size:12px;color:#9ca3af;font-family:'Segoe UI',sans-serif;">
+      ⚡ Action recommandee: Verifier la disponibilite et confirmer rapidement.
+    </div>
   `;
 
-  return baseEmailTemplate('Nouvelle reservation', 'Action admin recommandee: verifier et confirmer.', content);
+  return baseEmailTemplate('Nouvelle Reservation ⚓', 'Action admin recommandee - Verifier et confirmer', content);
 }
