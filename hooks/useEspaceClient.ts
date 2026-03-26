@@ -252,7 +252,7 @@ export function useEspaceClient() {
   useEffect(() => {
     if (!token) return;
     void loadUserData(token);
-    const interval = window.setInterval(() => void loadUserData(token), 20000);
+    const interval = window.setInterval(() => void loadUserData(token, true), 20000);
     return () => window.clearInterval(interval);
   }, [loadUserData, token]);
 
