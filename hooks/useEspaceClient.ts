@@ -180,10 +180,10 @@ export function useEspaceClient() {
     }
   }, [authHeaders, hydrateMenu, selectedCategory, showMessage]);
 
-  const loadUserData = useCallback(async (sessionToken: string) => {
+  const loadUserData = useCallback(async (sessionToken: string, silent = false) => {
     if (!sessionToken) return;
     
-    setLoading((prev) => ({ ...prev, data: true }));
+    if (!silent) setLoading((prev) => ({ ...prev, data: true }));
     const headers = { Authorization: `Bearer ${sessionToken}` };
     try {
       const [ordersData, reservationsData, favoritesData, profileData, settingsData] = await Promise.all([
@@ -215,7 +215,7 @@ export function useEspaceClient() {
     } catch {
       showMessage('Erreur chargement des données client.', true);
     } finally {
-      setLoading((prev) => ({ ...prev, data: false }));
+      if (!silent) setLoading((prev) => ({ ...prev, data: false }));
     }
   }, [showMessage]);
 
