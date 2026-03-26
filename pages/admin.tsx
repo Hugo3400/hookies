@@ -16,11 +16,35 @@ import type { AdminTab } from '@/components/admin/types';
 
 type AuthStatus = 'loading' | 'allowed' | 'denied';
 
+const VALID_ADMIN_TABS: AdminTab[] = ['dashboard', 'orders', 'reservations', 'menu', 'users', 'weekly-menu'];
+
+function getInitialAdminTab(): AdminTab {
+  if (typeof window === 'undefined') return 'dashboard';
+  const hash = window.location.hash.replace('#', '') as AdminTab;
+  return VALID_ADMIN_TABS.includes(hash) ? hash : 'dashboard';
+}
+
 export default function AdminPage() {
   const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
   const [adminName, setAdminName] = useState('');
   const [token, setToken] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
+  const [activeTab, _setActiveTab] = useState<AdminTab>(getInitialAdminTab);
+
+  const setActiveTab = useCallback((tab: AdminTab) => {
+    _setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `#${tab}`);
+    }
+  }, []);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const hash = window.location.hash.replace('#', '') as AdminTab;
+      if (VALID_ADMIN_TABS.includes(hash)) _setActiveTab(hash);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
   const admin = useAdmin(token);
   const {

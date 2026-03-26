@@ -29,9 +29,34 @@ import type {
 
 const MENU_IMAGE_FALLBACKS = ['/da/hero-bg-clean.png', '/da/logo.png', '/da/hero-bg-clean.png'];
 
+const VALID_TABS: TabKey[] = ['dashboard', 'borne', 'reservations', 'commandes', 'profil', 'fidelite'];
+
+function getInitialTab(): TabKey {
+  if (typeof window === 'undefined') return 'dashboard';
+  const hash = window.location.hash.replace('#', '') as TabKey;
+  return VALID_TABS.includes(hash) ? hash : 'dashboard';
+}
+
 export function useEspaceClient() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
-  const [activeTab, setActiveTab] = useState<TabKey>('dashboard');
+  const [activeTab, _setActiveTab] = useState<TabKey>(getInitialTab);
+
+  const setActiveTab = useCallback((tab: TabKey) => {
+    _setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `#${tab}`);
+    }
+  }, []);
+
+  // Sync tab on browser back/forward
+  useEffect(() => {
+    const onHashChange = () => {
+      const hash = window.location.hash.replace('#', '') as TabKey;
+      if (VALID_TABS.includes(hash)) _setActiveTab(hash);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
   const [authForm, setAuthForm] = useState({ name: '', email: '', password: '', phone: '' });
   const [reservationForm, setReservationForm] = useState({ date: '', time: '', guestCount: 2, specialRequest: '' });
