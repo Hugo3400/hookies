@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { FaTruck, FaMapMarkerAlt, FaEuroSign } from 'react-icons/fa';
 
 export default function LivraisonPage() {
   return (
@@ -26,19 +27,28 @@ export default function LivraisonPage() {
 
             <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="glass-card rounded-2xl p-6">
-                <h2 className="font-display text-2xl text-amber-100">Zone A</h2>
+                <div className="flex items-center gap-3">
+                  <FaMapMarkerAlt className="text-2xl text-amber-400" />
+                  <h2 className="font-display text-2xl text-amber-100">Zone A</h2>
+                </div>
                 <p className="mt-3 text-slate-300/85">Centre-ville et secteurs proches.</p>
-                <p className="mt-3 text-sm font-semibold text-amber-200">Frais: 2.90 EUR</p>
+                <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-amber-200"><FaEuroSign className="w-4 h-4" /> 2.90 EUR</p>
               </div>
               <div className="glass-card rounded-2xl p-6">
-                <h2 className="font-display text-2xl text-amber-100">Zone B</h2>
+                <div className="flex items-center gap-3">
+                  <FaMapMarkerAlt className="text-2xl text-amber-400" />
+                  <h2 className="font-display text-2xl text-amber-100">Zone B</h2>
+                </div>
                 <p className="mt-3 text-slate-300/85">Peripherie urbaine.</p>
-                <p className="mt-3 text-sm font-semibold text-amber-200">Frais: 4.90 EUR</p>
+                <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-amber-200"><FaEuroSign className="w-4 h-4" /> 4.90 EUR</p>
               </div>
               <div className="glass-card rounded-2xl p-6">
-                <h2 className="font-display text-2xl text-amber-100">Retrait</h2>
+                <div className="flex items-center gap-3">
+                  <FaTruck className="text-2xl text-amber-400" />
+                  <h2 className="font-display text-2xl text-amber-100">Retrait</h2>
+                </div>
                 <p className="mt-3 text-slate-300/85">Click & collect en 20 minutes.</p>
-                <p className="mt-3 text-sm font-semibold text-amber-200">Gratuit</p>
+                <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-amber-200"><span className="text-green-400">Gratuit</span></p>
               </div>
             </div>
           </div>

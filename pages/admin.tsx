@@ -1,124 +1,195 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdminNav from '@/components/admin/AdminNav';
+import StatsTab from '@/components/admin/StatsTab';
+import OrdersTab from '@/components/admin/OrdersTab';
+import ReservationsTab from '@/components/admin/ReservationsTab';
+import MenuTab from '@/components/admin/MenuTab';
+import UsersTab from '@/components/admin/UsersTab';
+import WeeklyMenuTab from '@/components/admin/WeeklyMenuTab';
+import { useAdmin } from '@/hooks/useAdmin';
+import type { AdminTab } from '@/components/admin/types';
 
-type AdminStatus = 'loading' | 'allowed' | 'denied';
-
-type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-};
+type AuthStatus = 'loading' | 'allowed' | 'denied';
 
 export default function AdminPage() {
-  const [status, setStatus] = useState<AdminStatus>('loading');
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
+  const [adminName, setAdminName] = useState('');
+  const [token, setToken] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
+
+  const admin = useAdmin(token);
+  const {
+    loadStats,
+    loadOrders,
+    loadReservations,
+    loadMenu,
+    loadUsers,
+    loadWeeklyMenu,
+  } = admin;
+
+  const refreshActiveTab = useCallback(() => {
+    if (activeTab === 'dashboard') {
+      loadStats();
+      return;
+    }
+    if (activeTab === 'orders') {
+      loadOrders();
+      loadStats();
+      return;
+    }
+    if (activeTab === 'reservations') {
+      loadReservations();
+      loadStats();
+      return;
+    }
+    if (activeTab === 'menu') {
+      loadMenu();
+      return;
+    }
+    if (activeTab === 'users') {
+      loadUsers();
+      return;
+    }
+    loadWeeklyMenu();
+  }, [
+    activeTab,
+    loadStats,
+    loadOrders,
+    loadReservations,
+    loadMenu,
+    loadUsers,
+    loadWeeklyMenu,
+  ]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    const stored = window.localStorage.getItem('hookies_token');
+    if (!stored) { setAuthStatus('denied'); return; }
 
-    const token = window.localStorage.getItem('hookies_token');
-    if (!token) {
-      setStatus('denied');
-      return;
-    }
-
-    const checkAccess = async () => {
-      try {
-        const response = await fetch('/api/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          setStatus('denied');
-          return;
-        }
-
-        const data = await response.json();
-        const authUser = data?.user as AuthUser | undefined;
-
-        if (authUser?.role === 'ADMIN') {
-          setUser(authUser);
-          setStatus('allowed');
+    fetch('/api/auth/me', { headers: { Authorization: `Bearer ${stored}` } })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.user?.role === 'ADMIN') {
+          setToken(stored);
+          setAdminName(data.user.name || 'Admin');
+          setAuthStatus('allowed');
         } else {
-          setStatus('denied');
+          setAuthStatus('denied');
         }
-      } catch {
-        setStatus('denied');
-      }
-    };
-
-    checkAccess();
+      })
+      .catch(() => setAuthStatus('denied'));
   }, []);
+
+  useEffect(() => {
+    if (authStatus !== 'allowed') return;
+    loadStats();
+  }, [authStatus, loadStats]);
 
   return (
     <>
       <Head>
         <title>Admin | Hookies</title>
-        <meta
-          name="description"
-          content="Panneau administrateur Hookies pour gerer menus, commandes, reservations et contenus." 
-        />
+        <meta name="description" content="Panneau administrateur Hookies." />
       </Head>
-
       <main className="text-white">
         <Header />
-
-        <section className="px-4 py-16 md:px-6">
-          {status === 'loading' && (
-            <div className="mx-auto w-full max-w-7xl rounded-2xl border border-amber-700/30 bg-black/20 p-8 text-slate-200">
-              Verification des droits administrateur...
+        <section className="px-4 py-12 md:px-6">
+          {authStatus === 'loading' && (
+            <div className="mx-auto max-w-7xl rounded-2xl border border-amber-700/30 bg-black/20 p-8 text-slate-300">
+              Vérification des droits administrateur…
             </div>
           )}
-
-          {status === 'denied' && (
-            <div className="mx-auto w-full max-w-7xl rounded-2xl border border-red-700/40 bg-red-950/25 p-8">
-              <h1 className="font-display text-3xl font-bold text-red-200">Acces refuse</h1>
-              <p className="mt-3 max-w-2xl text-red-100/90">
-                Cette page est reservee aux administrateurs. Connectez-vous avec un compte admin pour continuer.
-              </p>
-              <Link
-                href="/espace-client"
-                className="mt-6 inline-block rounded-xl border border-amber-500/40 bg-amber-500/15 px-5 py-2.5 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30"
-              >
-                Aller a l'espace client
+          {authStatus === 'denied' && (
+            <div className="mx-auto max-w-7xl rounded-2xl border border-red-700/40 bg-red-950/25 p-8">
+              <h1 className="font-display text-3xl font-bold text-red-200">Accès refusé</h1>
+              <p className="mt-3 text-red-100/90">Cette page est réservée aux administrateurs.</p>
+              <Link href="/espace-client" className="mt-6 inline-block rounded-xl border border-amber-500/40 bg-amber-500/15 px-5 py-2.5 text-sm font-semibold text-amber-100 hover:bg-amber-500/30">
+                Espace client
               </Link>
             </div>
           )}
-
-          {status === 'allowed' && (
-            <div className="mx-auto w-full max-w-7xl">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.26em] text-amber-200/80">Back-office</p>
-              <h1 className="font-display text-4xl font-black text-slate-100 md:text-5xl">Panel administrateur</h1>
-              <p className="mt-4 max-w-2xl text-slate-300/85">
-                Bonjour {user?.name}, vous pouvez piloter les menus hebdomadaires, les commandes et les reservations.
-              </p>
-
-              <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <div className="glass-card rounded-xl p-5">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-300/80">Menus</p>
-                  <p className="mt-2 font-semibold text-amber-100">Gerer la carte</p>
+          {authStatus === 'allowed' && (
+            <div className="mx-auto max-w-7xl">
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-amber-200/70">Back-office</p>
+                  <h1 className="font-display text-4xl font-black text-slate-100">Panel administrateur</h1>
+                  <p className="mt-1 text-sm text-slate-400">Bonjour {adminName} 👋</p>
                 </div>
-                <div className="glass-card rounded-xl p-5">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-300/80">Reservations</p>
-                  <p className="mt-2 font-semibold text-amber-100">Suivi des tables</p>
-                </div>
-                <div className="glass-card rounded-xl p-5">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-300/80">Commandes</p>
-                  <p className="mt-2 font-semibold text-amber-100">Flux en temps reel</p>
-                </div>
-                <div className="glass-card rounded-xl p-5">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-300/80">Clients</p>
-                  <p className="mt-2 font-semibold text-amber-100">Gestion comptes</p>
-                </div>
+                <button onClick={refreshActiveTab} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/10">
+                  ↻ Rafraîchir
+                </button>
               </div>
+
+              {admin.error && (
+                <div className="mb-4 rounded-xl border border-red-700/40 bg-red-900/20 px-4 py-3 text-sm text-red-300">
+                  {admin.error}
+                </div>
+              )}
+              {admin.success && (
+                <div className="mb-4 rounded-xl border border-green-700/40 bg-green-900/20 px-4 py-3 text-sm text-green-300">
+                  {admin.success}
+                </div>
+              )}
+
+              <AdminNav
+                activeTab={activeTab}
+                onChange={setActiveTab}
+                pendingOrders={admin.stats?.pendingOrders}
+                pendingReservations={admin.stats?.pendingReservations}
+              />
+
+              {activeTab === 'dashboard' && (
+                <StatsTab stats={admin.stats} loading={admin.loading.stats} onLoad={admin.loadStats} />
+              )}
+              {activeTab === 'orders' && (
+                <OrdersTab
+                  orders={admin.orders}
+                  loading={admin.loading.orders}
+                  onLoad={admin.loadOrders}
+                  onUpdateStatus={admin.updateOrderStatus}
+                />
+              )}
+              {activeTab === 'reservations' && (
+                <ReservationsTab
+                  reservations={admin.reservations}
+                  loading={admin.loading.reservations}
+                  onLoad={admin.loadReservations}
+                  onUpdateStatus={admin.updateReservationStatus}
+                />
+              )}
+              {activeTab === 'menu' && (
+                <MenuTab
+                  items={admin.menuItems}
+                  loading={admin.loading.menu}
+                  onLoad={admin.loadMenu}
+                  onSave={admin.saveMenuItem}
+                  onDelete={admin.deleteMenuItem}
+                />
+              )}
+              {activeTab === 'users' && (
+                <UsersTab
+                  users={admin.users}
+                  loading={admin.loading.users}
+                  onLoad={admin.loadUsers}
+                  onRoleChange={admin.updateUserRole}
+                />
+              )}
+              {activeTab === 'weekly-menu' && (
+                <WeeklyMenuTab
+                  weeklyMenu={admin.weeklyMenu}
+                  loading={admin.loading.weekly}
+                  onLoad={admin.loadWeeklyMenu}
+                  onSave={admin.saveWeeklyMenu}
+                />
+              )}
             </div>
           )}
         </section>
-
         <Footer />
       </main>
     </>

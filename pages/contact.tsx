@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { FormEvent, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaPaperPlane } from 'react-icons/fa';
 
 export default function ContactPage() {
   const [name, setName] = useState('');
@@ -62,11 +63,11 @@ export default function ContactPage() {
               <p className="mt-4 text-slate-300/85">
                 Notre equipe vous repond pour les reservations, groupes et evenements prives.
               </p>
-              <ul className="mt-6 space-y-2 text-slate-200/90">
-                <li>Telephone: +33 (0)1 23 45 67 89</li>
-                <li>Email: contact@hookies.fr</li>
-                <li>Adresse: 12 Rue de la Mer, 75000 Paris</li>
-                <li>Horaires: Lun - Dim, 11h30 - 23h30</li>
+              <ul className="mt-6 space-y-3 text-slate-200/90">
+                <li className="flex items-center gap-2"><FaPhone className="text-amber-400 w-5 h-5" /> +33 (0)1 23 45 67 89</li>
+                <li className="flex items-center gap-2"><FaEnvelope className="text-amber-400 w-5 h-5" /> contact@hookies.fr</li>
+                <li className="flex items-center gap-2"><FaMapMarkerAlt className="text-amber-400 w-5 h-5" /> 12 Rue de la Mer, 75000</li>
+                <li className="flex items-center gap-2"><FaClock className="text-amber-400 w-5 h-5" /> Lun - Dim, 11h30 - 23h30</li>
               </ul>
             </div>
 
@@ -104,8 +105,9 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-60"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-60"
                 >
+                  <FaPaperPlane className="w-4 h-4" />
                   {loading ? 'Envoi en cours...' : 'Envoyer'}
                 </button>
               </div>

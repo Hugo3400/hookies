@@ -19,6 +19,7 @@ model User {
   phone         String?
   role          Role      @default(CLIENT)
   isActive      Boolean   @default(true)
+  loyaltyPoints Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
@@ -26,7 +27,9 @@ model User {
   reservations  Reservation[]
   orders        Order[]
   reviews       Review[]
+  itemReviews   ItemReview[]
   favorites     MenuItem[]
+  addresses     UserAddress[]
 }
 
 enum Role {
@@ -52,6 +55,8 @@ model MenuItem {
   // Relations
   orderItems    OrderItem[]
   favorites     User[]
+  reviews       ItemReview[]
+  promotions    Promotion[]
 }
 
 // Réservations
@@ -82,11 +87,16 @@ model Order {
   user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   orderNumber   String    @unique
   totalPrice    Float
+  discountApplied Float   @default(0)
+  finalPrice    Float
   status        OrderStatus @default(PENDING)
   type          OrderType @default(DINE_IN)
   deliveryAddress String?
   notes         String?   @db.Text
   estimatedTime DateTime?
+  scheduledFor  DateTime?
+  promoCodeId   String?
+  promoCode     PromoCode? @relation(fields: [promoCodeId], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
@@ -150,7 +160,7 @@ enum PaymentStatus {
   REFUNDED
 }
 
-// Avis clients
+// Avis clients (général)
 model Review {
   id            String    @id @default(cuid())
   userId        String
@@ -162,10 +172,96 @@ model Review {
   @@index([userId])
 }
 
+// Avis sur les plats spécifiques
+model ItemReview {
+  id            String    @id @default(cuid())
+  menuItemId    String
+  menuItem      MenuItem  @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating        Int       @default(5) // 1-5 stars
+  comment       String?   @db.Text
+  createdAt     DateTime  @default(now())
+  
+  @@unique([menuItemId, userId])
+  @@index([menuItemId])
+}
+
+// Adresses multiples de livraison
+model UserAddress {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label         String    // "Maison", "Bureau", etc
+  street        String
+  city          String
+  postalCode    String
+  country       String    @default("France")
+  isDefault     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  
+  @@index([userId])
+}
+
+// Codes promotionnels
+model PromoCode {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  description   String?
+  discount      Float     // Pourcentage ou montant
+  isPercentage  Boolean   @default(true) // true = %, false = €
+  maxUses       Int?      // null = illimité
+  usedCount     Int       @default(0)
+  minOrderAmount Float    @default(0) // Montant minimum
+  isActive      Boolean   @default(true)
+  expiresAt     DateTime?
+  createdAt     DateTime  @default(now())
+  
+  // Relations
+  orders        Order[]
+}
+
+// Promotions (pour les items spécifiques)
+model Promotion {
+  id            String    @id @default(cuid())
+  name          String
+  description   String?   @db.Text
+  discount      Float     // Pourcentage
+  badge         String?   // "HOT", "NEW", "-50%", etc
+  menuItemId    String?
+  menuItem      MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  isActive      Boolean   @default(true)
+  startsAt      DateTime
+  endsAt        DateTime
+  createdAt     DateTime  @default(now())
+}
+
+// Ajouter à MenuItem relation promotions
+// (à faire manuellement dans le fichier)
+
 // Configuration
 model Configuration {
   id            String    @id @default(cuid())
   key           String    @unique
   value         String    @db.LongText
+  updatedAt     DateTime  @updatedAt
+}
+
+// Paramètres du restaurant
+model RestaurantSettings {
+  id            String    @id @default(cuid())
+  name          String    @default("Hookies")
+  phone         String?
+  email         String?
+  address       String?
+  
+  // Horaires (JSON: {"monday": {"open": "11:30", "close": "23:30"}, ...})
+  openingHours  String    @db.LongText @default("{\"monday\":{\"open\":\"11:30\",\"close\":\"23:30\"},\"tuesday\":{\"open\":\"11:30\",\"close\":\"23:30\"},\"wednesday\":{\"open\":\"11:30\",\"close\":\"23:30\"},\"thursday\":{\"open\":\"11:30\",\"close\":\"23:30\"},\"friday\":{\"open\":\"11:30\",\"close\":\"23:30\"},\"saturday\":{\"open\":\"11:30\",\"close\":\"23:30\"},\"sunday\":{\"open\":\"11:30\",\"close\":\"23:30\"}}")
+  
+  // Configurations générales
+  deliveryFee   Float     @default(2.90)
+  minOrderAmount Float    @default(15.0)
+  pointsPerEuro Float     @default(0.1) // 0.1 point par euro dépensé
+  
   updatedAt     DateTime  @updatedAt
 }

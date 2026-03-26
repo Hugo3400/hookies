@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaHome, FaStar, FaUtensils, FaCalendar, FaTruck, FaUser } from 'react-icons/fa';
 
 export default function Footer() {
   return (
@@ -27,13 +28,13 @@ export default function Footer() {
           >
             <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-amber-200">Navigation</h4>
             <ul className="space-y-2 text-sm text-slate-300/85">
-              <li><Link href="/" className="transition hover:text-amber-300">Accueil</Link></li>
-              <li><Link href="/experience" className="transition hover:text-amber-300">Experience</Link></li>
-              <li><Link href="/menu" className="transition hover:text-amber-300">Carte</Link></li>
-              <li><Link href="/reservation" className="transition hover:text-amber-300">Reservation</Link></li>
-              <li><Link href="/livraison" className="transition hover:text-amber-300">Livraison</Link></li>
-              <li><Link href="/espace-client" className="transition hover:text-amber-300">Espace client</Link></li>
-              <li><Link href="/contact" className="transition hover:text-amber-300">Contact</Link></li>
+              <li><Link href="/" className="flex items-center gap-2 transition hover:text-amber-300"><FaHome className="w-4 h-4" /> Accueil</Link></li>
+              <li><Link href="/experience" className="flex items-center gap-2 transition hover:text-amber-300"><FaStar className="w-4 h-4" /> Experience</Link></li>
+              <li><Link href="/menu" className="flex items-center gap-2 transition hover:text-amber-300"><FaUtensils className="w-4 h-4" /> Carte</Link></li>
+              <li><Link href="/reservation" className="flex items-center gap-2 transition hover:text-amber-300"><FaCalendar className="w-4 h-4" /> Reservation</Link></li>
+              <li><Link href="/livraison" className="flex items-center gap-2 transition hover:text-amber-300"><FaTruck className="w-4 h-4" /> Livraison</Link></li>
+              <li><Link href="/espace-client" className="flex items-center gap-2 transition hover:text-amber-300"><FaUser className="w-4 h-4" /> Espace client</Link></li>
+              <li><Link href="/contact" className="flex items-center gap-2 transition hover:text-amber-300"><FaEnvelope className="w-4 h-4" /> Contact</Link></li>
             </ul>
           </motion.div>
 
@@ -44,11 +45,11 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-amber-200">Contact</h4>
-            <ul className="space-y-2 text-sm text-slate-300/85">
-              <li>+33 (0)1 23 45 67 89</li>
-              <li>contact@hookies.fr</li>
-              <li>12 Rue de la Mer, 75000 Paris</li>
-              <li>Lun - Dim: 11h30 - 23h30</li>
+            <ul className="space-y-3 text-sm text-slate-300/85">
+              <li className="flex items-center gap-2"><FaPhone className="text-amber-400 w-4 h-4" /> +33 (0)1 23 45 67 89</li>
+              <li className="flex items-center gap-2"><FaEnvelope className="text-amber-400 w-4 h-4" /> contact@hookies.fr</li>
+              <li className="flex items-center gap-2"><FaMapMarkerAlt className="text-amber-400 w-4 h-4" /> 12 Rue de la Mer, 75000</li>
+              <li className="flex items-center gap-2"><FaClock className="text-amber-400 w-4 h-4" /> Lun - Dim: 11h30 - 23h30</li>
             </ul>
           </motion.div>
 

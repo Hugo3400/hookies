@@ -2,5 +2,13 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/api/orders": "pages/api/orders.js",
+  "/api/reservations": "pages/api/reservations.js",
+  "/api/user/profile": "pages/api/user/profile.js",
+  "/api/favorites": "pages/api/favorites.js",
+  "/api/settings": "pages/api/settings.js",
+  "/api/auth/login": "pages/api/auth/login.js",
+  "/api/auth/register": "pages/api/auth/register.js",
+  "/api/menu-enriched": "pages/api/menu-enriched.js",
   "/espace-client": "pages/espace-client.js"
 }

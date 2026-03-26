@@ -5,7 +5,7 @@ import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
 type WeeklyMenuItem = {
   name: string;
   description: string;
-  price: string;
+  price: number;
 };
 
 type WeeklyMenuPayload = {
@@ -23,35 +23,77 @@ const DEFAULT_WEEKLY_MENU: WeeklyMenuPayload = {
     {
       name: 'Menu Flibustier',
       description: 'Burger signature, frites de cale et sauce epicee maison.',
-      price: '18 EUR',
+      price: 18,
     },
     {
       name: 'Menu Kraken',
       description: 'Filet de poisson pane, potatoes rustiques et salade croquante.',
-      price: '21 EUR',
+      price: 21,
     },
     {
       name: 'Menu Capitaine',
       description: 'Double burger premium, cheddar affine et oignons carameles.',
-      price: '24 EUR',
+      price: 24,
     },
   ],
 };
 
-function isValidPayload(payload: WeeklyMenuPayload): boolean {
-  return (
-    typeof payload?.title === 'string' &&
-    typeof payload?.subtitle === 'string' &&
-    typeof payload?.weekLabel === 'string' &&
-    Array.isArray(payload?.items) &&
-    payload.items.length > 0 &&
-    payload.items.every(
-      (item) =>
-        typeof item?.name === 'string' &&
-        typeof item?.description === 'string' &&
-        typeof item?.price === 'string'
-    )
-  );
+function toNumberPrice(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string') {
+    const normalized = value.replace(',', '.').replace(/[^0-9.\-]/g, '').trim();
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
+function normalizePayload(payload: unknown): WeeklyMenuPayload | null {
+  if (!payload || typeof payload !== 'object') return null;
+
+  const data = payload as {
+    title?: unknown;
+    subtitle?: unknown;
+    weekLabel?: unknown;
+    items?: Array<{ name?: unknown; description?: unknown; price?: unknown }>;
+  };
+
+  if (
+    typeof data.title !== 'string' ||
+    typeof data.subtitle !== 'string' ||
+    typeof data.weekLabel !== 'string' ||
+    !Array.isArray(data.items) ||
+    data.items.length === 0
+  ) {
+    return null;
+  }
+
+  const items: WeeklyMenuItem[] = [];
+
+  for (const item of data.items) {
+    if (!item || typeof item !== 'object') return null;
+    if (typeof item.name !== 'string' || typeof item.description !== 'string') return null;
+    const price = toNumberPrice(item.price);
+    if (price == null) return null;
+    items.push({ name: item.name, description: item.description, price });
+  }
+
+  return {
+    title: data.title,
+    subtitle: data.subtitle,
+    weekLabel: data.weekLabel,
+    items,
+  };
+}
+
+function parseStoredPayload(value: string): WeeklyMenuPayload {
+  try {
+    const parsed = JSON.parse(value);
+    const normalized = normalizePayload(parsed);
+    return normalized || DEFAULT_WEEKLY_MENU;
+  } catch {
+    return DEFAULT_WEEKLY_MENU;
+  }
 }
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
@@ -65,7 +107,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         return res.status(200).json(DEFAULT_WEEKLY_MENU);
       }
 
-      return res.status(200).json(JSON.parse(config.value));
+      return res.status(200).json(parseStoredPayload(config.value));
     } catch (error) {
       console.error('Erreur weekly-menu admin GET:', error);
       return res.status(200).json(DEFAULT_WEEKLY_MENU);
@@ -73,9 +115,9 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   }
 
   if (req.method === 'PUT') {
-    const payload = req.body as WeeklyMenuPayload;
+    const cleanPayload = normalizePayload(req.body);
 
-    if (!isValidPayload(payload)) {
+    if (!cleanPayload) {
       return res.status(400).json({ error: 'Payload weekly menu invalide' });
     }
 
@@ -84,10 +126,10 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         where: { key: 'WEEKLY_MENU' },
         create: {
           key: 'WEEKLY_MENU',
-          value: JSON.stringify(payload),
+          value: JSON.stringify(cleanPayload),
         },
         update: {
-          value: JSON.stringify(payload),
+          value: JSON.stringify(cleanPayload),
         },
       });
 

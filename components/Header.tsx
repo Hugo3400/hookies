@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { FaHome, FaStar, FaUtensils, FaCalendar, FaTruck, FaEnvelope, FaUser, FaBars, FaTimes } from 'react-icons/fa';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -23,26 +24,26 @@ export default function Header() {
           </motion.div>
 
           <nav className="hidden items-center gap-8 md:flex">
-            <Link href="/" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              Accueil
+            <Link href="/" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              <FaHome className="text-lg" /> Accueil
             </Link>
-            <Link href="/experience" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              Expérience
+            <Link href="/experience" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              <FaStar className="text-lg" /> Expérience
             </Link>
-            <Link href="/menu" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              Menu
+            <Link href="/menu" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              <FaUtensils className="text-lg" /> Menu
             </Link>
-            <Link href="/reservation" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              Reservation
+            <Link href="/reservation" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              <FaCalendar className="text-lg" /> Reservation
             </Link>
-            <Link href="/livraison" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              Livraison
+            <Link href="/livraison" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              <FaTruck className="text-lg" /> Livraison
             </Link>
-            <Link href="/contact" className="text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              Contact
+            <Link href="/contact" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
+              <FaEnvelope className="text-lg" /> Contact
             </Link>
-            <Link href="/espace-client" className="rounded-xl border border-amber-400/40 bg-amber-500/15 px-5 py-2.5 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
-              Espace client
+            <Link href="/espace-client" className="flex items-center gap-2 rounded-xl border border-amber-400/40 bg-amber-500/15 px-5 py-2.5 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
+              <FaUser className="text-lg" /> Espace client
             </Link>
           </nav>
 
@@ -50,7 +51,7 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="rounded-lg border border-amber-600/40 p-2 text-amber-200 md:hidden"
           >
-            ☰
+            {mobileMenuOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
           </button>
         </div>
       </div>
@@ -61,29 +62,29 @@ export default function Header() {
           animate={{ opacity: 1, y: 0 }}
           className="mx-4 mb-4 space-y-2 rounded-xl border border-amber-700/30 bg-slate-950/90 p-4 md:hidden"
         >
-          <Link href="/" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Accueil
+          <Link href="/" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaHome className="text-lg" /> Accueil
           </Link>
-          <Link href="/experience" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Expérience
+          <Link href="/experience" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaStar className="text-lg" /> Expérience
           </Link>
-          <Link href="/menu" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Menu
+          <Link href="/menu" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaUtensils className="text-lg" /> Menu
           </Link>
-          <Link href="/reservation" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Reservation
+          <Link href="/reservation" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaCalendar className="text-lg" /> Reservation
           </Link>
-          <Link href="/livraison" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Livraison
+          <Link href="/livraison" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaTruck className="text-lg" /> Livraison
           </Link>
-          <Link href="/contact" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Contact
+          <Link href="/contact" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaEnvelope className="text-lg" /> Contact
           </Link>
-          <Link href="/espace-client" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Espace client
+          <Link href="/espace-client" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaUser className="text-lg" /> Espace client
           </Link>
-          <Link href="/admin" className="block rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            Admin
+          <Link href="/admin" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
+            <FaUser className="text-lg" /> Admin
           </Link>
         </motion.nav>
       )}

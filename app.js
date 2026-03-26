@@ -2,14 +2,12 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
-// Production par defaut pour la stabilite sur Plesk.
-// Mettre FORCE_DEV=1 pour activer le mode developpement sur le domaine.
-const forceDev = process.env.FORCE_DEV === '1';
-const dev = forceDev || process.env.NODE_ENV !== 'production';
+// Force production mode - always use the compiled .next build on this server.
+// To run in dev mode locally, use `npm run dev` directly instead.
+const dev = false;
 const app = next({
   dev,
-  // Evite les conflits de permissions entre build prod (.next) et dev sur Plesk.
-  distDir: dev ? '.next-dev' : '.next',
+  distDir: '.next',
 });
 const handle = app.getRequestHandler();
 const handleUpgrade = app.getUpgradeHandler();
