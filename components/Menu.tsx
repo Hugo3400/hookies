@@ -1,52 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaDrumstickBite, FaFish, FaFire, FaCocktail, FaIceCream, FaConciergeBell, FaPlus, FaArrowRight } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaHamburger, FaFish, FaCocktail, FaIceCream, FaPepperHot, FaUtensils, FaPlus } from 'react-icons/fa';
+import type { IconType } from 'react-icons';
+
+type MenuCategory = 'BURGER' | 'SIDE' | 'DRINK' | 'DESSERT' | 'SAUCE';
+
+type MenuItem = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: MenuCategory;
+  image?: string;
+  preparationTime: number;
+};
+
+const CATEGORY_LABELS: Record<MenuCategory, string> = {
+  BURGER: 'Burgers',
+  SIDE: 'Accompagnements',
+  DRINK: 'Boissons',
+  DESSERT: 'Desserts',
+  SAUCE: 'Sauces',
+};
+
+const CATEGORY_ICONS: Record<MenuCategory, IconType> = {
+  BURGER: FaHamburger,
+  SIDE: FaPepperHot,
+  DRINK: FaCocktail,
+  DESSERT: FaIceCream,
+  SAUCE: FaPepperHot,
+};
 
 export default function Menu() {
-  const menuItems = [
-    {
-      name: 'Cote Flibustier',
-      description: 'Boeuf maturé, jus corsé au poivre long et pommes grenaille croustillantes.',
-      price: '28 EUR',
-      tag: 'Viande',
-      icon: FaDrumstickBite,
-    },
-    {
-      name: 'Poisson du Tresor',
-      description: 'Filet de ligne, beurre citron fumé, legumes de saison glaces.',
-      price: '24 EUR',
-      tag: 'Ocean',
-      icon: FaFish,
-    },
-    {
-      name: 'Poulpe Farouche',
-      description: 'Tentacules snackees, puree d ail confit et huile pimentee maison.',
-      price: '22 EUR',
-      tag: 'Signature',
-      icon: FaFire,
-    },
-    {
-      name: 'Soupe du Capitaine',
-      description: 'Bouillon de crustaces, herbes fraiches et croutons rotis au beurre.',
-      price: '12 EUR',
-      tag: 'Entree',
-      icon: FaConciergeBell,
-    },
-    {
-      name: 'Rhum Epice Hookies',
-      description: 'Assemblage exclusif de rhums, epices chaudes et zeste d orange.',
-      price: '8 EUR',
-      tag: 'Bar',
-      icon: FaCocktail,
-    },
-    {
-      name: 'Tresor Chocolat Noir',
-      description: 'Ganache intense, coeur coulant et praline salee minute.',
-      price: '7 EUR',
-      tag: 'Dessert',
-      icon: FaIceCream,
-    },
-  ];
+  const [items, setItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<MenuCategory | 'ALL'>('ALL');
+
+  useEffect(() => {
+    fetch('/api/public/menu')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: MenuItem[]) => setItems(data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filtered = filter === 'ALL' ? items : items.filter(i => i.category === filter);
+  const categories = Array.from(new Set(items.map(i => i.category)));
+
+  const fmt = (n: number) =>
+    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
 
   return (
     <section id="menu" className="px-4 py-20 md:px-6">
@@ -63,44 +66,77 @@ export default function Menu() {
           <p className="mx-auto mt-4 max-w-2xl text-slate-300/85">Une cuisine franche, genereuse et visuelle, entre feu, iode et notes epicees.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {menuItems.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="glass-card rounded-2xl p-6 transition duration-300 hover:-translate-y-1"
-            >
-              <div className="mb-5 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/35 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-200">
-                  <item.icon className="text-[10px]" /> {item.tag}
-                </span>
-                <span className="text-lg font-extrabold text-amber-200">{item.price}</span>
-              </div>
-              <h3 className="font-display text-2xl font-bold text-slate-100">{item.name}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300/80">{item.description}</p>
-              <div className="mt-6 flex justify-end">
-                <button className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
-                  <FaPlus className="text-xs" /> Ajouter
-                </button>
-              </div>
-            </motion.div>
-          ))}
+        {/* Filtres par catégorie */}
+        <div className="mb-8 flex flex-wrap justify-center gap-2">
+          <button
+            onClick={() => setFilter('ALL')}
+            className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition ${
+              filter === 'ALL' ? 'bg-amber-500 text-black' : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+            }`}
+          >
+            <FaUtensils className="text-[10px]" /> Tout
+          </button>
+          {categories.map(cat => {
+            const Icon = CATEGORY_ICONS[cat] || FaUtensils;
+            return (
+              <button
+                key={cat}
+                onClick={() => setFilter(cat)}
+                className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition ${
+                  filter === cat ? 'bg-amber-500 text-black' : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                }`}
+              >
+                <Icon className="text-[10px]" /> {CATEGORY_LABELS[cat]}
+              </button>
+            );
+          })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <button className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-8 py-4 text-base font-semibold text-slate-950 transition hover:bg-amber-400">
-            <FaArrowRight /> Consulter le menu complet
-          </button>
-        </motion.div>
+        {loading && (
+          <p className="text-center text-slate-400">Chargement du menu...</p>
+        )}
+
+        {!loading && filtered.length === 0 && (
+          <p className="text-center text-slate-400">Aucun plat disponible pour le moment.</p>
+        )}
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((item, index) => {
+            const Icon = CATEGORY_ICONS[item.category] || FaUtensils;
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.08 }}
+                viewport={{ once: true }}
+                className="glass-card rounded-2xl p-6 transition duration-300 hover:-translate-y-1"
+              >
+                {item.image && (
+                  <img src={item.image} alt={item.name} className="mb-4 h-36 w-full rounded-xl object-cover" />
+                )}
+                <div className="mb-5 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/35 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-200">
+                    <Icon className="text-[10px]" /> {CATEGORY_LABELS[item.category]}
+                  </span>
+                  <span className="text-lg font-extrabold text-amber-200">{fmt(item.price)}</span>
+                </div>
+                <h3 className="font-display text-2xl font-bold text-slate-100">{item.name}</h3>
+                {item.description && (
+                  <p className="mt-3 text-sm leading-relaxed text-slate-300/80">{item.description}</p>
+                )}
+                <div className="mt-6 flex justify-end">
+                  <Link
+                    href="/espace-client"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30"
+                  >
+                    <FaPlus className="text-xs" /> Commander
+                  </Link>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
