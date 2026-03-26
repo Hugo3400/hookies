@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
+import { FaSyncAlt, FaHandPeace } from 'react-icons/fa';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AdminNav from '@/components/admin/AdminNav';
@@ -118,10 +119,10 @@ export default function AdminPage() {
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-amber-200/70">Back-office</p>
                   <h1 className="font-display text-4xl font-black text-slate-100">Panel administrateur</h1>
-                  <p className="mt-1 text-sm text-slate-400">Bonjour {adminName} 👋</p>
+                  <p className="mt-1 text-sm text-slate-400">Bonjour {adminName} <FaHandPeace className="inline text-amber-300" /></p>
                 </div>
-                <button onClick={refreshActiveTab} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/10">
-                  ↻ Rafraîchir
+                <button onClick={refreshActiveTab} className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/10">
+                  <FaSyncAlt /> Rafraîchir
                 </button>
               </div>
 

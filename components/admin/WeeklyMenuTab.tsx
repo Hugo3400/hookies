@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaTimes, FaPlus, FaSave } from 'react-icons/fa';
 import type { WeeklyMenuPayload, WeeklyMenuItem } from './types';
 
 type Props = {
@@ -79,7 +80,7 @@ export default function WeeklyMenuTab({ weeklyMenu, loading, onLoad, onSave }: P
             onClick={addItem}
             className="rounded-lg bg-amber-500/20 px-3 py-1.5 text-xs font-semibold text-amber-300 hover:bg-amber-500/30"
           >
-            + Ajouter un article
+            <FaPlus className="inline" /> Ajouter un article
           </button>
         </div>
         <div className="space-y-3">
@@ -88,7 +89,7 @@ export default function WeeklyMenuTab({ weeklyMenu, loading, onLoad, onSave }: P
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs font-semibold text-slate-400">Article #{idx + 1}</span>
                 {form.items.length > 1 && (
-                  <button onClick={() => removeItem(idx)} className="text-xs text-red-400 hover:text-red-300">✕ Supprimer</button>
+                  <button onClick={() => removeItem(idx)} className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300"><FaTimes /> Supprimer</button>
                 )}
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -134,7 +135,7 @@ export default function WeeklyMenuTab({ weeklyMenu, loading, onLoad, onSave }: P
         disabled={saving}
         className="w-full rounded-xl bg-amber-500 py-3 font-bold text-black hover:bg-amber-400 disabled:opacity-50"
       >
-        {saving ? 'Sauvegarde en cours...' : '💾 Sauvegarder le menu semaine'}
+        {saving ? 'Sauvegarde en cours...' : <><FaSave className="mr-2 inline" /> Sauvegarder le menu semaine</>}
       </button>
     </div>
   );

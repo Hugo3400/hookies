@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { FaDrumstickBite, FaFish, FaFire, FaCocktail, FaIceCream, FaConciergeBell, FaPlus, FaArrowRight } from 'react-icons/fa';
 
 export default function Menu() {
   const menuItems = [
@@ -8,36 +9,42 @@ export default function Menu() {
       description: 'Boeuf maturé, jus corsé au poivre long et pommes grenaille croustillantes.',
       price: '28 EUR',
       tag: 'Viande',
+      icon: FaDrumstickBite,
     },
     {
       name: 'Poisson du Tresor',
       description: 'Filet de ligne, beurre citron fumé, legumes de saison glaces.',
       price: '24 EUR',
       tag: 'Ocean',
+      icon: FaFish,
     },
     {
       name: 'Poulpe Farouche',
       description: 'Tentacules snackees, puree d ail confit et huile pimentee maison.',
       price: '22 EUR',
       tag: 'Signature',
+      icon: FaFire,
     },
     {
       name: 'Soupe du Capitaine',
       description: 'Bouillon de crustaces, herbes fraiches et croutons rotis au beurre.',
       price: '12 EUR',
       tag: 'Entree',
+      icon: FaConciergeBell,
     },
     {
       name: 'Rhum Epice Hookies',
       description: 'Assemblage exclusif de rhums, epices chaudes et zeste d orange.',
       price: '8 EUR',
       tag: 'Bar',
+      icon: FaCocktail,
     },
     {
       name: 'Tresor Chocolat Noir',
       description: 'Ganache intense, coeur coulant et praline salee minute.',
       price: '7 EUR',
       tag: 'Dessert',
+      icon: FaIceCream,
     },
   ];
 
@@ -67,16 +74,16 @@ export default function Menu() {
               className="glass-card rounded-2xl p-6 transition duration-300 hover:-translate-y-1"
             >
               <div className="mb-5 flex items-center justify-between">
-                <span className="rounded-full border border-amber-500/35 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-200">
-                  {item.tag}
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/35 bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-200">
+                  <item.icon className="text-[10px]" /> {item.tag}
                 </span>
                 <span className="text-lg font-extrabold text-amber-200">{item.price}</span>
               </div>
               <h3 className="font-display text-2xl font-bold text-slate-100">{item.name}</h3>
               <p className="mt-3 text-sm leading-relaxed text-slate-300/80">{item.description}</p>
               <div className="mt-6 flex justify-end">
-                <button className="rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
-                  Ajouter
+                <button className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
+                  <FaPlus className="text-xs" /> Ajouter
                 </button>
               </div>
             </motion.div>
@@ -90,8 +97,8 @@ export default function Menu() {
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <button className="rounded-xl bg-amber-500 px-8 py-4 text-base font-semibold text-slate-950 transition hover:bg-amber-400">
-            Consulter le menu complet
+          <button className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-8 py-4 text-base font-semibold text-slate-950 transition hover:bg-amber-400">
+            <FaArrowRight /> Consulter le menu complet
           </button>
         </motion.div>
       </div>

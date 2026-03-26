@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { FaStar, FaUtensils, FaDoorOpen, FaAnchor, FaBookOpen } from 'react-icons/fa';
 
 type WeeklyMenuItem = {
   name: string;
@@ -114,11 +115,11 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="mt-8 flex flex-wrap items-center gap-3"
           >
-            <Link href="/contact" className="rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400">
-              Monter a bord
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400">
+              <FaAnchor /> Monter a bord
             </Link>
-            <Link href="/menu" className="rounded-xl border border-slate-200/25 bg-slate-900/40 px-6 py-3 font-semibold text-slate-100 transition hover:border-amber-400/45 hover:bg-slate-900/70">
-              Voir la carte
+            <Link href="/menu" className="inline-flex items-center gap-2 rounded-xl border border-slate-200/25 bg-slate-900/40 px-6 py-3 font-semibold text-slate-100 transition hover:border-amber-400/45 hover:bg-slate-900/70">
+              <FaBookOpen /> Voir la carte
             </Link>
           </motion.div>
 
@@ -129,14 +130,17 @@ export default function Hero() {
             className="mt-10 grid max-w-xl grid-cols-3 gap-3"
           >
             <div className="glass-card rounded-xl p-4">
+              <FaStar className="mb-1 text-amber-400" />
               <p className="text-2xl font-extrabold text-amber-300">4.9/5</p>
               <p className="text-xs uppercase tracking-[0.18em] text-slate-300/80">Avis d'equipage</p>
             </div>
             <div className="glass-card rounded-xl p-4">
+              <FaUtensils className="mb-1 text-amber-400" />
               <p className="text-2xl font-extrabold text-amber-300">50+</p>
               <p className="text-xs uppercase tracking-[0.18em] text-slate-300/80">Plats de bord</p>
             </div>
             <div className="glass-card rounded-xl p-4">
+              <FaDoorOpen className="mb-1 text-amber-400" />
               <p className="text-2xl font-extrabold text-amber-300">7/7</p>
               <p className="text-xs uppercase tracking-[0.18em] text-slate-300/80">Pont ouvert</p>
             </div>

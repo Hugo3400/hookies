@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaChevronUp, FaChevronDown, FaArrowRight } from 'react-icons/fa';
 import type { AdminOrder, OrderStatus } from './types';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from './types';
 
@@ -66,7 +67,7 @@ export default function OrdersTab({ orders, loading, onLoad, onUpdateStatus }: P
                   {ORDER_STATUS_LABELS[order.status]}
                 </span>
                 <span className="font-bold text-green-300">{fmt(order.finalPrice)}</span>
-                <span className="text-slate-400">{expanded === order.id ? '▲' : '▼'}</span>
+                <span className="text-slate-400">{expanded === order.id ? <FaChevronUp /> : <FaChevronDown />}</span>
               </div>
             </div>
 
@@ -104,7 +105,7 @@ export default function OrdersTab({ orders, loading, onLoad, onUpdateStatus }: P
                           next === 'CANCELLED' ? 'bg-red-900/40 text-red-300 hover:bg-red-900/60' : 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
                         }`}
                       >
-                        → {ORDER_STATUS_LABELS[next]}
+                        <FaArrowRight className="inline text-[10px]" /> {ORDER_STATUS_LABELS[next]}
                       </button>
                     ))}
                   </div>

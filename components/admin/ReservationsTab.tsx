@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 import type { AdminReservation, ReservationStatus } from './types';
 import { RESERVATION_STATUS_LABELS, RESERVATION_STATUS_COLORS } from './types';
 
@@ -82,13 +83,13 @@ export default function ReservationsTab({ reservations, loading, onLoad, onUpdat
                           onClick={() => onUpdateStatus(res.id, 'CONFIRMED')}
                           className="rounded-lg bg-green-900/40 px-2 py-1 text-xs font-semibold text-green-300 hover:bg-green-900/60"
                         >
-                          ✓ Confirmer
+                          <FaCheck className="inline" /> Confirmer
                         </button>
                         <button
                           onClick={() => onUpdateStatus(res.id, 'CANCELLED')}
                           className="rounded-lg bg-red-900/40 px-2 py-1 text-xs font-semibold text-red-300 hover:bg-red-900/60"
                         >
-                          ✕ Annuler
+                          <FaTimes className="inline" /> Annuler
                         </button>
                       </>
                     )}
@@ -98,13 +99,13 @@ export default function ReservationsTab({ reservations, loading, onLoad, onUpdat
                           onClick={() => onUpdateStatus(res.id, 'COMPLETED')}
                           className="rounded-lg bg-slate-700/40 px-2 py-1 text-xs font-semibold text-slate-300 hover:bg-slate-700/60"
                         >
-                          ✓ Terminée
+                          <FaCheck className="inline" /> Terminée
                         </button>
                         <button
                           onClick={() => onUpdateStatus(res.id, 'CANCELLED')}
                           className="rounded-lg bg-red-900/40 px-2 py-1 text-xs font-semibold text-red-300 hover:bg-red-900/60"
                         >
-                          ✕ Annuler
+                          <FaTimes className="inline" /> Annuler
                         </button>
                       </>
                     )}

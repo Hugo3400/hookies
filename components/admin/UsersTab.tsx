@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { FaUser, FaEnvelope, FaShieldAlt, FaCoins, FaShoppingCart, FaCalendarAlt, FaCalendarCheck } from 'react-icons/fa';
 import type { AdminUserEntry } from './types';
 
 type Props = {
@@ -22,13 +23,13 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-white/10 text-left text-xs uppercase tracking-widest text-slate-400">
-              <th className="px-4 py-3">Client</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Rôle</th>
-              <th className="px-4 py-3 text-center">Points</th>
-              <th className="px-4 py-3 text-center">Commandes</th>
-              <th className="px-4 py-3 text-center">Réservations</th>
-              <th className="px-4 py-3">Inscrit le</th>
+              <th className="px-4 py-3"><span className="inline-flex items-center gap-1.5"><FaUser className="text-[10px]" /> Client</span></th>
+              <th className="px-4 py-3"><span className="inline-flex items-center gap-1.5"><FaEnvelope className="text-[10px]" /> Email</span></th>
+              <th className="px-4 py-3"><span className="inline-flex items-center gap-1.5"><FaShieldAlt className="text-[10px]" /> Rôle</span></th>
+              <th className="px-4 py-3 text-center"><span className="inline-flex items-center gap-1.5"><FaCoins className="text-[10px]" /> Points</span></th>
+              <th className="px-4 py-3 text-center"><span className="inline-flex items-center gap-1.5"><FaShoppingCart className="text-[10px]" /> Commandes</span></th>
+              <th className="px-4 py-3 text-center"><span className="inline-flex items-center gap-1.5"><FaCalendarAlt className="text-[10px]" /> Réservations</span></th>
+              <th className="px-4 py-3"><span className="inline-flex items-center gap-1.5"><FaCalendarCheck className="text-[10px]" /> Inscrit le</span></th>
             </tr>
           </thead>
           <tbody>

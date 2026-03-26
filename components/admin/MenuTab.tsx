@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaEdit, FaTrashAlt, FaPlus } from 'react-icons/fa';
 import type { AdminMenuItem, MenuCategory } from './types';
 
 const CATEGORIES: MenuCategory[] = ['BURGER', 'SIDE', 'DRINK', 'DESSERT', 'SAUCE'];
@@ -65,7 +66,7 @@ export default function MenuTab({ items, loading, onLoad, onSave, onDelete }: Pr
           onClick={() => openEdit()}
           className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-bold text-black hover:bg-amber-400"
         >
-          + Ajouter
+          <FaPlus className="inline" /> Ajouter
         </button>
       </div>
 
@@ -94,13 +95,13 @@ export default function MenuTab({ items, loading, onLoad, onSave, onDelete }: Pr
                   onClick={() => openEdit(item)}
                   className="rounded-lg bg-white/5 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:bg-white/10"
                 >
-                  ✏️ Modifier
+                  <FaEdit className="inline" /> Modifier
                 </button>
                 <button
                   onClick={() => handleDelete(item.id)}
                   className="rounded-lg bg-red-900/30 px-2.5 py-1 text-xs font-semibold text-red-300 hover:bg-red-900/50"
                 >
-                  🗑️
+                  <FaTrashAlt />
                 </button>
               </div>
             </div>

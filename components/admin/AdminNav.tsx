@@ -1,12 +1,14 @@
 import type { AdminTab } from './types';
+import { FaChartPie, FaHamburger, FaCalendarCheck, FaClipboardList, FaUsers, FaCalendarWeek } from 'react-icons/fa';
+import type { IconType } from 'react-icons';
 
-const TABS: { key: AdminTab; label: string; icon: string }[] = [
-  { key: 'dashboard', label: 'Dashboard', icon: '📊' },
-  { key: 'orders', label: 'Commandes', icon: '🍔' },
-  { key: 'reservations', label: 'Réservations', icon: '📅' },
-  { key: 'menu', label: 'Menu', icon: '🗒️' },
-  { key: 'users', label: 'Clients', icon: '👥' },
-  { key: 'weekly-menu', label: 'Menu semaine', icon: '📋' },
+const TABS: { key: AdminTab; label: string; icon: IconType }[] = [
+  { key: 'dashboard', label: 'Dashboard', icon: FaChartPie },
+  { key: 'orders', label: 'Commandes', icon: FaHamburger },
+  { key: 'reservations', label: 'Réservations', icon: FaCalendarCheck },
+  { key: 'menu', label: 'Menu', icon: FaClipboardList },
+  { key: 'users', label: 'Clients', icon: FaUsers },
+  { key: 'weekly-menu', label: 'Menu semaine', icon: FaCalendarWeek },
 ];
 
 type Props = {
@@ -34,7 +36,7 @@ export default function AdminNav({ activeTab, onChange, pendingOrders = 0, pendi
                 : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
             }`}
           >
-            <span>{tab.icon}</span>
+            <tab.icon className="text-sm" />
             <span>{tab.label}</span>
             {badge > 0 && (
               <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
