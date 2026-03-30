@@ -2,14 +2,14 @@ import type { AdminTab } from './types';
 import { FaChartPie, FaHamburger, FaCalendarCheck, FaClipboardList, FaUsers, FaCalendarWeek, FaCog } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 
-const TABS: { key: AdminTab; label: string; icon: IconType }[] = [
+const TABS: { key: AdminTab; label: string; icon: IconType; adminOnly?: boolean }[] = [
   { key: 'dashboard', label: 'Dashboard', icon: FaChartPie },
   { key: 'orders', label: 'Commandes', icon: FaHamburger },
   { key: 'reservations', label: 'Réservations', icon: FaCalendarCheck },
-  { key: 'menu', label: 'Menu', icon: FaClipboardList },
-  { key: 'users', label: 'Clients', icon: FaUsers },
-  { key: 'weekly-menu', label: 'Menu semaine', icon: FaCalendarWeek },
-  { key: 'settings', label: 'Paramètres', icon: FaCog },
+  { key: 'menu', label: 'Menu', icon: FaClipboardList, adminOnly: true },
+  { key: 'users', label: 'Clients', icon: FaUsers, adminOnly: true },
+  { key: 'weekly-menu', label: 'Menu semaine', icon: FaCalendarWeek, adminOnly: true },
+  { key: 'settings', label: 'Paramètres', icon: FaCog, adminOnly: true },
 ];
 
 type Props = {
@@ -17,12 +17,15 @@ type Props = {
   onChange: (tab: AdminTab) => void;
   pendingOrders?: number;
   pendingReservations?: number;
+  userRole?: string;
 };
 
-export default function AdminNav({ activeTab, onChange, pendingOrders = 0, pendingReservations = 0 }: Props) {
+export default function AdminNav({ activeTab, onChange, pendingOrders = 0, pendingReservations = 0, userRole = 'ADMIN' }: Props) {
+  const visibleTabs = TABS.filter(tab => !tab.adminOnly || userRole === 'ADMIN');
+
   return (
     <nav className="mb-8 flex flex-wrap gap-2">
-      {TABS.map((tab) => {
+      {visibleTabs.map((tab) => {
         const badge =
           tab.key === 'orders' ? pendingOrders
           : tab.key === 'reservations' ? pendingReservations

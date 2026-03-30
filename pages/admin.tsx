@@ -28,6 +28,7 @@ function getInitialAdminTab(): AdminTab {
 export default function AdminPage() {
   const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
   const [adminName, setAdminName] = useState('');
+  const [userRole, setUserRole] = useState<string>('');
   const [token, setToken] = useState<string | null>(null);
   const [activeTab, _setActiveTab] = useState<AdminTab>(getInitialAdminTab);
 
@@ -105,9 +106,11 @@ export default function AdminPage() {
     fetch('/api/auth/me', { headers: { Authorization: `Bearer ${stored}` } })
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (data?.user?.role === 'ADMIN') {
+        const role = data?.user?.role;
+        if (role === 'ADMIN' || role === 'EMPLOYEE') {
           setToken(stored);
-          setAdminName(data.user.name || 'Admin');
+          setAdminName(data.user.name || 'Staff');
+          setUserRole(role);
           setAuthStatus('allowed');
         } else {
           setAuthStatus('denied');
