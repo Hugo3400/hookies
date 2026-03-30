@@ -33,7 +33,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === 'PATCH') {
     const { id, role } = req.body;
     if (!id || !role) return res.status(400).json({ error: 'id et role requis' });
-    const validRoles = ['CLIENT', 'ADMIN', 'DELIVERY', 'KIOSK'];
+    const validRoles = ['CLIENT', 'ADMIN', 'EMPLOYEE', 'DELIVERY', 'KIOSK'];
     if (!validRoles.includes(role)) return res.status(400).json({ error: 'Rôle invalide' });
     try {
       const updated = await prisma.user.update({

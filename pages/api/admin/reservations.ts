@@ -1,6 +1,6 @@
 import type { NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
-import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
+import { withStaffAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -33,4 +33,4 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   return res.status(405).json({ error: 'Méthode non autorisée' });
 }
 
-export default withAdminAuth(handler);
+export default withStaffAuth(handler);
