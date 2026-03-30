@@ -183,11 +183,33 @@ export function useAdmin(token: string | null) {
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur sauvegarde'); }
   }, [token, showError, showSuccess]);
 
+  const loadSettings = useCallback(async () => {
+    if (!token) return;
+    setLoading(p => ({ ...p, settings: true }));
+    try {
+      const data = await apiFetch<SettingsData>('/api/admin/settings', token);
+      if (mountedRef.current) setSettingsData(data);
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur paramètres'); }
+    finally { if (mountedRef.current) setLoading(p => ({ ...p, settings: false })); }
+  }, [token, showError]);
+
+  const saveSettings = useCallback(async (payload: Partial<SettingsData>) => {
+    if (!token) return;
+    try {
+      await apiFetch('/api/admin/settings', token, {
+        method: 'PUT', body: JSON.stringify(payload),
+      });
+      if (payload.deliveryZones && settingsData) setSettingsData(prev => prev ? { ...prev, deliveryZones: payload.deliveryZones! } : prev);
+      if (payload.loyaltyConfig && settingsData) setSettingsData(prev => prev ? { ...prev, loyaltyConfig: payload.loyaltyConfig! } : prev);
+      showSuccess('Paramètres sauvegardés');
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur sauvegarde'); }
+  }, [token, showError, showSuccess, settingsData]);
+
   return {
-    stats, orders, reservations, menuItems, users, weeklyMenu,
+    stats, orders, reservations, menuItems, users, weeklyMenu, settingsData,
     loading, error, success,
-    loadStats, loadOrders, loadReservations, loadMenu, loadUsers, loadWeeklyMenu,
+    loadStats, loadOrders, loadReservations, loadMenu, loadUsers, loadWeeklyMenu, loadSettings,
     updateOrderStatus, updateReservationStatus,
-    saveMenuItem, deleteMenuItem, updateUserRole, saveWeeklyMenu,
+    saveMenuItem, deleteMenuItem, updateUserRole, saveWeeklyMenu, saveSettings,
   };
 }

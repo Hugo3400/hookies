@@ -11,12 +11,13 @@ import ReservationsTab from '@/components/admin/ReservationsTab';
 import MenuTab from '@/components/admin/MenuTab';
 import UsersTab from '@/components/admin/UsersTab';
 import WeeklyMenuTab from '@/components/admin/WeeklyMenuTab';
+import SettingsTab from '@/components/admin/SettingsTab';
 import { useAdmin } from '@/hooks/useAdmin';
 import type { AdminTab } from '@/components/admin/types';
 
 type AuthStatus = 'loading' | 'allowed' | 'denied';
 
-const VALID_ADMIN_TABS: AdminTab[] = ['dashboard', 'orders', 'reservations', 'menu', 'users', 'weekly-menu'];
+const VALID_ADMIN_TABS: AdminTab[] = ['dashboard', 'orders', 'reservations', 'menu', 'users', 'weekly-menu', 'settings'];
 
 function getInitialAdminTab(): AdminTab {
   if (typeof window === 'undefined') return 'dashboard';
@@ -54,6 +55,7 @@ export default function AdminPage() {
     loadMenu,
     loadUsers,
     loadWeeklyMenu,
+    loadSettings,
   } = admin;
 
   const refreshActiveTab = useCallback(() => {
@@ -79,6 +81,10 @@ export default function AdminPage() {
       loadUsers();
       return;
     }
+    if (activeTab === 'settings') {
+      loadSettings();
+      return;
+    }
     loadWeeklyMenu();
   }, [
     activeTab,
@@ -88,6 +94,7 @@ export default function AdminPage() {
     loadMenu,
     loadUsers,
     loadWeeklyMenu,
+    loadSettings,
   ]);
 
   useEffect(() => {
@@ -210,6 +217,14 @@ export default function AdminPage() {
                   loading={admin.loading.weekly}
                   onLoad={admin.loadWeeklyMenu}
                   onSave={admin.saveWeeklyMenu}
+                />
+              )}
+              {activeTab === 'settings' && (
+                <SettingsTab
+                  data={admin.settingsData}
+                  loading={admin.loading.settings}
+                  onLoad={admin.loadSettings}
+                  onSave={admin.saveSettings}
                 />
               )}
             </div>
