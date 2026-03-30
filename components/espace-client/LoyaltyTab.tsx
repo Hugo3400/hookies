@@ -1,4 +1,15 @@
+import { useEffect, useState } from 'react';
 import { FaCoins, FaGift, FaPercent, FaUsers } from 'react-icons/fa';
+
+type LoyaltyReward = { points: number; label: string };
+type LoyaltyConfig = {
+  bonusPercent: number;
+  bonusThreshold: number;
+  referralDiscount: number;
+  referralPoints: number;
+  nextRewardGoal: number;
+  rewards: LoyaltyReward[];
+};
 
 type LoyaltyTabProps = {
   userName?: string;
@@ -6,9 +17,30 @@ type LoyaltyTabProps = {
   referralCode: string;
 };
 
+const DEFAULT_CONFIG: LoyaltyConfig = {
+  bonusPercent: 10,
+  bonusThreshold: 200,
+  referralDiscount: 5,
+  referralPoints: 50,
+  nextRewardGoal: 500,
+  rewards: [
+    { points: 100, label: 'Boisson offerte' },
+    { points: 250, label: 'Dessert offert' },
+    { points: 500, label: 'Menu offert' },
+  ],
+};
+
 export default function LoyaltyTab({ userName, points, referralCode }: LoyaltyTabProps) {
-  const nextReward = 500;
-  const progress = Math.min(100, Math.floor((points / nextReward) * 100));
+  const [config, setConfig] = useState<LoyaltyConfig>(DEFAULT_CONFIG);
+
+  useEffect(() => {
+    fetch('/api/public/loyalty-config')
+      .then(r => r.ok ? r.json() : DEFAULT_CONFIG)
+      .then(data => setConfig(data))
+      .catch(() => {});
+  }, []);
+
+  const progress = Math.min(100, Math.floor((points / config.nextRewardGoal) * 100));
 
   return (
     <div className="space-y-6">
@@ -26,20 +58,20 @@ export default function LoyaltyTab({ userName, points, referralCode }: LoyaltyTa
         </div>
         <div className="rounded-xl border border-amber-700/30 bg-black/20 p-4">
           <p className="flex items-center gap-2 text-sm text-slate-300"><FaPercent /> Bonus actuel</p>
-          <p className="mt-2 text-3xl font-black text-green-300">-10%</p>
-          <p className="text-xs text-slate-400">Dès 200 points</p>
+          <p className="mt-2 text-3xl font-black text-green-300">-{config.bonusPercent}%</p>
+          <p className="text-xs text-slate-400">Dès {config.bonusThreshold} points</p>
         </div>
         <div className="rounded-xl border border-amber-700/30 bg-black/20 p-4">
           <p className="flex items-center gap-2 text-sm text-slate-300"><FaUsers /> Code parrainage</p>
           <p className="mt-2 rounded-md bg-slate-900 px-2 py-1 text-lg font-black text-amber-200">{referralCode}</p>
-          <p className="text-xs text-slate-400">Ton ami gagne -$5, toi +50 points</p>
+          <p className="text-xs text-slate-400">Ton ami gagne -${config.referralDiscount}, toi +{config.referralPoints} points</p>
         </div>
       </div>
 
       <div className="glass-card rounded-2xl p-6">
         <h3 className="font-display text-xl font-bold text-amber-100">Progression vers récompense</h3>
         <p className="mt-2 text-sm text-slate-300">
-          Objectif: {nextReward} points pour un menu offert. Il te manque {Math.max(0, nextReward - points)} points.
+          Objectif: {config.nextRewardGoal} points pour un menu offert. Il te manque {Math.max(0, config.nextRewardGoal - points)} points.
         </p>
         <div className="mt-4 h-3 overflow-hidden rounded-full bg-slate-800">
           <div className="h-full bg-gradient-to-r from-amber-500 to-green-400" style={{ width: `${progress}%` }} />
@@ -49,9 +81,9 @@ export default function LoyaltyTab({ userName, points, referralCode }: LoyaltyTa
       <div className="glass-card rounded-2xl p-6">
         <h4 className="font-display text-lg font-bold text-amber-100">Récompenses disponibles</h4>
         <div className="mt-3 space-y-2">
-          <RewardLine label="100 points" value="Boisson offerte" unlocked={points >= 100} />
-          <RewardLine label="250 points" value="Dessert offert" unlocked={points >= 250} />
-          <RewardLine label="500 points" value="Menu offert" unlocked={points >= 500} />
+          {config.rewards.map((reward, i) => (
+            <RewardLine key={i} label={`${reward.points} points`} value={reward.label} unlocked={points >= reward.points} />
+          ))}
         </div>
       </div>
     </div>
