@@ -152,7 +152,7 @@ export default function AdminPage() {
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-amber-200/70">Back-office</p>
-                  <h1 className="font-display text-4xl font-black text-slate-100">Panel administrateur</h1>
+                  <h1 className="font-display text-4xl font-black text-slate-100">Panel {userRole === 'ADMIN' ? 'administrateur' : 'employé'}</h1>
                   <p className="mt-1 text-sm text-slate-400">Bonjour {adminName} <FaHandPeace className="inline text-amber-300" /></p>
                 </div>
                 <button onClick={refreshActiveTab} className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/10">
@@ -176,6 +176,7 @@ export default function AdminPage() {
                 onChange={setActiveTab}
                 pendingOrders={admin.stats?.pendingOrders}
                 pendingReservations={admin.stats?.pendingReservations}
+                userRole={userRole}
               />
 
               {activeTab === 'dashboard' && (
@@ -197,7 +198,7 @@ export default function AdminPage() {
                   onUpdateStatus={admin.updateReservationStatus}
                 />
               )}
-              {activeTab === 'menu' && (
+              {activeTab === 'menu' && userRole === 'ADMIN' && (
                 <MenuTab
                   items={admin.menuItems}
                   loading={admin.loading.menu}
@@ -206,7 +207,7 @@ export default function AdminPage() {
                   onDelete={admin.deleteMenuItem}
                 />
               )}
-              {activeTab === 'users' && (
+              {activeTab === 'users' && userRole === 'ADMIN' && (
                 <UsersTab
                   users={admin.users}
                   loading={admin.loading.users}
@@ -214,7 +215,7 @@ export default function AdminPage() {
                   onRoleChange={admin.updateUserRole}
                 />
               )}
-              {activeTab === 'weekly-menu' && (
+              {activeTab === 'weekly-menu' && userRole === 'ADMIN' && (
                 <WeeklyMenuTab
                   weeklyMenu={admin.weeklyMenu}
                   loading={admin.loading.weekly}
@@ -222,7 +223,7 @@ export default function AdminPage() {
                   onSave={admin.saveWeeklyMenu}
                 />
               )}
-              {activeTab === 'settings' && (
+              {activeTab === 'settings' && userRole === 'ADMIN' && (
                 <SettingsTab
                   data={admin.settingsData}
                   loading={admin.loading.settings}
