@@ -150,11 +150,11 @@ export default function BorneTab({
                         <div>
                           {hasPromo ? (
                             <>
-                              <p className="text-xs text-slate-400 line-through">{item.price.toFixed(2)}€</p>
-                              <p className="text-lg font-bold text-green-300">{discountedPrice.toFixed(2)}€</p>
+                              <p className="text-xs text-slate-400 line-through">${item.price.toFixed(2)}</p>
+                              <p className="text-lg font-bold text-green-300">${discountedPrice.toFixed(2)}</p>
                             </>
                           ) : (
-                            <p className="text-lg font-bold text-amber-200">{item.price.toFixed(2)}€</p>
+                            <p className="text-lg font-bold text-amber-200">${item.price.toFixed(2)}</p>
                           )}
                         </div>
                         <button
@@ -253,7 +253,7 @@ export default function BorneTab({
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
                         <p className="font-semibold text-amber-100">{item.name}</p>
-                        <p className="text-sm text-amber-200">{(item.price * item.cartQuantity).toFixed(2)}€</p>
+                        <p className="text-sm text-amber-200">${(item.price * item.cartQuantity).toFixed(2)}</p>
                       </div>
                       <button onClick={() => onUpdateQuantity(item.id, 0)} className="text-red-400 hover:text-red-300">
                         <FaTimes />
@@ -310,15 +310,15 @@ export default function BorneTab({
               <div className="border-t border-amber-700/30 pt-4">
                 <div className="mb-1 flex items-center justify-between text-sm text-slate-300">
                   <span>Sous-total</span>
-                  <span>{cartTotal.toFixed(2)}€</span>
+                  <span>${cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="mb-1 flex items-center justify-between text-sm text-green-300">
                   <span>Réduction</span>
-                  <span>-{Math.max(0, cartTotal - finalTotal).toFixed(2)}€</span>
+                  <span>-${Math.max(0, cartTotal - finalTotal).toFixed(2)}</span>
                 </div>
                 <div className="mb-4 flex items-center justify-between text-lg font-bold text-amber-200">
                   <span>Total</span>
-                  <span>{finalTotal.toFixed(2)}€</span>
+                  <span>${finalTotal.toFixed(2)}</span>
                 </div>
 
                 <form onSubmit={onSubmitOrder}>

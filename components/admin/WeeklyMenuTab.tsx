@@ -25,7 +25,7 @@ export default function WeeklyMenuTab({ weeklyMenu, loading, onLoad, onSave }: P
   }, [weeklyMenu]);
 
   const fmt = (n: number) =>
-    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
   const setItem = (idx: number, key: keyof WeeklyMenuItem, value: string | number) =>
     setForm(f => ({ ...f, items: f.items.map((it, i) => i === idx ? { ...it, [key]: value } : it) }));
@@ -102,7 +102,7 @@ export default function WeeklyMenuTab({ weeklyMenu, loading, onLoad, onSave }: P
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-slate-400">Prix (€)</label>
+                  <label className="mb-1 block text-xs text-slate-400">Prix ($)</label>
                   <input
                     type="number" step="0.01"
                     value={item.price}

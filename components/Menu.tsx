@@ -48,7 +48,7 @@ export default function Menu() {
   const categories = Array.from(new Set(items.map(i => i.category)));
 
   const fmt = (n: number) =>
-    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
   return (
     <section id="menu" className="px-4 py-16 md:px-6 md:py-20">

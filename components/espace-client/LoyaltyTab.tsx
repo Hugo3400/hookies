@@ -32,7 +32,7 @@ export default function LoyaltyTab({ userName, points, referralCode }: LoyaltyTa
         <div className="rounded-xl border border-amber-700/30 bg-black/20 p-4">
           <p className="flex items-center gap-2 text-sm text-slate-300"><FaUsers /> Code parrainage</p>
           <p className="mt-2 rounded-md bg-slate-900 px-2 py-1 text-lg font-black text-amber-200">{referralCode}</p>
-          <p className="text-xs text-slate-400">Ton ami gagne -5€, toi +50 points</p>
+          <p className="text-xs text-slate-400">Ton ami gagne -$5, toi +50 points</p>
         </div>
       </div>
 

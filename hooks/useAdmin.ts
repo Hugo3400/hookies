@@ -4,6 +4,11 @@ import type {
   AdminUserEntry, WeeklyMenuPayload, OrderStatus, ReservationStatus,
 } from '../components/admin/types';
 
+type DeliveryZone = { name: string; description: string; fee: number };
+type LoyaltyReward = { points: number; label: string };
+type LoyaltyConfig = { bonusPercent: number; bonusThreshold: number; referralDiscount: number; referralPoints: number; nextRewardGoal: number; rewards: LoyaltyReward[] };
+type SettingsData = { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig };
+
 async function apiFetch<T>(url: string, token: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     ...init,
@@ -26,7 +31,8 @@ export function useAdmin(token: string | null) {
   const [menuItems, setMenuItems] = useState<AdminMenuItem[]>([]);
   const [users, setUsers] = useState<AdminUserEntry[]>([]);
   const [weeklyMenu, setWeeklyMenu] = useState<WeeklyMenuPayload | null>(null);
-  const [loading, setLoading] = useState({ stats: false, orders: false, reservations: false, menu: false, users: false, weekly: false });
+  const [settingsData, setSettingsData] = useState<SettingsData | null>(null);
+  const [loading, setLoading] = useState({ stats: false, orders: false, reservations: false, menu: false, users: false, weekly: false, settings: false });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const mountedRef = useRef(true);

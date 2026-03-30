@@ -22,17 +22,17 @@ const FALLBACK_WEEKLY_MENU: WeeklyMenuData = {
     {
       name: 'Menu Flibustier',
       description: 'Burger au feu de bois, frites maison et sauce épicée.',
-      price: '18 EUR',
+      price: '$18',
     },
     {
       name: 'Menu Kraken',
       description: 'Filet de poisson pané, potatoes rustiques et salade.',
-      price: '21 EUR',
+      price: '$21',
     },
     {
       name: 'Menu Capitaine',
       description: 'Double burger, cheddar affiné et oignons caramélisés.',
-      price: '24 EUR',
+      price: '$24',
     },
   ],
 };

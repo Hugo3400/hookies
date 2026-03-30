@@ -1,5 +1,5 @@
 import type { AdminTab } from './types';
-import { FaChartPie, FaHamburger, FaCalendarCheck, FaClipboardList, FaUsers, FaCalendarWeek } from 'react-icons/fa';
+import { FaChartPie, FaHamburger, FaCalendarCheck, FaClipboardList, FaUsers, FaCalendarWeek, FaCog } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 
 const TABS: { key: AdminTab; label: string; icon: IconType }[] = [
@@ -9,6 +9,7 @@ const TABS: { key: AdminTab; label: string; icon: IconType }[] = [
   { key: 'menu', label: 'Menu', icon: FaClipboardList },
   { key: 'users', label: 'Clients', icon: FaUsers },
   { key: 'weekly-menu', label: 'Menu semaine', icon: FaCalendarWeek },
+  { key: 'settings', label: 'Paramètres', icon: FaCog },
 ];
 
 type Props = {

@@ -95,7 +95,7 @@ export default function OrdersTab({ loadingData, orders, selectedOrderId, setSel
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-slate-300">
-                    {new Date(order.createdAt).toLocaleDateString('fr-FR')} • {Number(order.finalPrice || order.totalPrice).toFixed(2)} €
+                    {new Date(order.createdAt).toLocaleDateString('fr-FR')} • ${Number(order.finalPrice || order.totalPrice).toFixed(2)}
                   </p>
                   {order.scheduledFor && (
                     <p className="mt-1 text-xs text-slate-400">
@@ -187,7 +187,7 @@ export default function OrdersTab({ loadingData, orders, selectedOrderId, setSel
                       <p className="text-sm font-medium text-amber-100">{item.menuItem?.name || 'Plat'}</p>
                       <p className="text-xs text-slate-400">×{item.quantity}</p>
                     </div>
-                    <p className="text-sm font-semibold text-amber-200">{(item.price * item.quantity).toFixed(2)} €</p>
+                    <p className="text-sm font-semibold text-amber-200">${(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                 ))}
               </div>
@@ -200,17 +200,17 @@ export default function OrdersTab({ loadingData, orders, selectedOrderId, setSel
             <div className="rounded-lg border border-amber-700/20 bg-black/20 p-3">
               <div className="flex items-center justify-between text-xs text-slate-300">
                 <span>Sous-total</span>
-                <span>{Number(selectedOrder.totalPrice).toFixed(2)} €</span>
+                <span>${Number(selectedOrder.totalPrice).toFixed(2)}</span>
               </div>
               {Number(selectedOrder.discountApplied || 0) > 0 && (
                 <div className="flex items-center justify-between text-xs text-green-300">
                   <span>Réduction</span>
-                  <span>−{Number(selectedOrder.discountApplied || 0).toFixed(2)} €</span>
+                  <span>−${Number(selectedOrder.discountApplied || 0).toFixed(2)}</span>
                 </div>
               )}
               <div className="mt-2 flex items-center justify-between border-t border-amber-700/20 pt-2 text-base font-semibold text-amber-200">
                 <span>Total</span>
-                <span>{Number(selectedOrder.finalPrice || selectedOrder.totalPrice).toFixed(2)} €</span>
+                <span>${Number(selectedOrder.finalPrice || selectedOrder.totalPrice).toFixed(2)}</span>
               </div>
             </div>
 

@@ -28,12 +28,12 @@ export default function LivraisonPage() {
               <div className="wood-card p-6">
                 <h2 className="font-pirate text-2xl text-parchment">Los Santos County</h2>
                 <p className="mt-2 text-sm text-parchment/60">Livraison dans tout le comté de Los Santos.</p>
-                <p className="mt-3 font-bold text-gold">2,90 &euro;</p>
+                <p className="mt-3 font-bold text-gold">$2.90</p>
               </div>
               <div className="wood-card p-6">
                 <h2 className="font-pirate text-2xl text-parchment">Blaine County</h2>
                 <p className="mt-2 text-sm text-parchment/60">Livraison dans le comté de Blaine.</p>
-                <p className="mt-3 font-bold text-gold">4,90 &euro;</p>
+                <p className="mt-3 font-bold text-gold">$4.90</p>
               </div>
             </div>
           </div>

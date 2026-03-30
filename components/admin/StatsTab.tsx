@@ -30,7 +30,7 @@ export default function StatsTab({ stats, loading, onLoad }: Props) {
   if (!stats) return <div className="text-slate-400">Aucune donnée.</div>;
 
   const fmt = (n: number) =>
-    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
   return (
     <div className="space-y-8">
@@ -82,7 +82,7 @@ export default function StatsTab({ stats, loading, onLoad }: Props) {
                   {ORDER_STATUS_LABELS[order.status]}
                 </span>
                 <span className="text-sm font-bold text-green-300">
-                  {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(order.finalPrice)}
+                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.finalPrice)}
                 </span>
               </div>
             </div>

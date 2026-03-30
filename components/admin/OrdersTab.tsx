@@ -28,7 +28,7 @@ export default function OrdersTab({ orders, loading, onLoad, onUpdateStatus }: P
 
   const filtered = filter === 'ALL' ? orders : orders.filter(o => o.status === filter);
   const fmt = (n: number) =>
-    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
   const fmtDate = (d: string) =>
     new Date(d).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 

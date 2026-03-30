@@ -1,4 +1,4 @@
-import { FaBox, FaCalendarAlt, FaCoins, FaEuroSign } from 'react-icons/fa';
+import { FaBox, FaCalendarAlt, FaCoins, FaDollarSign } from 'react-icons/fa';
 import type { Order, Reservation } from './types';
 
 type DashboardTabProps = {
@@ -51,8 +51,8 @@ export default function DashboardTab({
           <p className="mt-2 text-2xl font-bold text-amber-200">{reservations.length}</p>
         </div>
         <div className="rounded-xl border border-amber-700/30 bg-black/20 p-4">
-          <p className="flex items-center gap-2 text-sm text-slate-300"><FaEuroSign /> Dépensé</p>
-          <p className="mt-2 text-2xl font-bold text-amber-200">{totalSpent.toFixed(2)}€</p>
+          <p className="flex items-center gap-2 text-sm text-slate-300"><FaDollarSign /> Dépensé</p>
+          <p className="mt-2 text-2xl font-bold text-amber-200">${totalSpent.toFixed(2)}</p>
         </div>
         <div className="rounded-xl border border-amber-700/30 bg-black/20 p-4">
           <p className="flex items-center gap-2 text-sm text-slate-300"><FaCoins /> Points</p>
@@ -75,7 +75,7 @@ export default function DashboardTab({
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-slate-300">
-                  {new Date(order.createdAt).toLocaleDateString('fr-FR')} • {Number(order.finalPrice || order.totalPrice).toFixed(2)}€
+                  {new Date(order.createdAt).toLocaleDateString('fr-FR')} • ${Number(order.finalPrice || order.totalPrice).toFixed(2)}
                 </p>
               </div>
             ))}

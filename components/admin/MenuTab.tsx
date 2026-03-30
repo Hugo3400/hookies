@@ -28,7 +28,7 @@ export default function MenuTab({ items, loading, onLoad, onSave, onDelete }: Pr
 
   const filtered = catFilter === 'ALL' ? items : items.filter(i => i.category === catFilter);
   const fmt = (n: number) =>
-    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n);
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
   const openEdit = (item?: AdminMenuItem) =>
     setEditItem(item ? { ...item } : { name: '', description: '', price: 0, category: 'BURGER', isAvailable: true, image: '', preparationTime: 10 });
@@ -120,7 +120,7 @@ export default function MenuTab({ items, loading, onLoad, onSave, onDelete }: Pr
                   <input value={editItem.name || ''} onChange={e => setEditItem({...editItem, name: e.target.value})} className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500" />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-slate-400">Prix (€) *</label>
+                  <label className="mb-1 block text-xs text-slate-400">Prix ($) *</label>
                   <input type="number" step="0.01" value={editItem.price || 0} onChange={e => setEditItem({...editItem, price: parseFloat(e.target.value)})} className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500" />
                 </div>
               </div>

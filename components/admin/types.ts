@@ -1,6 +1,6 @@
 // Types partagés pour le panel administrateur
 
-export type AdminTab = 'dashboard' | 'orders' | 'reservations' | 'menu' | 'users' | 'weekly-menu';
+export type AdminTab = 'dashboard' | 'orders' | 'reservations' | 'menu' | 'users' | 'weekly-menu' | 'settings';
 
 export type AdminUser = {
   id: string;

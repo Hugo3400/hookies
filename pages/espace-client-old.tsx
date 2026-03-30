@@ -353,7 +353,7 @@ export default function EspaceClientPage() {
                   </div>
                   <div className="rounded-xl border border-amber-700/30 bg-black/20 p-4">
                     <p className="text-xs uppercase tracking-[0.18em] text-slate-300/70">Total depense</p>
-                    <p className="mt-2 text-2xl font-bold text-amber-200">{totalSpent.toFixed(2)} EUR</p>
+                    <p className="mt-2 text-2xl font-bold text-amber-200">${totalSpent.toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -423,7 +423,7 @@ export default function EspaceClientPage() {
                       <div key={order.id} className="rounded-xl border border-amber-700/30 bg-black/20 p-4">
                         <div className="flex items-center justify-between gap-2">
                           <p className="font-semibold text-amber-100">{order.orderNumber}</p>
-                          <p className="text-sm text-amber-200">{Number(order.totalPrice).toFixed(2)} EUR</p>
+                          <p className="text-sm text-amber-200">${Number(order.totalPrice).toFixed(2)}</p>
                         </div>
                         <p className="mt-1 text-sm text-slate-300">Statut: {order.status}</p>
                         <p className="text-sm text-slate-300">Type: {order.type}</p>

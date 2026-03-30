@@ -261,7 +261,7 @@ model RestaurantSettings {
   // Configurations générales
   deliveryFee   Float     @default(2.90)
   minOrderAmount Float    @default(15.0)
-  pointsPerEuro Float     @default(0.1) // 0.1 point par euro dépensé
+  pointsPerEuro Float     @default(0.1) // 0.1 point par dollar dépensé
   
   updatedAt     DateTime  @updatedAt
 }
