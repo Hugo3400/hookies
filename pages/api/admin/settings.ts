@@ -83,6 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === 'PUT') {
+      if (admin.role !== 'ADMIN') return res.status(403).json({ error: 'Réservé aux administrateurs' });
       const { deliveryZones, loyaltyConfig } = req.body;
       if (deliveryZones) await setConfig(DELIVERY_ZONES_KEY, deliveryZones);
       if (loyaltyConfig) await setConfig(LOYALTY_CONFIG_KEY, loyaltyConfig);
