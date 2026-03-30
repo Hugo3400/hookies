@@ -1,100 +1,58 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { FaFire, FaLightbulb, FaCalendarCheck, FaTruck, FaUsers, FaMobileAlt } from 'react-icons/fa';
+import { FaFire, FaDrumstickBite, FaGlassCheers, FaUsers } from 'react-icons/fa';
 
 export default function Features() {
-  const features = [
-    {
-      title: 'Cuisine Signature',
-      description: 'Cuissons braise, marinades maison et dressages haut de gamme inspires des routes maritimes.',
-      icon: FaFire,
-    },
-    {
-      title: 'Ambiance Cinematographique',
-      description: 'Lumiere cuivre, bois sombre et bande-son oceanique pour une immersion totale.',
-      icon: FaLightbulb,
-    },
-    {
-      title: 'Reservation Instantanee',
-      description: 'Places salon, pont principal ou comptoir cocktail disponibles en quelques clics.',
-      icon: FaCalendarCheck,
-    },
-    {
-      title: 'Livraison Premium',
-      description: 'Vos plats favoris en livraison rapide avec emballage isotherme et suivi en direct.',
-      icon: FaTruck,
-    },
-    {
-      title: 'Evenements Prives',
-      description: 'Privatisation partielle ou totale pour anniversaires, equipes et celebrations.',
-      icon: FaUsers,
-    },
-    {
-      title: 'Experience Digitale',
-      description: 'Borne de commande, espace client et suivi des reservations depuis mobile.',
-      icon: FaMobileAlt,
-    },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8 },
-    },
-  };
-
   return (
-    <section id="services" className="px-4 py-20 md:px-6">
+    <section id="services" className="grain border-t-2 border-rope/20 bg-plank-light px-4 py-16 md:px-6 md:py-20">
       <div className="mx-auto w-full max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-14 text-center"
-        >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.26em] text-amber-200/80">L'experience Hookies</p>
-          <h2 className="font-display text-4xl font-black text-slate-100 md:text-5xl">Un restaurant pirate pense comme une marque premium</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-slate-300/85">Chaque detail est pense pour meler spectacle, confort et execution culinaire moderne.</p>
-        </motion.div>
+        <h2 className="font-pirate text-center text-4xl text-gold md:text-5xl">Pourquoi Hookies ?</h2>
+        <div className="rope-line mx-auto mt-4 w-32" />
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
-        >
-          {features.map((feature, index) => {
-            const IconComponent = feature.icon;
-            return (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="glass-card rounded-2xl p-7 transition duration-300 hover:-translate-y-1"
-            >
-              <div className="mb-4 flex items-center gap-3">
-                <IconComponent className="text-2xl text-amber-400" />
-                <div className="h-1 w-10 rounded-full bg-amber-400/80" />
-              </div>
-              <h3 className="font-display text-2xl font-bold text-amber-100">{feature.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300/80">{feature.description}</p>
-            </motion.div>
-          );})}
-        </motion.div>
+        {/* Asymmetric layout — not a perfect 3x2 grid */}
+        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
+          {/* Large featured card */}
+          <div className="wood-card row-span-2 p-8">
+            <FaFire className="text-3xl text-gold" />
+            <h3 className="mt-4 font-pirate text-3xl text-parchment">Grill au feu de bois</h3>
+            <p className="mt-3 text-sm leading-relaxed text-parchment/70">
+              Nos viandes sont grillées à la flamme dans notre cuisine ouverte. Vous sentez la braise depuis la salle.
+              Côte de boeuf maturée, ribs fumés, poulet mariné — tout est cuit sous vos yeux.
+            </p>
+          </div>
+
+          <div className="wood-card p-6">
+            <FaDrumstickBite className="text-2xl text-gold" />
+            <h3 className="mt-3 font-pirate text-2xl text-parchment">Fish &amp; Chips de la cale</h3>
+            <p className="mt-2 text-sm text-parchment/70">
+              Poisson frais pané à la bière, frites épaisses et sauce tartare maison. Le classique du port, version Hookies.
+            </p>
+          </div>
+
+          <div className="wood-card p-6">
+            <FaGlassCheers className="text-2xl text-gold" />
+            <h3 className="mt-3 font-pirate text-2xl text-parchment">Rhums &amp; Cocktails</h3>
+            <p className="mt-2 text-sm text-parchment/70">
+              Carte de 30 rhums arrangés et cocktails tiki. Le Dark Storm, le Captain's Punch — ça se mérite.
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom row — full width callout */}
+        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+          <div className="wood-card p-6">
+            <FaUsers className="text-2xl text-gold" />
+            <h3 className="mt-3 font-pirate text-2xl text-parchment">Soirées &amp; Groupes</h3>
+            <p className="mt-2 text-sm text-parchment/70">
+              Anniversaires, pots de départ, enterrements de vie — on privatise une partie de la salle. Appelez-nous.
+            </p>
+          </div>
+          <div className="wood-card col-span-1 flex flex-col justify-center p-6 md:col-span-2">
+            <h3 className="font-pirate text-2xl text-gold">Ouvert tous les jours</h3>
+            <p className="mt-2 text-sm text-parchment/70">
+              Midi : 11h30 – 14h30 &middot; Soir : 18h30 – 23h30 &middot; Happy hour de 17h à 19h du lundi au jeudi.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -11,24 +11,23 @@ body,
 }
 
 :root {
-  --tar-950: #221611;
-  --tar-900: #53301c;
-  --wood-800: #6b4f38;
-  --copper-600: #9b5d2c;
-  --copper-500: #d5a165;
-  --copper-300: #d8b38d;
-  --fog-blue: #60849c;
-  --sand-100: #f3e2cc;
+  --plank: #1c1209;
+  --plank-light: #2a1c0f;
+  --rum: #3d2512;
+  --rope: #8b6914;
+  --gold: #c9952b;
+  --gold-light: #dbb44a;
+  --parchment: #e8d5b5;
+  --bone: #f0e6d3;
+  --blood: #7a1f1f;
+  --sea: #1a3a4a;
 }
 
 body {
   margin: 0;
   font-family: 'Manrope', sans-serif;
-  color: var(--sand-100);
-  background:
-    radial-gradient(900px 500px at 5% -10%, rgba(213, 161, 101, 0.33) 0%, transparent 55%),
-    radial-gradient(1000px 500px at 95% -10%, rgba(96, 132, 156, 0.22) 0%, transparent 60%),
-    linear-gradient(180deg, var(--tar-900) 0%, var(--tar-950) 52%, #110b08 100%);
+  color: var(--parchment);
+  background: var(--plank);
 }
 
 * {
@@ -39,42 +38,76 @@ h1,
 h2,
 h3,
 .font-display {
-  font-family: 'Cinzel', serif;
-  letter-spacing: 0.02em;
+  font-family: 'Pirata One', cursive;
+  letter-spacing: 0.03em;
+  font-weight: 400;
 }
 
-.paper-noise {
+h1 { font-size: 2.8rem; }
+
+/* Subtitle style — Cinzel for secondary headings */
+.font-subtitle {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Wood plank card */
+.wood-card {
+  background: linear-gradient(175deg, var(--rum) 0%, var(--plank-light) 100%);
+  border: 2px solid rgba(139, 105, 20, 0.35);
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Parchment style for featured content */
+.parchment-card {
+  background: linear-gradient(165deg, #d4bd94 0%, #c4a978 50%, #b89c6a 100%);
+  color: #2a1c0f;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
   position: relative;
 }
 
-.paper-noise::before {
+.parchment-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Rope separator */
+.rope-line {
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--rope) 0px,
+    var(--rope) 8px,
+    transparent 8px,
+    transparent 12px
+  );
+  opacity: 0.6;
+}
+
+/* Gold accent text */
+.gold-text {
+  color: var(--gold);
+}
+
+/* Subtle grain texture on dark sections */
+.grain {
+  position: relative;
+}
+
+.grain::before {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 0.5px, transparent 0.5px);
-  background-size: 3px 3px;
-  opacity: 0.13;
-}
-
-.glass-card {
-  backdrop-filter: blur(8px);
-  background: linear-gradient(165deg, rgba(73, 45, 26, 0.68), rgba(26, 17, 13, 0.7));
-  border: 1px solid rgba(213, 161, 101, 0.33);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.35);
-}
-
-.copper-text {
-  color: var(--copper-500);
-}
-
-.map-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.14;
-  background-image:
-    linear-gradient(transparent 96%, rgba(216, 179, 141, 0.22) 100%),
-    linear-gradient(90deg, transparent 96%, rgba(216, 179, 141, 0.14) 100%);
-  background-size: 28px 28px;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
 }

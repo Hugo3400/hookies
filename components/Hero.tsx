@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { FaStar, FaUtensils, FaDoorOpen, FaAnchor, FaBookOpen } from 'react-icons/fa';
 
 type WeeklyMenuItem = {
   name: string;
@@ -18,22 +16,22 @@ type WeeklyMenuData = {
 
 const FALLBACK_WEEKLY_MENU: WeeklyMenuData = {
   title: 'Menus de la semaine',
-  subtitle: 'Selection du capitaine',
+  subtitle: 'La sélection du capitaine',
   weekLabel: 'Semaine en cours',
   items: [
     {
       name: 'Menu Flibustier',
-      description: 'Burger signature, frites de cale et sauce epicee maison.',
+      description: 'Burger au feu de bois, frites maison et sauce épicée.',
       price: '18 EUR',
     },
     {
       name: 'Menu Kraken',
-      description: 'Filet de poisson pane, potatoes rustiques et salade croquante.',
+      description: 'Filet de poisson pané, potatoes rustiques et salade.',
       price: '21 EUR',
     },
     {
       name: 'Menu Capitaine',
-      description: 'Double burger premium, cheddar affine et oignons carameles.',
+      description: 'Double burger, cheddar affiné et oignons caramélisés.',
       price: '24 EUR',
     },
   ],
@@ -65,120 +63,58 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="accueil" className="paper-noise relative overflow-hidden px-4 pb-20 pt-12 md:px-6 md:pt-20">
+    <section id="accueil" className="grain relative overflow-hidden">
+      {/* Full-width hero background */}
       <div
-        className="absolute inset-0 opacity-35"
+        className="absolute inset-0"
         style={{
-          backgroundImage: "linear-gradient(rgba(24,14,10,0.78), rgba(24,14,10,0.9)), url('/da/hero-bg-clean.png')",
+          backgroundImage: "url('/da/hero-bg-clean.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundBlendMode: 'multiply',
         }}
       />
-      <div className="map-overlay" />
-      <div className="absolute -left-20 top-32 h-64 w-64 rounded-full bg-amber-500/20 blur-3xl" />
-      <div className="absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-sky-500/20 blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-b from-plank/70 via-plank/50 to-plank" />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-        <div>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-5 inline-flex rounded-full border border-amber-500/40 bg-amber-400/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-amber-200"
-          >
-            Taverne Pirate Premium
-          </motion.p>
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-20 pt-16 md:px-6 md:pt-24">
+        <div className="max-w-2xl">
+          <h1 className="font-pirate text-5xl leading-tight text-bone md:text-7xl">
+            Bienvenue à bord,<br />
+            <span className="gold-text">moussaillon.</span>
+          </h1>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="font-display text-5xl font-black leading-[1.05] text-slate-100 md:text-6xl xl:text-7xl"
-          >
-            Le repaire gourmet
-            <span className="block copper-text">des capitaines et aventuriers</span>
-          </motion.h1>
+          <p className="mt-6 max-w-lg text-lg leading-relaxed text-parchment/80">
+            Grillades au feu de bois, fish &amp; chips croustillants, rhums arrangés et ambiance de corsaire. On vous attend 7j/7 de 11h30 à 23h30.
+          </p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="mt-6 max-w-xl text-base leading-relaxed text-slate-200/85 md:text-lg"
-          >
-            Hookies transforme chaque service en traversee: viandes flambees, poissons de cale, epices de comptoir et cocktails de pirate dans un decor cinematographique.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-8 flex flex-wrap items-center gap-3"
-          >
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400">
-              <FaAnchor /> Monter a bord
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/reservation" className="rounded-sm bg-gold px-7 py-3 text-sm font-bold text-plank transition hover:bg-gold-light">
+              Réserver une table
             </Link>
-            <Link href="/menu" className="inline-flex items-center gap-2 rounded-xl border border-slate-200/25 bg-slate-900/40 px-6 py-3 font-semibold text-slate-100 transition hover:border-amber-400/45 hover:bg-slate-900/70">
-              <FaBookOpen /> Voir la carte
+            <Link href="/menu" className="rounded-sm border-2 border-parchment/25 px-7 py-3 text-sm font-bold text-parchment transition hover:border-gold/50 hover:text-gold">
+              Voir la carte
             </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
-            className="mt-10 grid max-w-xl grid-cols-3 gap-3"
-          >
-            <div className="glass-card rounded-xl p-4">
-              <FaStar className="mb-1 text-amber-400" />
-              <p className="text-2xl font-extrabold text-amber-300">4.9/5</p>
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-300/80">Avis d'equipage</p>
-            </div>
-            <div className="glass-card rounded-xl p-4">
-              <FaUtensils className="mb-1 text-amber-400" />
-              <p className="text-2xl font-extrabold text-amber-300">50+</p>
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-300/80">Plats de bord</p>
-            </div>
-            <div className="glass-card rounded-xl p-4">
-              <FaDoorOpen className="mb-1 text-amber-400" />
-              <p className="text-2xl font-extrabold text-amber-300">7/7</p>
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-300/80">Pont ouvert</p>
-            </div>
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="glass-card relative rounded-3xl p-6 md:p-8"
-        >
-          <div className="absolute right-6 top-6 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-amber-200">
-            Admin
-          </div>
-          <p className="mb-2 text-xs uppercase tracking-[0.2em] text-slate-300/75">{weeklyMenu.subtitle}</p>
-          <h3 className="font-display text-3xl font-bold text-amber-100 md:text-4xl">{weeklyMenu.title}</h3>
+        {/* Weekly menu — parchment style */}
+        <div className="parchment-card mt-14 max-w-xl p-6 md:p-8">
+          <p className="font-subtitle text-[10px] tracking-[0.2em] text-rum/70">{weeklyMenu.subtitle}</p>
+          <h3 className="mt-1 text-3xl text-rum md:text-4xl">{weeklyMenu.title}</h3>
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-5 space-y-3">
             {weeklyMenu.items.map((item, index) => (
-              <div key={`${item.name}-${index}`} className="rounded-xl border border-slate-100/10 bg-slate-900/45 p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-base font-semibold text-amber-100">{item.name}</p>
-                    <p className="mt-1 text-sm text-slate-200/80">{item.description}</p>
-                  </div>
-                  <p className="whitespace-nowrap text-sm font-bold text-amber-300">{item.price}</p>
+              <div key={`${item.name}-${index}`} className="flex items-start justify-between gap-4 border-b border-rum/15 pb-3 last:border-0">
+                <div>
+                  <p className="font-bold text-rum">{item.name}</p>
+                  <p className="mt-0.5 text-sm text-rum/70">{item.description}</p>
                 </div>
+                <p className="whitespace-nowrap font-bold text-blood">{item.price}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-6 rounded-2xl border border-amber-400/25 bg-gradient-to-br from-amber-400/20 to-sky-400/15 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-200/80">Publication</p>
-            <p className="mt-2 text-sm font-semibold text-amber-100">{weeklyMenu.weekLabel}</p>
-            <p className="mt-1 text-xs text-slate-100/80">Contenu synchronise depuis le panel admin.</p>
-          </div>
-        </motion.div>
+          <p className="mt-4 text-xs text-rum/50">{weeklyMenu.weekLabel}</p>
+        </div>
       </div>
     </section>
   );

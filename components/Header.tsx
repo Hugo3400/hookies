@@ -1,92 +1,63 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { FaHome, FaStar, FaUtensils, FaCalendar, FaTruck, FaEnvelope, FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const links = [
+    { href: '/', label: 'Accueil' },
+    { href: '/experience', label: 'L\'Aventure' },
+    { href: '/menu', label: 'La Carte' },
+    { href: '/reservation', label: 'Réserver' },
+    { href: '/livraison', label: 'Livraison' },
+    { href: '/contact', label: 'Contact' },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 border-b border-amber-700/35 bg-[#1e140f]/80 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-6">
-        <div className="flex justify-between items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-3"
-          >
-            <img src="/da/logo.png" alt="Hookies logo" className="h-11 w-11 rounded-xl border border-amber-500/35 bg-amber-200/10 p-1" />
-            <div>
-              <h1 className="font-display text-2xl font-black tracking-[0.16em] text-amber-200 md:text-3xl">HOOKIES</h1>
-              <p className="text-[10px] uppercase tracking-[0.34em] text-[#d8b38d]/85 md:text-xs">Repaire du Capitaine</p>
-            </div>
-          </motion.div>
+    <header className="sticky top-0 z-50 border-b-2 border-rope/30 bg-plank/95 backdrop-blur-sm">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+        <Link href="/" className="flex items-center gap-3">
+          <img src="/da/logo.png" alt="Hookies" className="h-12 w-12 rounded-sm" />
+          <div>
+            <span className="font-pirate text-3xl text-gold md:text-4xl">Hookies</span>
+            <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">Taverne &amp; Grillades</p>
+          </div>
+        </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
-            <Link href="/" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              <FaHome className="text-lg" /> Accueil
+        <nav className="hidden items-center gap-7 md:flex">
+          {links.map(l => (
+            <Link key={l.href} href={l.href} className="text-sm text-parchment/80 transition hover:text-gold">
+              {l.label}
             </Link>
-            <Link href="/experience" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              <FaStar className="text-lg" /> Expérience
-            </Link>
-            <Link href="/menu" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              <FaUtensils className="text-lg" /> Menu
-            </Link>
-            <Link href="/reservation" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              <FaCalendar className="text-lg" /> Reservation
-            </Link>
-            <Link href="/livraison" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              <FaTruck className="text-lg" /> Livraison
-            </Link>
-            <Link href="/contact" className="flex items-center gap-2 text-sm font-medium text-amber-50 transition hover:text-amber-300">
-              <FaEnvelope className="text-lg" /> Contact
-            </Link>
-            <Link href="/espace-client" className="flex items-center gap-2 rounded-xl border border-amber-400/40 bg-amber-500/15 px-5 py-2.5 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/30">
-              <FaUser className="text-lg" /> Espace client
-            </Link>
-          </nav>
+          ))}
+          <Link href="/espace-client" className="rounded-sm border-2 border-gold/50 bg-gold/10 px-5 py-2 text-sm font-bold text-gold transition hover:bg-gold/20">
+            Mon Compte
+          </Link>
+        </nav>
 
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-lg border border-amber-600/40 p-2 text-amber-200 md:hidden"
-          >
-            {mobileMenuOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
-          </button>
-        </div>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-2 text-gold md:hidden"
+        >
+          {mobileMenuOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
+        </button>
       </div>
 
       {mobileMenuOpen && (
-        <motion.nav
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-4 mb-4 space-y-2 rounded-xl border border-amber-700/30 bg-slate-950/90 p-4 md:hidden"
-        >
-          <Link href="/" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaHome className="text-lg" /> Accueil
+        <nav className="mx-4 mb-4 space-y-1 border-t border-rope/20 bg-plank pt-3 md:hidden">
+          {links.map(l => (
+            <Link key={l.href} href={l.href} onClick={() => setMobileMenuOpen(false)} className="block rounded px-4 py-2.5 text-parchment/90 hover:bg-rum">
+              {l.label}
+            </Link>
+          ))}
+          <Link href="/espace-client" onClick={() => setMobileMenuOpen(false)} className="block rounded px-4 py-2.5 text-gold hover:bg-rum">
+            Mon Compte
           </Link>
-          <Link href="/experience" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaStar className="text-lg" /> Expérience
+          <Link href="/admin" onClick={() => setMobileMenuOpen(false)} className="block rounded px-4 py-2.5 text-parchment/60 hover:bg-rum">
+            Admin
           </Link>
-          <Link href="/menu" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaUtensils className="text-lg" /> Menu
-          </Link>
-          <Link href="/reservation" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaCalendar className="text-lg" /> Reservation
-          </Link>
-          <Link href="/livraison" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaTruck className="text-lg" /> Livraison
-          </Link>
-          <Link href="/contact" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaEnvelope className="text-lg" /> Contact
-          </Link>
-          <Link href="/espace-client" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaUser className="text-lg" /> Espace client
-          </Link>
-          <Link href="/admin" className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-100 hover:bg-amber-500/15">
-            <FaUser className="text-lg" /> Admin
-          </Link>
-        </motion.nav>
+        </nav>
       )}
     </header>
   );

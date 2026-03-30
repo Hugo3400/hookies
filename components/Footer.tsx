@@ -1,72 +1,46 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaHome, FaStar, FaUtensils, FaCalendar, FaTruck, FaUser } from 'react-icons/fa';
 
 export default function Footer() {
   return (
-    <footer id="contact" className="border-t border-amber-700/30 bg-slate-950/70 px-4 py-14 md:px-6">
+    <footer className="border-t-2 border-rope/20 bg-plank px-4 py-12 md:px-6">
       <div className="mx-auto w-full max-w-7xl">
-        <div className="mb-10 grid grid-cols-1 gap-8 md:grid-cols-3">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="font-display text-3xl font-black tracking-[0.12em] text-amber-200">HOOKIES</h3>
-            <p className="mt-4 text-sm leading-relaxed text-slate-300/80">
-              Le restaurant pirate nouvelle generation. Experience immersive, carte creative et service premium.
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+          <div>
+            <span className="font-pirate text-3xl text-gold">Hookies</span>
+            <p className="mt-3 text-sm text-parchment/50">
+              Restaurant pirate &amp; grillades au feu de bois. Ouvert 7j/7 de 11h30 à 23h30.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-amber-200">Navigation</h4>
-            <ul className="space-y-2 text-sm text-slate-300/85">
-              <li><Link href="/" className="flex items-center gap-2 transition hover:text-amber-300"><FaHome className="w-4 h-4" /> Accueil</Link></li>
-              <li><Link href="/experience" className="flex items-center gap-2 transition hover:text-amber-300"><FaStar className="w-4 h-4" /> Experience</Link></li>
-              <li><Link href="/menu" className="flex items-center gap-2 transition hover:text-amber-300"><FaUtensils className="w-4 h-4" /> Carte</Link></li>
-              <li><Link href="/reservation" className="flex items-center gap-2 transition hover:text-amber-300"><FaCalendar className="w-4 h-4" /> Reservation</Link></li>
-              <li><Link href="/livraison" className="flex items-center gap-2 transition hover:text-amber-300"><FaTruck className="w-4 h-4" /> Livraison</Link></li>
-              <li><Link href="/espace-client" className="flex items-center gap-2 transition hover:text-amber-300"><FaUser className="w-4 h-4" /> Espace client</Link></li>
-              <li><Link href="/contact" className="flex items-center gap-2 transition hover:text-amber-300"><FaEnvelope className="w-4 h-4" /> Contact</Link></li>
+          <div>
+            <p className="font-subtitle text-xs tracking-[0.15em] text-gold/80">Plan du site</p>
+            <ul className="mt-3 space-y-1.5 text-sm text-parchment/60">
+              <li><Link href="/" className="transition hover:text-gold">Accueil</Link></li>
+              <li><Link href="/menu" className="transition hover:text-gold">La Carte</Link></li>
+              <li><Link href="/reservation" className="transition hover:text-gold">Réserver</Link></li>
+              <li><Link href="/livraison" className="transition hover:text-gold">Livraison</Link></li>
+              <li><Link href="/contact" className="transition hover:text-gold">Contact</Link></li>
             </ul>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-amber-200">Contact</h4>
-            <ul className="space-y-3 text-sm text-slate-300/85">
-              <li className="flex items-center gap-2"><FaPhone className="text-amber-400 w-4 h-4" /> +33 (0)1 23 45 67 89</li>
-              <li className="flex items-center gap-2"><FaEnvelope className="text-amber-400 w-4 h-4" /> contact@hookies.fr</li>
-              <li className="flex items-center gap-2"><FaMapMarkerAlt className="text-amber-400 w-4 h-4" /> 12 Rue de la Mer, 75000</li>
-              <li className="flex items-center gap-2"><FaClock className="text-amber-400 w-4 h-4" /> Lun - Dim: 11h30 - 23h30</li>
+          <div>
+            <p className="font-subtitle text-xs tracking-[0.15em] text-gold/80">Nous trouver</p>
+            <ul className="mt-3 space-y-1.5 text-sm text-parchment/60">
+              <li>+33 (0)1 23 45 67 89</li>
+              <li>contact@hookies.fr</li>
+              <li>12 Rue de la Mer, 75000</li>
+              <li>Lun – Dim : 11h30 – 23h30</li>
             </ul>
-          </motion.div>
-
+          </div>
         </div>
 
-        <div className="my-6 border-t border-amber-700/30" />
+        <div className="rope-line my-8" />
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center justify-between gap-3 text-sm text-slate-400 md:flex-row"
-        >
-          <p>&copy; 2026 Hookies. Tous droits reserves.</p>
-          <p>Restaurant Hookies - Univers pirate, cuisine signature.</p>
-        </motion.div>
+        <div className="flex flex-col items-center justify-between gap-2 text-xs text-parchment/35 md:flex-row">
+          <p>&copy; 2026 Hookies. Tous droits réservés.</p>
+          <p>Taverne &amp; Grillades au feu de bois.</p>
+        </div>
       </div>
     </footer>
   );
