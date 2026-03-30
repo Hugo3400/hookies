@@ -36,11 +36,16 @@ body {
 
 h1,
 h2,
-h3,
-.font-display {
+h3 {
   font-family: 'Pirata One', cursive;
   letter-spacing: 0.03em;
   font-weight: 400;
+}
+
+/* Cinzel for admin/espace-client headings */
+.font-display {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.02em;
 }
 
 h1 { font-size: 2.8rem; }
@@ -58,6 +63,14 @@ h1 { font-size: 2.8rem; }
   border: 2px solid rgba(139, 105, 20, 0.35);
   border-radius: 4px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Glass card — used by admin & espace-client panels */
+.glass-card {
+  backdrop-filter: blur(8px);
+  background: linear-gradient(165deg, rgba(73, 45, 26, 0.68), rgba(26, 17, 13, 0.7));
+  border: 1px solid rgba(213, 161, 101, 0.33);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.35);
 }
 
 /* Parchment style for featured content */
