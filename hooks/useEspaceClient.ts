@@ -231,9 +231,17 @@ export function useEspaceClient() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Discord bot login: token in URL query param
+    // Discord OAuth: token in URL query param
     const urlParams = new URLSearchParams(window.location.search);
     const urlToken = urlParams.get('token');
+    const urlError = urlParams.get('error');
+
+    if (urlError) {
+      window.history.replaceState({}, '', window.location.pathname);
+      setError(urlError);
+      return;
+    }
+
     if (urlToken) {
       // Clean URL
       window.history.replaceState({}, '', window.location.pathname);
