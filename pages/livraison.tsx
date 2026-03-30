@@ -24,21 +24,16 @@ export default function LivraisonPage() {
             </p>
             <div className="rope-line mt-4 w-24" />
 
-            <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="wood-card p-6">
-                <h2 className="font-pirate text-2xl text-parchment">Zone A</h2>
-                <p className="mt-2 text-sm text-parchment/60">Centre-ville et alentours.</p>
+                <h2 className="font-pirate text-2xl text-parchment">Los Santos County</h2>
+                <p className="mt-2 text-sm text-parchment/60">Livraison dans tout le comté de Los Santos.</p>
                 <p className="mt-3 font-bold text-gold">2,90 &euro;</p>
               </div>
               <div className="wood-card p-6">
-                <h2 className="font-pirate text-2xl text-parchment">Zone B</h2>
-                <p className="mt-2 text-sm text-parchment/60">Périphérie.</p>
+                <h2 className="font-pirate text-2xl text-parchment">Blaine County</h2>
+                <p className="mt-2 text-sm text-parchment/60">Livraison dans le comté de Blaine.</p>
                 <p className="mt-3 font-bold text-gold">4,90 &euro;</p>
-              </div>
-              <div className="wood-card p-6">
-                <h2 className="font-pirate text-2xl text-parchment">Click &amp; Collect</h2>
-                <p className="mt-2 text-sm text-parchment/60">Prêt en 20 minutes.</p>
-                <p className="mt-3 font-bold text-green-400">Gratuit</p>
               </div>
             </div>
           </div>
