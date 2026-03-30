@@ -57,3 +57,34 @@ export const withAdminAuth = (handler: (req: AuthenticatedRequest, res: NextApiR
     return handler(req, res);
   });
 };
+
+// Staff auth: accepts ADMIN + EMPLOYEE roles
+export const withStaffAuth = (handler: (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>) => {
+  return withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Session invalide' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true, isActive: true },
+    });
+
+    if (!user || !user.isActive) {
+      return res.status(401).json({ error: 'Utilisateur non autorise' });
+    }
+
+    if (user.role !== 'ADMIN' && user.role !== 'EMPLOYEE') {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    req.user = {
+      userId,
+      role: user.role,
+    };
+
+    return handler(req, res);
+  });
+};
