@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { FaCompass } from 'react-icons/fa';
 import Header from '@/components/Header';
 import Features from '@/components/Features';
 import Footer from '@/components/Footer';
@@ -8,22 +7,22 @@ export default function ExperiencePage() {
   return (
     <>
       <Head>
-        <title>Experience | Hookies</title>
+        <title>L'Aventure | Hookies</title>
         <meta
           name="description"
-          content="Decouvrez l'experience Hookies: ambiance pirate, cuisine ouverte, service premium et immersion complete."
+          content="Découvrez l'univers Hookies : grill au feu de bois, décor de taverne, rhums arrangés et soirées pirates."
         />
       </Head>
 
-      <main className="text-white">
+      <main>
         <Header />
         <section className="px-4 pt-14 md:px-6 md:pt-20">
           <div className="mx-auto w-full max-w-7xl">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.26em] text-amber-200/80">Immersion</p>
-            <h1 className="inline-flex items-center gap-3 font-display text-4xl font-black text-slate-100 md:text-5xl"><FaCompass className="text-amber-400" /> L'experience Hookies</h1>
-            <p className="mt-4 max-w-2xl text-slate-300/85">
-              Une identite pirate forte, un service moderne et des espaces pensés pour une soiree memorable.
+            <h1 className="font-pirate text-4xl text-gold md:text-5xl">L'Aventure Hookies</h1>
+            <p className="mt-3 max-w-lg text-sm text-parchment/60">
+              Décor de taverne, cuisine visible et soirées pirates. Voilà ce qui nous attend.
             </p>
+            <div className="rope-line mt-4 w-24" />
           </div>
         </section>
         <Features />

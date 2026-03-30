@@ -2,7 +2,6 @@ import Head from 'next/head';
 import { FormEvent, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaPaperPlane } from 'react-icons/fa';
 
 export default function ContactPage() {
   const [name, setName] = useState('');
@@ -52,35 +51,35 @@ export default function ContactPage() {
         />
       </Head>
 
-      <main className="text-white">
+      <main>
         <Header />
 
         <section className="px-4 py-16 md:px-6">
           <div className="mx-auto grid w-full max-w-7xl gap-6 md:grid-cols-2">
-            <div className="glass-card rounded-2xl p-6 md:p-8">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.26em] text-amber-200/80">Contact</p>
-              <h1 className="font-display text-4xl font-black text-slate-100 md:text-5xl">Parlez au capitaine</h1>
-              <p className="mt-4 text-slate-300/85">
-                Notre equipe vous repond pour les reservations, groupes et evenements prives.
+            <div className="wood-card p-6 md:p-8">
+              <h1 className="font-pirate text-4xl text-gold md:text-5xl">Contact</h1>
+              <p className="mt-4 text-sm text-parchment/70">
+                Réservations, groupes, événements — on vous répond vite.
               </p>
-              <ul className="mt-6 space-y-3 text-slate-200/90">
-                <li className="flex items-center gap-2"><FaPhone className="text-amber-400 w-5 h-5" /> +33 (0)1 23 45 67 89</li>
-                <li className="flex items-center gap-2"><FaEnvelope className="text-amber-400 w-5 h-5" /> contact@hookies.fr</li>
-                <li className="flex items-center gap-2"><FaMapMarkerAlt className="text-amber-400 w-5 h-5" /> 12 Rue de la Mer, 75000</li>
-                <li className="flex items-center gap-2"><FaClock className="text-amber-400 w-5 h-5" /> Lun - Dim, 11h30 - 23h30</li>
+              <div className="rope-line mt-5 w-20" />
+              <ul className="mt-5 space-y-2 text-sm text-parchment/70">
+                <li>+33 (0)1 23 45 67 89</li>
+                <li>contact@hookies.fr</li>
+                <li>12 Rue de la Mer, 75000</li>
+                <li>Lun – Dim : 11h30 – 23h30</li>
               </ul>
             </div>
 
-            <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-6 md:p-8">
-              <h2 className="font-display text-2xl font-bold text-amber-100">Demande rapide</h2>
+            <form onSubmit={handleSubmit} className="wood-card p-6 md:p-8">
+              <h2 className="font-pirate text-2xl text-parchment">Envoyer un message</h2>
               <div className="mt-5 space-y-4">
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Nom complet"
-                  className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-400"
+                  placeholder="Nom"
+                  className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none placeholder:text-parchment/40"
                 />
                 <input
                   type="email"
@@ -88,7 +87,7 @@ export default function ContactPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-400"
+                  className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none placeholder:text-parchment/40"
                 />
                 <textarea
                   required
@@ -96,19 +95,18 @@ export default function ContactPage() {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Votre message"
                   rows={5}
-                  className="w-full rounded-xl border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-400"
+                  className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none placeholder:text-parchment/40"
                 />
 
-                {error && <p className="text-sm text-red-200">{error}</p>}
-                {success && <p className="text-sm text-amber-100">{success}</p>}
+                {error && <p className="text-sm text-red-300">{error}</p>}
+                {success && <p className="text-sm text-green-300">{success}</p>}
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-60"
+                  className="w-full rounded-sm bg-gold px-6 py-3 font-bold text-plank transition hover:bg-gold-light disabled:opacity-60"
                 >
-                  <FaPaperPlane className="w-4 h-4" />
-                  {loading ? 'Envoi en cours...' : 'Envoyer'}
+                  {loading ? 'Envoi...' : 'Envoyer'}
                 </button>
               </div>
             </form>

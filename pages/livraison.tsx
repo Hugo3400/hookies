@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { FaTruck, FaMapMarkerAlt, FaEuroSign } from 'react-icons/fa';
 
 export default function LivraisonPage() {
   return (
@@ -10,45 +9,36 @@ export default function LivraisonPage() {
         <title>Livraison | Hookies</title>
         <meta
           name="description"
-          content="Commandez en livraison les menus Hookies avec suivi de commande et zones desservies."
+          content="Commandez Hookies en livraison : burgers, fish & chips et plats du jour livrés chez vous."
         />
       </Head>
 
-      <main className="text-white">
+      <main>
         <Header />
 
         <section className="px-4 py-16 md:px-6">
           <div className="mx-auto w-full max-w-7xl">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.26em] text-amber-200/80">Livraison</p>
-            <h1 className="font-display text-4xl font-black text-slate-100 md:text-5xl">Service de livraison</h1>
-            <p className="mt-4 max-w-2xl text-slate-300/85">
-              Recevez vos menus Hookies chez vous avec emballage isotherme et suivi en direct.
+            <h1 className="font-pirate text-4xl text-gold md:text-5xl">Livraison</h1>
+            <p className="mt-3 max-w-lg text-sm text-parchment/60">
+              Vos plats Hookies livrés chauds chez vous, avec emballage isotherme.
             </p>
+            <div className="rope-line mt-4 w-24" />
 
-            <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-              <div className="glass-card rounded-2xl p-6">
-                <div className="flex items-center gap-3">
-                  <FaMapMarkerAlt className="text-2xl text-amber-400" />
-                  <h2 className="font-display text-2xl text-amber-100">Zone A</h2>
-                </div>
-                <p className="mt-3 text-slate-300/85">Centre-ville et secteurs proches.</p>
-                <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-amber-200"><FaEuroSign className="w-4 h-4" /> 2.90 EUR</p>
+            <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+              <div className="wood-card p-6">
+                <h2 className="font-pirate text-2xl text-parchment">Zone A</h2>
+                <p className="mt-2 text-sm text-parchment/60">Centre-ville et alentours.</p>
+                <p className="mt-3 font-bold text-gold">2,90 &euro;</p>
               </div>
-              <div className="glass-card rounded-2xl p-6">
-                <div className="flex items-center gap-3">
-                  <FaMapMarkerAlt className="text-2xl text-amber-400" />
-                  <h2 className="font-display text-2xl text-amber-100">Zone B</h2>
-                </div>
-                <p className="mt-3 text-slate-300/85">Peripherie urbaine.</p>
-                <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-amber-200"><FaEuroSign className="w-4 h-4" /> 4.90 EUR</p>
+              <div className="wood-card p-6">
+                <h2 className="font-pirate text-2xl text-parchment">Zone B</h2>
+                <p className="mt-2 text-sm text-parchment/60">Périphérie.</p>
+                <p className="mt-3 font-bold text-gold">4,90 &euro;</p>
               </div>
-              <div className="glass-card rounded-2xl p-6">
-                <div className="flex items-center gap-3">
-                  <FaTruck className="text-2xl text-amber-400" />
-                  <h2 className="font-display text-2xl text-amber-100">Retrait</h2>
-                </div>
-                <p className="mt-3 text-slate-300/85">Click & collect en 20 minutes.</p>
-                <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-amber-200"><span className="text-green-400">Gratuit</span></p>
+              <div className="wood-card p-6">
+                <h2 className="font-pirate text-2xl text-parchment">Click &amp; Collect</h2>
+                <p className="mt-2 text-sm text-parchment/60">Prêt en 20 minutes.</p>
+                <p className="mt-3 font-bold text-green-400">Gratuit</p>
               </div>
             </div>
           </div>

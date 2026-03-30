@@ -10,12 +10,12 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Hookies | Taverne Pirate Moderne</title>
-        <meta name="description" content="Hookies, restaurant pirate moderne: cuisine signature, cocktails premium, reservation en ligne et experience immersive." />
+        <title>Hookies — Taverne &amp; Grillades au feu de bois</title>
+        <meta name="description" content="Restaurant pirate Hookies : grillades au feu de bois, fish & chips, rhums arrangés. Ouvert 7j/7 de 11h30 à 23h30. Réservation en ligne." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <main className="text-white">
+      <main>
         <Header />
         <Hero />
         <Features />
