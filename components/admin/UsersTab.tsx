@@ -6,7 +6,7 @@ type Props = {
   users: AdminUserEntry[];
   loading: boolean;
   onLoad: () => void;
-  onRoleChange: (id: string, role: 'USER' | 'ADMIN') => Promise<void>;
+  onRoleChange: (id: string, role: string) => Promise<void>;
 };
 
 export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props) {
@@ -40,14 +40,17 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props
                 <td className="px-4 py-3">
                   <select
                     value={user.role}
-                    onChange={e => onRoleChange(user.id, e.target.value as 'USER' | 'ADMIN')}
+                    onChange={e => onRoleChange(user.id, e.target.value)}
                     className={`rounded-full px-2.5 py-0.5 text-xs font-semibold focus:outline-none ${
                       user.role === 'ADMIN'
                         ? 'bg-amber-900/40 text-amber-300'
+                        : user.role === 'EMPLOYEE'
+                        ? 'bg-blue-900/40 text-blue-300'
                         : 'bg-slate-700/40 text-slate-300'
                     }`}
                   >
-                    <option value="USER">CLIENT</option>
+                    <option value="CLIENT">CLIENT</option>
+                    <option value="EMPLOYEE">EMPLOYÉ</option>
                     <option value="ADMIN">ADMIN</option>
                   </select>
                 </td>

@@ -230,6 +230,25 @@ export function useEspaceClient() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    // Discord bot login: token in URL query param
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+    if (urlToken) {
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+      // Verify token via /api/auth/me
+      fetch('/api/auth/me', { headers: { Authorization: `Bearer ${urlToken}` } })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data?.user) {
+            saveSession(urlToken, data.user);
+          }
+        })
+        .catch(() => {});
+      return;
+    }
+
     const savedToken = window.localStorage.getItem('hookies_token');
     const savedUser = window.localStorage.getItem('hookies_user');
     if (!savedToken || !savedUser) return;
@@ -243,7 +262,7 @@ export function useEspaceClient() {
       window.localStorage.removeItem('hookies_token');
       window.localStorage.removeItem('hookies_user');
     }
-  }, []);
+  }, [saveSession]);
 
   useEffect(() => {
     void loadMenu();

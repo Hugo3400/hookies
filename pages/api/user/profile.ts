@@ -48,7 +48,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           where: { id: decoded.userId },
         });
 
-        const isValid = await bcryptjs.compare(currentPassword, user!.password);
+        if (!user || !user.password) {
+          return res.status(400).json({ error: 'Changement de mot de passe non disponible' });
+        }
+
+        const isValid = await bcryptjs.compare(currentPassword, user.password);
         if (!isValid) {
           return res.status(400).json({ error: 'Mot de passe actuel incorrect' });
         }

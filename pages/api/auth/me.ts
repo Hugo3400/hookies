@@ -19,6 +19,8 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         id: true,
         name: true,
         email: true,
+        discordId: true,
+        discordTag: true,
         role: true,
         isActive: true,
       },

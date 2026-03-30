@@ -76,7 +76,7 @@ export const withStaffAuth = (handler: (req: AuthenticatedRequest, res: NextApiR
       return res.status(401).json({ error: 'Utilisateur non autorise' });
     }
 
-    if (user.role !== 'ADMIN' && user.role !== 'EMPLOYEE') {
+    if (user.role !== 'ADMIN' && (user.role as string) !== 'EMPLOYEE') {
       return res.status(403).json({ error: 'Accès refusé' });
     }
 

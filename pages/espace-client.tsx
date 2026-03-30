@@ -24,14 +24,8 @@ export default function EspaceClientPage() {
         <main className="text-white">
           <Header />
           <AuthPanel
-            authMode={state.authMode}
-            setAuthMode={state.setAuthMode}
-            authForm={state.authForm}
-            setAuthForm={state.setAuthForm}
-            loading={state.loading.auth}
             error={state.error}
             successMessage={state.successMessage}
-            onSubmit={state.handleAuthSubmit}
           />
           <Footer />
         </main>
@@ -52,7 +46,7 @@ export default function EspaceClientPage() {
             <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="font-display text-3xl font-black text-amber-200">Bienvenue, {state.user?.name}</h1>
-                <p className="mt-2 text-slate-300">{state.user?.email}</p>
+                <p className="mt-2 text-slate-300">{state.user?.email || state.user?.discordTag || ''}</p>
               </div>
               <button
                 onClick={state.handleLogout}
