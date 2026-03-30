@@ -34,7 +34,8 @@ export default function AuthPanel({
               {error === 'discord_user' && 'Impossible de récupérer tes infos Discord.'}
               {error === 'account_disabled' && 'Ton compte est désactivé.'}
               {error === 'server_error' && 'Erreur serveur. Réessaye plus tard.'}
-              {!['missing_code', 'discord_token', 'discord_user', 'account_disabled', 'server_error'].includes(error) && error}
+              {error === 'discord_rejected' && 'Discord a refusé la connexion. Vérifie la config du scope.'}
+              {!['missing_code', 'discord_token', 'discord_user', 'account_disabled', 'server_error', 'discord_rejected'].includes(error) && error}
             </div>
           )}
 

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { generateToken } from '@/lib/auth/auth';
+import { notifyWelcome } from '@/lib/notifications';
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || '';
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || '';
@@ -8,7 +9,13 @@ const REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || 'https://hookies.nexade
 const SITE_URL = process.env.SITE_URL || 'https://hookies.nexadev.fr';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { code } = req.query;
+  const { code, error: discordError, error_description } = req.query;
+
+  // Discord redirige avec ?error= si le scope ou la config est invalide
+  if (discordError) {
+    console.error('[Discord OAuth] Erreur retournée par Discord:', discordError, error_description);
+    return res.redirect(`${SITE_URL}/espace-client?error=discord_rejected&detail=${encodeURIComponent(String(error_description || discordError))}`);
+  }
 
   if (!code || typeof code !== 'string') {
     return res.redirect(`${SITE_URL}/espace-client?error=missing_code`);
@@ -59,13 +66,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           discordTag,
           name: discordUser.global_name || discordUser.username,
           role: 'CLIENT',
+          discordAccessToken: tokenData.access_token,
+          discordRefreshToken: tokenData.refresh_token || null,
         },
       });
+
+      // Notification de bienvenue in-app
+      notifyWelcome(user.id, user.name).catch(() => {});
     } else {
-      // Mettre à jour le tag Discord au cas où
+      // Mettre à jour le tag Discord et les tokens OAuth
       await prisma.user.update({
         where: { id: user.id },
-        data: { discordTag },
+        data: {
+          discordTag,
+          discordAccessToken: tokenData.access_token,
+          discordRefreshToken: tokenData.refresh_token || user.discordRefreshToken,
+        },
       });
     }
 

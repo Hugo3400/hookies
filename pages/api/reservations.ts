@@ -7,6 +7,7 @@ import {
   buildReservationAdminEmail,
   buildReservationCustomerEmail,
 } from '@/lib/email/templates';
+import { notifyReservationCreated } from '@/lib/notifications';
 
 function formatReservationDate(value: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
@@ -44,8 +45,14 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
       const client = await prisma.user.findUnique({
         where: { id: req.user?.userId },
-        select: { name: true, email: true },
+        select: { name: true, email: true, discordId: true },
       });
+
+      // Notification in-app
+      if (req.user?.userId) {
+        const resaDate = formatReservationDate(reservation.date);
+        notifyReservationCreated(req.user.userId, client?.name || '', resaDate, reservation.time, reservation.guestCount).catch(() => {});
+      }
 
       if (client?.email) {
         const reservationDate = formatReservationDate(reservation.date);

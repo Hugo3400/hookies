@@ -6,6 +6,7 @@ import AuthPanel from '@/components/espace-client/AuthPanel';
 import BorneTab from '@/components/espace-client/BorneTab';
 import DashboardTab from '@/components/espace-client/DashboardTab';
 import LoyaltyTab from '@/components/espace-client/LoyaltyTab';
+import NotificationsTab from '@/components/espace-client/NotificationsTab';
 import OrdersTab from '@/components/espace-client/OrdersTab';
 import ProfileTab from '@/components/espace-client/ProfileTab';
 import ReservationsTab from '@/components/espace-client/ReservationsTab';
@@ -157,6 +158,10 @@ export default function EspaceClientPage() {
                 points={state.user?.loyaltyPoints || 0}
                 referralCode={`HOOK-${(state.user?.id || '0000').slice(0, 6).toUpperCase()}`}
               />
+            )}
+
+            {state.activeTab === 'notifications' && (
+              <NotificationsTab token={state.token} />
             )}
           </div>
         </section>

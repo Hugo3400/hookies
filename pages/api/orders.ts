@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withAuth } from '@/lib/auth/middleware';
 import { AuthenticatedRequest } from '@/lib/auth/middleware';
+import { notifyOrderCreated } from '@/lib/notifications';
 
 const prismaAny = prisma as any;
 
@@ -123,6 +124,10 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
             data: { loyaltyPoints: { increment: pointsToAdd } },
           });
         }
+
+        // Notification in-app
+        const itemNames = order.orderItems.map((oi: any) => `${oi.quantity}x ${oi.menuItem.name}`);
+        notifyOrderCreated(req.user.userId, order.orderNumber, finalPrice, itemNames).catch(() => {});
       }
 
       res.status(201).json(order);

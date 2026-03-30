@@ -1,4 +1,5 @@
 import {
+  FaBell,
   FaBox,
   FaCalendarAlt,
   FaGift,
@@ -19,12 +20,13 @@ const tabs: Array<{ key: TabKey; label: string; icon: JSX.Element }> = [
   { key: 'reservations', label: 'Réservations', icon: <FaCalendarAlt /> },
   { key: 'commandes', label: 'Commandes', icon: <FaBox /> },
   { key: 'profil', label: 'Profil', icon: <FaUserCircle /> },
+  { key: 'notifications', label: 'Notifs', icon: <FaBell /> },
   { key: 'fidelite', label: 'Fidélité', icon: <FaGift /> },
 ];
 
 export default function TabsNav({ activeTab, setActiveTab }: TabsNavProps) {
   return (
-    <div className="mb-8 grid grid-cols-2 gap-2 rounded-lg border border-amber-700/30 bg-black/20 p-1 md:grid-cols-6">
+    <div className="mb-8 grid grid-cols-2 gap-2 rounded-lg border border-amber-700/30 bg-black/20 p-1 md:grid-cols-7">
       {tabs.map((tab) => (
         <button
           key={tab.key}

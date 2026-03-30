@@ -29,7 +29,7 @@ import type {
 
 const MENU_IMAGE_FALLBACKS = ['/da/hero-bg-clean.png', '/da/logo.png', '/da/hero-bg-clean.png'];
 
-const VALID_TABS: TabKey[] = ['dashboard', 'borne', 'reservations', 'commandes', 'profil', 'fidelite'];
+const VALID_TABS: TabKey[] = ['dashboard', 'borne', 'reservations', 'commandes', 'profil', 'fidelite', 'notifications'];
 
 function getInitialTab(): TabKey {
   if (typeof window === 'undefined') return 'dashboard';

@@ -15,8 +15,10 @@ model User {
   id            String    @id @default(cuid())
   email         String?   @unique
   password      String?
-  discordId     String?   @unique
-  discordTag    String?
+  discordId           String?   @unique
+  discordTag          String?
+  discordAccessToken  String?   @db.Text
+  discordRefreshToken String?   @db.Text
   name          String
   phone         String?
   role          Role      @default(CLIENT)
@@ -32,6 +34,7 @@ model User {
   itemReviews   ItemReview[]
   favorites     MenuItem[]
   addresses     UserAddress[]
+  notifications Notification[]
 }
 
 enum Role {
@@ -239,8 +242,19 @@ model Promotion {
   createdAt     DateTime  @default(now())
 }
 
-// Ajouter à MenuItem relation promotions
-// (à faire manuellement dans le fichier)
+// Notifications in-app
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // ORDER, RESERVATION, WELCOME, PROMO
+  title     String
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
 
 // Configuration
 model Configuration {

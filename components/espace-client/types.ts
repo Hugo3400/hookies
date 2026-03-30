@@ -1,5 +1,5 @@
 export type AuthMode = 'login' | 'register';
-export type TabKey = 'dashboard' | 'borne' | 'reservations' | 'commandes' | 'profil' | 'fidelite';
+export type TabKey = 'dashboard' | 'borne' | 'reservations' | 'commandes' | 'profil' | 'fidelite' | 'notifications';
 
 export type AuthUser = {
   id: string;

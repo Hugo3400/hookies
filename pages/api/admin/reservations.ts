@@ -1,6 +1,7 @@
 import type { NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withStaffAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
+import { notifyReservationStatus } from '@/lib/notifications';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -22,8 +23,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       const updated = await prisma.reservation.update({
         where: { id },
         data: { status },
-        include: { user: { select: { id: true, name: true, email: true } } },
+        include: { user: { select: { id: true, name: true, email: true, discordId: true } } },
       });
+
+      // Notification in-app
+      if ((updated as any).user?.id) {
+        const d = new Intl.DateTimeFormat('fr-FR').format(updated.date);
+        notifyReservationStatus((updated as any).user.id, status, d, updated.time).catch(() => {});
+      }
+
       return res.status(200).json(updated);
     } catch (error) {
       return res.status(500).json({ error: 'Erreur mise à jour réservation' });

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withStaffAuth } from '@/lib/auth/middleware';
 import { AuthenticatedRequest } from '@/lib/auth/middleware';
+import { notifyOrderStatus } from '@/lib/notifications';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -26,7 +27,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       const updatedOrder = await prisma.order.update({
         where: { id },
         data: { status },
+        include: { user: { select: { discordId: true } } },
       });
+
+      // Notification in-app
+      const oUser = (updatedOrder as any).user;
+      if (oUser?.id) {
+        notifyOrderStatus(oUser.id, (updatedOrder as any).orderNumber, status).catch(() => {});
+      }
+
       res.status(200).json(updatedOrder);
     } catch (error) {
       res.status(500).json({ error: 'Erreur lors de la mise à jour' });
