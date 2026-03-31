@@ -5,6 +5,8 @@ export type AdminLogEntry = {
   id: string;
   actorId: string | null;
   actorName: string | null;
+  actorFirstName?: string | null;
+  actorLastName?: string | null;
   actorRole: string | null;
   action: string;
   target: string | null;
@@ -138,6 +140,7 @@ export default function LogsTab({ token, userRole: _userRole }: Props) {
             {logs.map((log, i) => {
               const meta = ACTION_LABELS[log.action];
               const Icon = ACTION_ICONS[log.action] ?? FaCog;
+              const actorDisplayName = [log.actorFirstName, log.actorLastName].filter(Boolean).join(' ').trim() || log.actorName || '—';
               return (
                 <tr key={log.id} className={`border-b border-white/5 ${i % 2 === 0 ? 'bg-white/[0.02]' : ''}`}>
                   <td className="whitespace-nowrap px-4 py-2 text-xs text-slate-400">{fmtDate(log.createdAt)}</td>
@@ -149,7 +152,7 @@ export default function LogsTab({ token, userRole: _userRole }: Props) {
                   </td>
                   <td className="px-4 py-2">
                     <span className={`text-xs font-semibold ${ROLE_COLORS[log.actorRole ?? ''] ?? 'text-slate-300'}`}>
-                      {log.actorName ?? '—'}
+                      {actorDisplayName}
                     </span>
                     {log.actorRole && (
                       <span className="ml-1.5 text-xs text-slate-500">({log.actorRole})</span>
