@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FaChevronUp, FaChevronDown, FaArrowRight } from 'react-icons/fa';
+import { FaChevronUp, FaChevronDown, FaArrowRight, FaTrash } from 'react-icons/fa';
 import type { AdminOrder, OrderStatus } from './types';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from './types';
 
@@ -18,13 +18,19 @@ type Props = {
   loading: boolean;
   onLoad: () => void;
   onUpdateStatus: (id: string, status: OrderStatus) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
 };
 
-export default function OrdersTab({ orders, loading, onLoad, onUpdateStatus }: Props) {
+export default function OrdersTab({ orders, loading, onLoad, onUpdateStatus, onDelete }: Props) {
   const [filter, setFilter] = useState<OrderStatus | 'ALL'>('ALL');
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => { onLoad(); }, [onLoad]);
+
+  const handleDelete = async (order: AdminOrder) => {
+    if (!window.confirm(`Supprimer définitivement la commande #${order.orderNumber} ?`)) return;
+    await onDelete(order.id);
+  };
 
   const filtered = filter === 'ALL' ? orders : orders.filter(o => o.status === filter);
   const fmt = (n: number) =>
@@ -110,6 +116,14 @@ export default function OrdersTab({ orders, loading, onLoad, onUpdateStatus }: P
                     ))}
                   </div>
                 )}
+                <div className="mt-3 border-t border-white/10 pt-3">
+                  <button
+                    onClick={() => handleDelete(order)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-red-900/30 px-3 py-1.5 text-xs font-semibold text-red-300 hover:bg-red-900/50 transition"
+                  >
+                    <FaTrash className="text-[10px]" /> Supprimer la commande
+                  </button>
+                </div>
               </div>
             )}
           </div>
