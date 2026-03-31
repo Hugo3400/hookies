@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { comparePassword, generateToken } from '@/lib/auth/auth';
+import { logAction } from '@/lib/admin/logger';
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,6 +33,16 @@ export default async function handler(
     }
 
     const token = generateToken(user.id, user.role);
+
+    logAction({
+      actorId: user.id,
+      actorName: user.name,
+      actorRole: user.role,
+      action: 'USER_LOGIN',
+      target: user.name,
+      details: `Email: ${email}`,
+      req,
+    });
 
     res.status(200).json({
       message: 'Connexion réussie',

@@ -8,6 +8,7 @@ import {
   buildReservationCustomerEmail,
 } from '@/lib/email/templates';
 import { notifyReservationCreated } from '@/lib/notifications';
+import { logAction } from '@/lib/admin/logger';
 
 function formatReservationDate(value: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
@@ -117,6 +118,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
         await Promise.allSettled(tasks);
       }
+
+      logAction({
+        actorId: req.user?.userId ?? null,
+        actorRole: 'CLIENT',
+        action: 'RESERVATION_PLACED',
+        target: `Réservation ${formatReservationDate(reservation.date)} ${reservation.time}`,
+        details: `Couverts: ${reservation.guestCount} | Client: ${client?.name ?? 'Anonyme'}`,
+        req,
+      });
 
       res.status(201).json(reservation);
     } catch (error) {

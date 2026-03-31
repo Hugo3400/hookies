@@ -3,6 +3,7 @@ import prisma from '@/lib/db/prisma';
 import { withAuth } from '@/lib/auth/middleware';
 import { AuthenticatedRequest } from '@/lib/auth/middleware';
 import { notifyOrderCreated } from '@/lib/notifications';
+import { logAction } from '@/lib/admin/logger';
 
 const prismaAny = prisma as any;
 
@@ -129,6 +130,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         const itemNames = order.orderItems.map((oi: any) => `${oi.quantity}x ${oi.menuItem.name}`);
         notifyOrderCreated(req.user.userId, order.orderNumber, finalPrice, itemNames).catch(() => {});
       }
+
+      logAction({
+        actorId: req.user?.userId ?? null,
+        actorRole: 'CLIENT',
+        action: 'ORDER_PLACED',
+        target: `Commande #${order.orderNumber}`,
+        details: `Type: ${type} | Total: ${finalPrice.toFixed(2)}€ | Articles: ${normalizedItems.length}`,
+        req,
+      });
 
       res.status(201).json(order);
     } catch (error) {
