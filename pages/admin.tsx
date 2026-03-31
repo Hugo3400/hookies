@@ -107,7 +107,7 @@ export default function AdminPage() {
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         const role = data?.user?.role;
-        if (role === 'ADMIN' || role === 'EMPLOYEE') {
+        if (role === 'ADMIN' || role === 'EMPLOYEE' || role === 'WEBMASTER') {
           setToken(stored);
           setAdminName(data.user.name || 'Staff');
           setUserRole(role);
@@ -152,7 +152,7 @@ export default function AdminPage() {
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-amber-200/70">Back-office</p>
-                  <h1 className="font-display text-4xl font-black text-slate-100">Panel {userRole === 'ADMIN' ? 'administrateur' : 'employé'}</h1>
+                  <h1 className="font-display text-4xl font-black text-slate-100">Panel {userRole === 'ADMIN' || userRole === 'WEBMASTER' ? 'administrateur' : 'employé'}</h1>
                   <p className="mt-1 text-sm text-slate-400">Bonjour {adminName} <FaHandPeace className="inline text-amber-300" /></p>
                 </div>
                 <button onClick={refreshActiveTab} className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/10">
