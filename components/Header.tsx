@@ -18,7 +18,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b-2 border-rope/30 bg-plank/95 backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6">
         <Link href="/" className="flex items-center gap-3">
-          <img src="/da/logo.png" alt="Hookies" className="h-12 w-12 rounded-sm" />
+          <img src="/favicon.png" alt="Hookies" className="h-12 w-12 rounded-sm" />
           <div>
             <span className="font-pirate text-3xl text-gold md:text-4xl">Hookies</span>
             <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">Taverne &amp; Grillades</p>
