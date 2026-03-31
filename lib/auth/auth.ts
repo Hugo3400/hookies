@@ -40,3 +40,10 @@ export const verifyToken = (token: string): any => {
     return null;
   }
 };
+
+export const maskEmail = (email: string | null | undefined): string => {
+  if (!email) return '****';
+  const [local, domain] = email.split('@');
+  if (!domain) return '****';
+  return `${local.charAt(0)}****@${domain}`;
+};
