@@ -9,7 +9,7 @@ function getAdmin(req: NextApiRequest) {
   if (!auth?.startsWith('Bearer ')) return null;
   try {
     const payload = jwt.verify(auth.slice(7), JWT_SECRET) as { userId: string; role: string };
-    return (payload.role === 'ADMIN' || payload.role === 'EMPLOYEE') ? payload : null;
+    return (payload.role === 'ADMIN' || payload.role === 'EMPLOYEE' || payload.role === 'WEBMASTER') ? payload : null;
   } catch { return null; }
 }
 
