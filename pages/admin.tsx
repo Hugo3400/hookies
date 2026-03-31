@@ -12,12 +12,13 @@ import MenuTab from '@/components/admin/MenuTab';
 import UsersTab from '@/components/admin/UsersTab';
 import WeeklyMenuTab from '@/components/admin/WeeklyMenuTab';
 import SettingsTab from '@/components/admin/SettingsTab';
+import LogsTab from '@/components/admin/LogsTab';
 import { useAdmin } from '@/hooks/useAdmin';
 import type { AdminTab } from '@/components/admin/types';
 
 type AuthStatus = 'loading' | 'allowed' | 'denied';
 
-const VALID_ADMIN_TABS: AdminTab[] = ['dashboard', 'orders', 'reservations', 'menu', 'users', 'weekly-menu', 'settings'];
+const VALID_ADMIN_TABS: AdminTab[] = ['dashboard', 'orders', 'reservations', 'menu', 'users', 'weekly-menu', 'settings', 'logs'];
 
 function getInitialAdminTab(): AdminTab {
   if (typeof window === 'undefined') return 'dashboard';
@@ -188,6 +189,7 @@ export default function AdminPage() {
                   loading={admin.loading.orders}
                   onLoad={admin.loadOrders}
                   onUpdateStatus={admin.updateOrderStatus}
+                  onDelete={admin.deleteOrder}
                 />
               )}
               {activeTab === 'reservations' && (
@@ -231,6 +233,9 @@ export default function AdminPage() {
                   onLoad={admin.loadSettings}
                   onSave={admin.saveSettings}
                 />
+              )}
+              {activeTab === 'logs' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
+                <LogsTab token={token!} userRole={userRole} />
               )}
             </div>
           )}
