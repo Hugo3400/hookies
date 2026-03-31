@@ -275,6 +275,23 @@ model Notification {
   @@index([userId])
 }
 
+// Logs admin
+model AdminLog {
+  id          String   @id @default(cuid())
+  actorId     String?
+  actorName   String?
+  actorRole   String?
+  action      String
+  target      String?
+  details     String?  @db.Text
+  ip          String?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([actorId])
+  @@index([action])
+}
+
 // Configuration
 model Configuration {
   id            String    @id @default(cuid())
