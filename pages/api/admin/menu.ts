@@ -1,6 +1,7 @@
 import type { NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
+import { logAction } from '@/lib/admin/logger';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -20,17 +21,8 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       return res.status(400).json({ error: 'Champs requis manquants' });
     }
     try {
-      const item = await prisma.menuItem.create({
-        data: {
-          name,
-          description,
-          price: parseFloat(price),
-          category,
-          image: image || null,
-          isAvailable: isAvailable !== false,
-          preparationTime: preparationTime ? parseInt(preparationTime) : 15,
-        },
-      });
+      const item = await prisma.menuItem.create({ data: { name, description, price: parseFloat(price), category, image: image || null, isAvailable: isAvailable !== false, preparationTime: preparationTime ? parseInt(preparationTime) : 15 } });
+      logAction({ actorId: req.user?.userId, actorRole: req.user?.role, action: 'MENU_ITEM_CREATED', target: name, details: `Catégorie: ${category} | Prix: ${price}€`, req });
       return res.status(201).json(item);
     } catch (error) {
       return res.status(500).json({ error: 'Erreur création article' });
@@ -53,6 +45,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
           ...(preparationTime != null && { preparationTime: parseInt(preparationTime) }),
         },
       });
+      logAction({ actorId: req.user?.userId, actorRole: req.user?.role, action: 'MENU_ITEM_UPDATED', target: item.name, details: null, req });
       return res.status(200).json(item);
     } catch (error) {
       return res.status(500).json({ error: 'Erreur mise à jour article' });
@@ -63,7 +56,9 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     const { id } = req.body;
     if (!id) return res.status(400).json({ error: 'id requis' });
     try {
+      const item = await prisma.menuItem.findUnique({ where: { id }, select: { name: true } });
       await prisma.menuItem.delete({ where: { id } });
+      logAction({ actorId: req.user?.userId, actorRole: req.user?.role, action: 'MENU_ITEM_DELETED', target: item?.name ?? id, details: null, req });
       return res.status(200).json({ success: true });
     } catch (error) {
       return res.status(500).json({ error: 'Erreur suppression article' });

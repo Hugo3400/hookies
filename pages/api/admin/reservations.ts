@@ -3,6 +3,7 @@ import prisma from '@/lib/db/prisma';
 import { withStaffAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
 import { notifyReservationStatus } from '@/lib/notifications';
 import { maskEmail } from '@/lib/auth/auth';
+import { logAction } from '@/lib/admin/logger';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   const isWebmaster = req.user?.role === 'WEBMASTER';
@@ -46,6 +47,16 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       if (!isWebmaster && (updated as any).user?.email) {
         (updated as any).user.email = maskEmail((updated as any).user.email);
       }
+
+      // Log
+      logAction({
+        actorId: req.user?.userId,
+        actorRole: req.user?.role,
+        action: 'RESERVATION_STATUS_CHANGED',
+        target: `Réservation #${updated.id.slice(-6).toUpperCase()}`,
+        details: `Statut → ${status} | Client: ${(updated as any).user?.name ?? 'Anonyme'}`,
+        req,
+      });
 
       return res.status(200).json(updated);
     } catch (error) {

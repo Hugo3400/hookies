@@ -2,6 +2,7 @@ import type { NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
 import { maskEmail } from '@/lib/auth/auth';
+import { logAction } from '@/lib/admin/logger';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   const isWebmaster = req.user?.role === 'WEBMASTER';
@@ -56,6 +57,16 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         data: { role },
         select: { id: true, email: true, name: true, role: true },
       });
+
+      logAction({
+        actorId: req.user?.userId,
+        actorRole: req.user?.role,
+        action: 'USER_ROLE_CHANGED',
+        target: updated.name,
+        details: `Rôle → ${role}`,
+        req,
+      });
+
       return res.status(200).json({
         ...updated,
         email: isWebmaster ? updated.email : maskEmail(updated.email),
@@ -92,6 +103,16 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       }
 
       await prisma.user.delete({ where: { id } });
+
+      logAction({
+        actorId: req.user?.userId,
+        actorRole: req.user?.role,
+        action: 'USER_DELETED',
+        target: targetUser.name,
+        details: `Rôle: ${targetUser.role}`,
+        req,
+      });
+
       return res.status(200).json({ success: true, id, name: targetUser.name });
     } catch (error) {
       return res.status(500).json({ error: 'Erreur suppression utilisateur' });
