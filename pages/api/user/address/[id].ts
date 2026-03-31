@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import jwt from 'jsonwebtoken';
 import prisma from '@/lib/db/prisma';
+import { verifyToken } from '@/lib/auth/auth';
 
 const prismaAny = prisma as any;
 
@@ -12,7 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!id) return res.status(400).json({ error: 'ID adresse manquant' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as { userId: string };
+    const decoded = verifyToken(token) as { userId: string } | null;
+    if (!decoded) return res.status(401).json({ error: 'Token invalide' });
 
     const address = await prismaAny.userAddress.findUnique({ where: { id } });
     if (!address || address.userId !== decoded.userId) {

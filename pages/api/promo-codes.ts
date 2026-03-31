@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '@/lib/auth/auth';
 
 const prisma = new PrismaClient();
 const prismaAny = prisma as any;
@@ -12,7 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) return res.status(401).json({ error: 'Non autorisé' });
 
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+      const decoded = verifyToken(token);
+      if (!decoded) return res.status(401).json({ error: 'Non autorisé' });
       const { code, orderAmount } = req.body;
 
       if (!code) return res.status(400).json({ error: 'Code requis' });

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '@/lib/auth/auth';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) return res.status(401).json({ error: 'Token manquant' });
 
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+      const decoded = verifyToken(token);
+      if (!decoded) return res.status(401).json({ error: 'Token invalide' });
       const favorites = await prisma.user.findUnique({
         where: { id: decoded.userId },
         select: { favorites: true },
@@ -30,7 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) return res.status(401).json({ error: 'Token manquant' });
 
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+      const decoded = verifyToken(token);
+      if (!decoded) return res.status(401).json({ error: 'Token invalide' });
       const { menuItemId } = req.body;
 
       await prisma.user.update({
@@ -55,7 +57,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) return res.status(401).json({ error: 'Token manquant' });
 
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+      const decoded = verifyToken(token);
+      if (!decoded) return res.status(401).json({ error: 'Token invalide' });
       const { menuItemId } = req.body;
 
       await prisma.user.update({

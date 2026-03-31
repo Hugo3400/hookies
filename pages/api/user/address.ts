@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '@/lib/auth/auth';
 
 const prisma = new PrismaClient();
 const prismaAny = prisma as any;
@@ -10,7 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!token) return res.status(401).json({ error: 'Non autorisé' });
 
   try {
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = verifyToken(token);
+    if (!decoded) return res.status(401).json({ error: 'Token invalide' });
 
     if (req.method === 'GET') {
       // Récupérer les adresses de l'utilisateur

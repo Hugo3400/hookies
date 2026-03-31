@@ -1,16 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'hookies-secret';
+import { verifyToken } from '@/lib/auth/auth';
 
 function getAdmin(req: NextApiRequest) {
   const auth = req.headers.authorization;
   if (!auth?.startsWith('Bearer ')) return null;
-  try {
-    const payload = jwt.verify(auth.slice(7), JWT_SECRET) as { userId: string; role: string };
-    return (payload.role === 'ADMIN' || payload.role === 'EMPLOYEE' || payload.role === 'WEBMASTER') ? payload : null;
-  } catch { return null; }
+  const payload = verifyToken(auth.slice(7)) as { userId: string; role: string } | null;
+  if (!payload) return null;
+  return (payload.role === 'ADMIN' || payload.role === 'EMPLOYEE' || payload.role === 'WEBMASTER') ? payload : null;
 }
 
 // Config keys
