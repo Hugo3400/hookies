@@ -29,7 +29,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       new Set(
         logs
           .map((log: any) => log.actorId)
-          .filter((id): id is string => typeof id === 'string' && id.length > 0)
+          .filter((id: unknown): id is string => typeof id === 'string' && id.length > 0)
       )
     );
 
