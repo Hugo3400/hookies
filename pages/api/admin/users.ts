@@ -1,8 +1,11 @@
 import type { NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
+import { maskEmail } from '@/lib/auth/auth';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+  const isWebmaster = req.user?.role === 'WEBMASTER';
+
   if (req.method === 'GET') {
     try {
       const users = await prisma.user.findMany({
@@ -15,7 +18,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
           return {
             id: user.id,
-            email: user.email,
+            email: isWebmaster ? user.email : maskEmail(user.email),
             name: user.name,
             phone: user.phone,
             role: user.role,
@@ -53,7 +56,10 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         data: { role },
         select: { id: true, email: true, name: true, role: true },
       });
-      return res.status(200).json(updated);
+      return res.status(200).json({
+        ...updated,
+        email: isWebmaster ? updated.email : maskEmail(updated.email),
+      });
     } catch (error) {
       return res.status(500).json({ error: 'Erreur mise à jour utilisateur' });
     }
