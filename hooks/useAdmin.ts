@@ -6,7 +6,7 @@ import type {
 
 type DeliveryZone = { name: string; description: string; fee: number };
 type LoyaltyReward = { points: number; label: string };
-type LoyaltyConfig = { bonusPercent: number; bonusThreshold: number; referralDiscount: number; referralPoints: number; nextRewardGoal: number; rewards: LoyaltyReward[] };
+type LoyaltyConfig = { bonusPercent: number; bonusThreshold: number; referralEnabled: boolean; referralDiscount: number; referralPoints: number; nextRewardGoal: number; rewards: LoyaltyReward[] };
 type SettingsData = { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig };
 
 async function apiFetch<T>(url: string, token: string, init?: RequestInit): Promise<T> {
