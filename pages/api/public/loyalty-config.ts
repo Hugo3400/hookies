@@ -4,6 +4,7 @@ import prisma from '@/lib/db/prisma';
 const DEFAULT_LOYALTY = {
   bonusPercent: 10,
   bonusThreshold: 200,
+  referralEnabled: true,
   referralDiscount: 5,
   referralPoints: 50,
   nextRewardGoal: 500,

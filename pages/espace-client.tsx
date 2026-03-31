@@ -157,6 +157,7 @@ export default function EspaceClientPage() {
                 userName={state.user?.name}
                 points={state.user?.loyaltyPoints || 0}
                 referralCode={`HOOK-${(state.user?.id || '0000').slice(0, 6).toUpperCase()}`}
+                token={state.token!}
               />
             )}
 

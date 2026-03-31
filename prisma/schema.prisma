@@ -35,6 +35,8 @@ model User {
   favorites     MenuItem[]
   addresses     UserAddress[]
   notifications Notification[]
+  referralsMade     Referral[] @relation("ReferralsMade")
+  referralsReceived Referral[] @relation("ReferralsReceived")
 }
 
 enum Role {
@@ -207,6 +209,22 @@ model UserAddress {
   createdAt     DateTime  @default(now())
   
   @@index([userId])
+}
+
+// Parrainages
+model Referral {
+  id            String    @id @default(cuid())
+  referrerId    String
+  referrer      User      @relation("ReferralsMade", fields: [referrerId], references: [id], onDelete: Cascade)
+  refereeId     String
+  referee       User      @relation("ReferralsReceived", fields: [refereeId], references: [id], onDelete: Cascade)
+  pointsAwarded Int       @default(0)
+  discountAwarded Float   @default(0)
+  createdAt     DateTime  @default(now())
+
+  @@unique([referrerId, refereeId])
+  @@index([referrerId])
+  @@index([refereeId])
 }
 
 // Codes promotionnels

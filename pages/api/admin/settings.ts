@@ -31,6 +31,7 @@ export type LoyaltyReward = {
 export type LoyaltyConfig = {
   bonusPercent: number;
   bonusThreshold: number;
+  referralEnabled: boolean;
   referralDiscount: number;
   referralPoints: number;
   nextRewardGoal: number;
@@ -45,6 +46,7 @@ const DEFAULT_ZONES: DeliveryZone[] = [
 const DEFAULT_LOYALTY: LoyaltyConfig = {
   bonusPercent: 10,
   bonusThreshold: 200,
+  referralEnabled: true,
   referralDiscount: 5,
   referralPoints: 50,
   nextRewardGoal: 500,

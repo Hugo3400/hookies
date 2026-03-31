@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FaTruck, FaGift, FaSave, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaTruck, FaGift, FaSave, FaPlus, FaTrash, FaToggleOn, FaToggleOff } from 'react-icons/fa';
 
 type DeliveryZone = {
   name: string;
@@ -15,6 +15,7 @@ type LoyaltyReward = {
 type LoyaltyConfig = {
   bonusPercent: number;
   bonusThreshold: number;
+  referralEnabled: boolean;
   referralDiscount: number;
   referralPoints: number;
   nextRewardGoal: number;
@@ -33,6 +34,7 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
   const [loyalty, setLoyalty] = useState<LoyaltyConfig>({
     bonusPercent: 10,
     bonusThreshold: 200,
+    referralEnabled: true,
     referralDiscount: 5,
     referralPoints: 50,
     nextRewardGoal: 500,
@@ -169,6 +171,17 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
               className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
             />
             <p className="mt-1 text-xs text-slate-500">Progression vers la prochaine récompense</p>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-slate-400">Parrainage</label>
+            <button
+              type="button"
+              onClick={() => setLoyalty({ ...loyalty, referralEnabled: !loyalty.referralEnabled })}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${loyalty.referralEnabled ? 'bg-green-600/30 text-green-200 border border-green-500/40' : 'bg-red-900/30 text-red-300 border border-red-600/40'}`}
+            >
+              {loyalty.referralEnabled ? <FaToggleOn className="text-lg" /> : <FaToggleOff className="text-lg" />}
+              {loyalty.referralEnabled ? 'Activé' : 'Désactivé'}
+            </button>
           </div>
           <div>
             <label className="mb-1 block text-xs text-slate-400">Parrainage : réduction ami ($)</label>
