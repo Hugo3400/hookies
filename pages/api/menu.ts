@@ -16,7 +16,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     }
   } else if (req.method === 'POST') {
     // Ajouter un nouvel article (admin)
-    if (req.user?.role !== 'ADMIN') {
+    if (req.user?.role !== 'ADMIN' && req.user?.role !== 'WEBMASTER') {
       return res.status(403).json({ error: 'Accès refusé' });
     }
 

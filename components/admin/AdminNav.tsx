@@ -21,7 +21,7 @@ type Props = {
 };
 
 export default function AdminNav({ activeTab, onChange, pendingOrders = 0, pendingReservations = 0, userRole = 'ADMIN' }: Props) {
-  const visibleTabs = TABS.filter(tab => !tab.adminOnly || userRole === 'ADMIN');
+  const visibleTabs = TABS.filter(tab => !tab.adminOnly || userRole === 'ADMIN' || userRole === 'WEBMASTER');
 
   return (
     <nav className="mb-8 flex flex-wrap gap-2">

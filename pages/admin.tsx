@@ -198,7 +198,7 @@ export default function AdminPage() {
                   onUpdateStatus={admin.updateReservationStatus}
                 />
               )}
-              {activeTab === 'menu' && userRole === 'ADMIN' && (
+              {activeTab === 'menu' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
                 <MenuTab
                   items={admin.menuItems}
                   loading={admin.loading.menu}
@@ -207,7 +207,7 @@ export default function AdminPage() {
                   onDelete={admin.deleteMenuItem}
                 />
               )}
-              {activeTab === 'users' && userRole === 'ADMIN' && (
+              {activeTab === 'users' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
                 <UsersTab
                   users={admin.users}
                   loading={admin.loading.users}
@@ -215,7 +215,7 @@ export default function AdminPage() {
                   onRoleChange={admin.updateUserRole}
                 />
               )}
-              {activeTab === 'weekly-menu' && userRole === 'ADMIN' && (
+              {activeTab === 'weekly-menu' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
                 <WeeklyMenuTab
                   weeklyMenu={admin.weeklyMenu}
                   loading={admin.loading.weekly}
@@ -223,7 +223,7 @@ export default function AdminPage() {
                   onSave={admin.saveWeeklyMenu}
                 />
               )}
-              {activeTab === 'settings' && userRole === 'ADMIN' && (
+              {activeTab === 'settings' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
                 <SettingsTab
                   data={admin.settingsData}
                   loading={admin.loading.settings}

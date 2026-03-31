@@ -15,6 +15,13 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props
   const fmtDate = (d: string) =>
     new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
+  const getRoleClassName = (role: string) => {
+    if (role === 'WEBMASTER') return 'bg-fuchsia-900/40 text-fuchsia-200';
+    if (role === 'ADMIN') return 'bg-amber-900/40 text-amber-300';
+    if (role === 'EMPLOYEE') return 'bg-blue-900/40 text-blue-300';
+    return 'bg-slate-700/40 text-slate-300';
+  };
+
   return (
     <div>
       <p className="mb-4 text-sm text-slate-400">{users.length} client(s) enregistré(s)</p>
@@ -41,17 +48,13 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props
                   <select
                     value={user.role}
                     onChange={e => onRoleChange(user.id, e.target.value)}
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-semibold focus:outline-none ${
-                      user.role === 'ADMIN'
-                        ? 'bg-amber-900/40 text-amber-300'
-                        : user.role === 'EMPLOYEE'
-                        ? 'bg-blue-900/40 text-blue-300'
-                        : 'bg-slate-700/40 text-slate-300'
-                    }`}
+                    disabled={user.role === 'WEBMASTER'}
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-semibold focus:outline-none disabled:cursor-not-allowed disabled:opacity-90 ${getRoleClassName(user.role)}`}
                   >
                     <option value="CLIENT">CLIENT</option>
                     <option value="EMPLOYEE">EMPLOYÉ</option>
                     <option value="ADMIN">ADMIN</option>
+                    <option value="WEBMASTER">WEBMASTER</option>
                   </select>
                 </td>
                 <td className="px-4 py-3 text-center text-amber-300">{user.loyaltyPoints}</td>
