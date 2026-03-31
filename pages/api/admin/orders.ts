@@ -3,8 +3,11 @@ import prisma from '@/lib/db/prisma';
 import { withStaffAuth } from '@/lib/auth/middleware';
 import { AuthenticatedRequest } from '@/lib/auth/middleware';
 import { notifyOrderStatus } from '@/lib/notifications';
+import { maskEmail } from '@/lib/auth/auth';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+  const isWebmaster = req.user?.role === 'WEBMASTER';
+
   if (req.method === 'GET') {
     // Récupérer toutes les commandes (admin)
     try {
@@ -15,6 +18,14 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
           payment: true 
         },
       });
+      if (!isWebmaster) {
+        return res.status(200).json(
+          orders.map((o: any) => ({
+            ...o,
+            user: o.user ? { ...o.user, email: maskEmail(o.user.email) } : o.user,
+          }))
+        );
+      }
       res.status(200).json(orders);
     } catch (error) {
       res.status(500).json({ error: 'Erreur lors de la récupération des commandes' });

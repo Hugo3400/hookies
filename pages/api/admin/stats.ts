@@ -2,8 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withStaffAuth } from '@/lib/auth/middleware';
 import { AuthenticatedRequest } from '@/lib/auth/middleware';
+import { maskEmail } from '@/lib/auth/auth';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+  const isWebmaster = req.user?.role === 'WEBMASTER';
+
   if (req.method === 'GET') {
     try {
       const today = new Date();
@@ -49,7 +52,12 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         todayRevenue: todayRevenue._sum.finalPrice || 0,
         pendingOrders,
         pendingReservations,
-        recentOrders,
+        recentOrders: isWebmaster
+          ? recentOrders
+          : recentOrders.map((o: any) => ({
+              ...o,
+              user: o.user ? { ...o.user, email: maskEmail(o.user.email) } : o.user,
+            })),
       });
     } catch (error) {
       return res.status(500).json({ error: 'Erreur lors de la récupération des statistiques' });
