@@ -2,12 +2,22 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { verifyToken } from '@/lib/auth/auth';
 
-function getAdmin(req: NextApiRequest) {
+async function getAdmin(req: NextApiRequest) {
   const auth = req.headers.authorization;
   if (!auth?.startsWith('Bearer ')) return null;
+
   const payload = verifyToken(auth.slice(7)) as { userId: string; role: string } | null;
   if (!payload) return null;
-  return (payload.role === 'ADMIN' || payload.role === 'EMPLOYEE' || payload.role === 'WEBMASTER') ? payload : null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: payload.userId },
+    select: { id: true, role: true, isActive: true },
+  });
+
+  if (!user || !user.isActive) return null;
+  return (user.role === 'ADMIN' || user.role === 'EMPLOYEE' || user.role === 'WEBMASTER')
+    ? { userId: user.id, role: user.role }
+    : null;
 }
 
 // Config keys
@@ -69,7 +79,7 @@ async function setConfig(key: string, value: unknown) {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const admin = getAdmin(req);
+  const admin = await getAdmin(req);
   if (!admin) return res.status(401).json({ error: 'Non autorisé' });
 
   try {
