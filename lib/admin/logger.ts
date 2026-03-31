@@ -20,10 +20,21 @@ function getIp(req?: NextApiRequest): string | null {
 
 export async function logAction(payload: LogPayload): Promise<void> {
   try {
+    let resolvedActorName = payload.actorName ?? null;
+
+    // If caller did not provide actorName, resolve it from user table when actorId exists.
+    if (!resolvedActorName && payload.actorId) {
+      const actor = await prisma.user.findUnique({
+        where: { id: payload.actorId },
+        select: { name: true },
+      });
+      resolvedActorName = actor?.name ?? null;
+    }
+
     await (prisma as any).adminLog.create({
       data: {
         actorId: payload.actorId ?? null,
-        actorName: payload.actorName ?? null,
+        actorName: resolvedActorName,
         actorRole: payload.actorRole ?? null,
         action: payload.action,
         target: payload.target ?? null,
