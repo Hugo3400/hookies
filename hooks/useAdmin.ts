@@ -172,6 +172,18 @@ export function useAdmin(token: string | null) {
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur mise à jour'); }
   }, [token, showError, showSuccess]);
 
+  const deleteUser = useCallback(async (id: string) => {
+    if (!token) return;
+    try {
+      const deleted = await apiFetch<{ success: boolean; id: string; name: string }>('/api/admin/users', token, {
+        method: 'DELETE', body: JSON.stringify({ id }),
+      });
+      setUsers(prev => prev.filter(u => u.id !== id));
+      await loadStats();
+      showSuccess(`Client supprimé: ${deleted.name}`);
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur suppression'); }
+  }, [token, showError, showSuccess, loadStats]);
+
   const saveWeeklyMenu = useCallback(async (payload: WeeklyMenuPayload) => {
     if (!token) return;
     try {
@@ -210,6 +222,6 @@ export function useAdmin(token: string | null) {
     loading, error, success,
     loadStats, loadOrders, loadReservations, loadMenu, loadUsers, loadWeeklyMenu, loadSettings,
     updateOrderStatus, updateReservationStatus,
-    saveMenuItem, deleteMenuItem, updateUserRole, saveWeeklyMenu, saveSettings,
+    saveMenuItem, deleteMenuItem, updateUserRole, deleteUser, saveWeeklyMenu, saveSettings,
   };
 }

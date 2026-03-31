@@ -213,6 +213,7 @@ export default function AdminPage() {
                   loading={admin.loading.users}
                   onLoad={admin.loadUsers}
                   onRoleChange={admin.updateUserRole}
+                  onDelete={admin.deleteUser}
                 />
               )}
               {activeTab === 'weekly-menu' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (

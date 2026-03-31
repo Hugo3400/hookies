@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FaUser, FaEnvelope, FaShieldAlt, FaCoins, FaShoppingCart, FaCalendarAlt, FaCalendarCheck } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaShieldAlt, FaCoins, FaShoppingCart, FaCalendarAlt, FaCalendarCheck, FaTrash } from 'react-icons/fa';
 import type { AdminUserEntry } from './types';
 
 type Props = {
@@ -7,9 +7,10 @@ type Props = {
   loading: boolean;
   onLoad: () => void;
   onRoleChange: (id: string, role: string) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
 };
 
-export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props) {
+export default function UsersTab({ users, loading, onLoad, onRoleChange, onDelete }: Props) {
   useEffect(() => { onLoad(); }, [onLoad]);
 
   const fmtDate = (d: string) =>
@@ -20,6 +21,12 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props
     if (role === 'ADMIN') return 'bg-amber-900/40 text-amber-300';
     if (role === 'EMPLOYEE') return 'bg-blue-900/40 text-blue-300';
     return 'bg-slate-700/40 text-slate-300';
+  };
+
+  const handleDelete = async (user: AdminUserEntry) => {
+    if (user.role !== 'CLIENT') return;
+    if (!window.confirm(`Supprimer définitivement le client ${user.name || user.email} ?`)) return;
+    await onDelete(user.id);
   };
 
   return (
@@ -37,6 +44,7 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props
               <th className="px-4 py-3 text-center"><span className="inline-flex items-center gap-1.5"><FaShoppingCart className="text-[10px]" /> Commandes</span></th>
               <th className="px-4 py-3 text-center"><span className="inline-flex items-center gap-1.5"><FaCalendarAlt className="text-[10px]" /> Réservations</span></th>
               <th className="px-4 py-3"><span className="inline-flex items-center gap-1.5"><FaCalendarCheck className="text-[10px]" /> Inscrit le</span></th>
+              <th className="px-4 py-3 text-right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -61,6 +69,19 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange }: Props
                 <td className="px-4 py-3 text-center text-slate-300">{user._count.orders}</td>
                 <td className="px-4 py-3 text-center text-slate-300">{user._count.reservations}</td>
                 <td className="px-4 py-3 text-slate-400">{fmtDate(user.createdAt)}</td>
+                <td className="px-4 py-3 text-right">
+                  {user.role === 'CLIENT' ? (
+                    <button
+                      type="button"
+                      onClick={() => void handleDelete(user)}
+                      className="inline-flex items-center gap-2 rounded-lg border border-red-700/40 bg-red-900/20 px-3 py-1.5 text-xs font-semibold text-red-300 transition hover:bg-red-900/35"
+                    >
+                      <FaTrash className="text-[11px]" /> Supprimer
+                    </button>
+                  ) : (
+                    <span className="text-xs text-slate-500">Protégé</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

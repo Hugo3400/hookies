@@ -59,6 +59,39 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     }
   }
 
+  if (req.method === 'DELETE') {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'id requis' });
+
+    try {
+      const targetUser = await prisma.user.findUnique({
+        where: { id },
+        select: { id: true, role: true, name: true },
+      });
+
+      if (!targetUser) {
+        return res.status(404).json({ error: 'Utilisateur introuvable' });
+      }
+
+      if (targetUser.role === 'WEBMASTER') {
+        return res.status(403).json({ error: 'Impossible de supprimer un compte WEBMASTER' });
+      }
+
+      if (targetUser.id === req.user?.userId) {
+        return res.status(403).json({ error: 'Impossible de supprimer ton propre compte' });
+      }
+
+      if (targetUser.role !== 'CLIENT') {
+        return res.status(403).json({ error: 'Seuls les comptes clients peuvent être supprimés' });
+      }
+
+      await prisma.user.delete({ where: { id } });
+      return res.status(200).json({ success: true, id, name: targetUser.name });
+    } catch (error) {
+      return res.status(500).json({ error: 'Erreur suppression utilisateur' });
+    }
+  }
+
   return res.status(405).json({ error: 'Méthode non autorisée' });
 }
 
