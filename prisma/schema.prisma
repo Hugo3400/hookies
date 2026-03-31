@@ -45,6 +45,7 @@ enum Role {
   EMPLOYEE
   DELIVERY
   KIOSK
+  WEBMASTER
 }
 
 // Menu

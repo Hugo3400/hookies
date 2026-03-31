@@ -45,7 +45,7 @@ export const withAdminAuth = (handler: (req: AuthenticatedRequest, res: NextApiR
       return res.status(401).json({ error: 'Utilisateur non autorise' });
     }
 
-    if (user.role !== 'ADMIN') {
+    if (user.role !== 'ADMIN' && user.role !== 'WEBMASTER') {
       return res.status(403).json({ error: 'Accès refusé' });
     }
 

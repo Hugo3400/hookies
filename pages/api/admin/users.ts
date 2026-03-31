@@ -33,9 +33,21 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === 'PATCH') {
     const { id, role } = req.body;
     if (!id || !role) return res.status(400).json({ error: 'id et role requis' });
-    const validRoles = ['CLIENT', 'ADMIN', 'EMPLOYEE', 'DELIVERY', 'KIOSK'];
+    const validRoles = ['CLIENT', 'ADMIN', 'EMPLOYEE', 'DELIVERY', 'KIOSK', 'WEBMASTER'];
     if (!validRoles.includes(role)) return res.status(400).json({ error: 'Rôle invalide' });
+
+    // Vérifier que l'utilisateur n'essaie pas de modifier un compte WEBMASTER
     try {
+      const targetUser = await prisma.user.findUnique({ where: { id }, select: { role: true } });
+      if (targetUser?.role === 'WEBMASTER') {
+        return res.status(403).json({ error: 'Impossible de modifier un compte WEBMASTER' });
+      }
+
+      // Vérifier que quelqu'un n'essaie pas de se donner le rôle WEBMASTER
+      if (role === 'WEBMASTER') {
+        return res.status(403).json({ error: 'Impossible d\'assigner le rôle WEBMASTER' });
+      }
+
       const updated = await prisma.user.update({
         where: { id },
         data: { role },
