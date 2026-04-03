@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { FaUser, FaEnvelope, FaShieldAlt, FaCoins, FaShoppingCart, FaCalendarAlt, FaCalendarCheck, FaTrash } from 'react-icons/fa';
+import { useEffect, useMemo, useState } from 'react';
+import { FaUser, FaEnvelope, FaShieldAlt, FaCoins, FaShoppingCart, FaCalendarAlt, FaCalendarCheck, FaTrash, FaSave } from 'react-icons/fa';
 import type { AdminUserEntry } from './types';
 
 type Props = {
@@ -7,11 +7,21 @@ type Props = {
   loading: boolean;
   onLoad: () => void;
   onRoleChange: (id: string, role: string) => Promise<void>;
+  onPointsChange: (id: string, loyaltyPoints: number) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 };
 
-export default function UsersTab({ users, loading, onLoad, onRoleChange, onDelete }: Props) {
+export default function UsersTab({ users, loading, onLoad, onRoleChange, onPointsChange, onDelete }: Props) {
   useEffect(() => { onLoad(); }, [onLoad]);
+  const [pointsDraft, setPointsDraft] = useState<Record<string, string>>({});
+
+  const pointsById = useMemo(() => {
+    const map: Record<string, string> = {};
+    users.forEach((user) => {
+      map[user.id] = pointsDraft[user.id] ?? String(user.loyaltyPoints ?? 0);
+    });
+    return map;
+  }, [pointsDraft, users]);
 
   const fmtDate = (d: string) =>
     new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -27,6 +37,18 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange, onDelet
     if (user.role !== 'CLIENT') return;
     if (!window.confirm(`Supprimer définitivement le client ${user.name || user.email} ?`)) return;
     await onDelete(user.id);
+  };
+
+  const handleSavePoints = async (user: AdminUserEntry) => {
+    const raw = (pointsById[user.id] ?? '').trim();
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed) || parsed < 0 || !Number.isInteger(parsed)) {
+      window.alert('Points invalides: entrez un entier >= 0.');
+      return;
+    }
+    if (parsed === user.loyaltyPoints) return;
+    await onPointsChange(user.id, parsed);
+    setPointsDraft((prev) => ({ ...prev, [user.id]: String(parsed) }));
   };
 
   return (
@@ -65,7 +87,29 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange, onDelet
                     <option value="WEBMASTER">WEBMASTER</option>
                   </select>
                 </td>
-                <td className="px-4 py-3 text-center text-amber-300">{user.loyaltyPoints}</td>
+                <td className="px-4 py-3 text-center">
+                  {user.role === 'CLIENT' ? (
+                    <div className="inline-flex items-center gap-2">
+                      <input
+                        type="number"
+                        min={0}
+                        step={1}
+                        value={pointsById[user.id]}
+                        onChange={(e) => setPointsDraft((prev) => ({ ...prev, [user.id]: e.target.value }))}
+                        className="w-24 rounded-lg border border-amber-500/30 bg-black/20 px-2 py-1 text-center text-amber-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => void handleSavePoints(user)}
+                        className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-900/20 px-2 py-1 text-xs font-semibold text-amber-200 hover:bg-amber-900/35"
+                      >
+                        <FaSave className="text-[11px]" /> Sauver
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-amber-300">{user.loyaltyPoints}</span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-center text-slate-300">{user._count.orders}</td>
                 <td className="px-4 py-3 text-center text-slate-300">{user._count.reservations}</td>
                 <td className="px-4 py-3 text-slate-400">{fmtDate(user.createdAt)}</td>

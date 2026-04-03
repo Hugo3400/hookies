@@ -215,6 +215,7 @@ export default function AdminPage() {
                   loading={admin.loading.users}
                   onLoad={admin.loadUsers}
                   onRoleChange={admin.updateUserRole}
+                  onPointsChange={admin.updateUserPoints}
                   onDelete={admin.deleteUser}
                 />
               )}
