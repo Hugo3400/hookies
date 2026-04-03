@@ -10,7 +10,7 @@ type MenuItem = {
   name: string;
   description: string;
   price: number;
-  category: MenuCategory;
+  category: string;
   image?: string;
   preparationTime: number;
 };
@@ -33,10 +33,21 @@ const CATEGORY_ICONS: Record<MenuCategory, IconType> = {
   SAUCE: FaPepperHot,
 };
 
+const CATEGORY_ORDER: MenuCategory[] = ['BURGER', 'PLAT', 'SIDE', 'DRINK', 'DESSERT', 'SAUCE'];
+
+function normalizeCategory(category: string): string {
+  return String(category || '').trim().toUpperCase();
+}
+
+function getCategoryLabel(category: string): string {
+  const normalized = normalizeCategory(category);
+  return CATEGORY_LABELS[normalized as MenuCategory] || normalized || 'Autres';
+}
+
 export default function Menu() {
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<MenuCategory | 'ALL'>('ALL');
+  const [filter, setFilter] = useState<string | 'ALL'>('ALL');
 
   useEffect(() => {
     fetch('/api/public/menu')
@@ -46,8 +57,8 @@ export default function Menu() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = filter === 'ALL' ? items : items.filter(i => i.category === filter);
-  const categories = Array.from(new Set(items.map(i => i.category)));
+  const categories = CATEGORY_ORDER.filter(cat => items.some(i => normalizeCategory(i.category) === cat));
+  const filtered = filter === 'ALL' ? items : items.filter(i => normalizeCategory(i.category) === filter);
 
   const fmt = (n: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
@@ -79,7 +90,7 @@ export default function Menu() {
                 filter === cat ? 'bg-gold text-plank' : 'border border-rope/30 text-parchment/70 hover:border-gold/50 hover:text-gold'
               }`}
             >
-              {CATEGORY_LABELS[cat]}
+              {getCategoryLabel(cat)}
             </button>
           ))}
         </div>
@@ -94,7 +105,8 @@ export default function Menu() {
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map(item => {
-            const Icon = CATEGORY_ICONS[item.category] || FaUtensils;
+            const normalizedCategory = normalizeCategory(item.category);
+            const Icon = CATEGORY_ICONS[normalizedCategory as MenuCategory] || FaUtensils;
             return (
               <div key={item.id} className="wood-card p-5">
                 {item.image && (
@@ -102,7 +114,7 @@ export default function Menu() {
                 )}
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-xs text-gold/80">
-                    <Icon className="text-[11px]" /> {CATEGORY_LABELS[item.category]}
+                    <Icon className="text-[11px]" /> {getCategoryLabel(item.category)}
                   </span>
                   <span className="font-bold text-gold">{fmt(item.price)}</span>
                 </div>
