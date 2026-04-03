@@ -22,17 +22,17 @@ const DEFAULT_WEEKLY_MENU: WeeklyMenuPayload = {
     {
       name: 'Menu Flibustier',
       description: 'Burger signature, frites de cale et sauce epicee maison.',
-      price: '18 EUR',
+      price: '$18',
     },
     {
       name: 'Menu Kraken',
       description: 'Filet de poisson pane, potatoes rustiques et salade croquante.',
-      price: '21 EUR',
+      price: '$21',
     },
     {
       name: 'Menu Capitaine',
       description: 'Double burger premium, cheddar affine et oignons carameles.',
-      price: '24 EUR',
+      price: '$24',
     },
   ],
 };
