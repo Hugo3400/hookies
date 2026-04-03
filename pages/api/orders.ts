@@ -136,7 +136,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         actorRole: 'CLIENT',
         action: 'ORDER_PLACED',
         target: `Commande #${order.orderNumber}`,
-        details: `Type: ${type} | Total: ${finalPrice.toFixed(2)}€ | Articles: ${normalizedItems.length}`,
+        details: `Type: ${type} | Total: $${finalPrice.toFixed(2)} | Articles: ${normalizedItems.length}`,
         req,
       });
 

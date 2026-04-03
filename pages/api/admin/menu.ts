@@ -22,7 +22,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     }
     try {
       const item = await prisma.menuItem.create({ data: { name, description, price: parseFloat(price), category, image: image || null, isAvailable: isAvailable !== false, preparationTime: preparationTime ? parseInt(preparationTime) : 15 } });
-      logAction({ actorId: req.user?.userId, actorRole: req.user?.role, action: 'MENU_ITEM_CREATED', target: name, details: `Catégorie: ${category} | Prix: ${price}€`, req });
+      logAction({ actorId: req.user?.userId, actorRole: req.user?.role, action: 'MENU_ITEM_CREATED', target: name, details: `Catégorie: ${category} | Prix: $${price}`, req });
       return res.status(201).json(item);
     } catch (error) {
       return res.status(500).json({ error: 'Erreur création article' });

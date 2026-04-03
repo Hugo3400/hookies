@@ -24,6 +24,9 @@ type Props = {
   token: string;
 };
 
+const formatUsd = (amount: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+
 function computeTotal(lines: QuoteLine[]) {
   return lines.reduce((sum, line) => sum + Number(line.quantity || 0) * Number(line.unitPrice || 0), 0);
 }
@@ -168,7 +171,7 @@ export default function QuotesTab({ token }: Props) {
 
         <div className="mt-3 flex items-center justify-between rounded-lg border border-amber-500/30 bg-amber-900/15 px-4 py-3">
           <span className="text-sm text-amber-100">Total devis</span>
-          <span className="text-xl font-black text-amber-300">{total.toFixed(2)} EUR</span>
+          <span className="text-xl font-black text-amber-300">{formatUsd(total)}</span>
         </div>
 
         <button type="button" onClick={saveQuote} className="mt-3 w-full rounded-xl bg-amber-500 px-4 py-2 text-sm font-bold text-black hover:bg-amber-400">
@@ -185,7 +188,7 @@ export default function QuotesTab({ token }: Props) {
               <div>
                 <p className="font-bold text-slate-100">{quote.customerName}</p>
                 <p className="text-xs text-slate-400">{quote.customerContact || 'Sans contact'} | {new Date(quote.createdAt).toLocaleString('fr-FR')}</p>
-                <p className="text-sm text-amber-200">Total: {quote.total.toFixed(2)} EUR</p>
+                <p className="text-sm text-amber-200">Total: {formatUsd(quote.total)}</p>
               </div>
               <div className="flex items-center gap-2">
                 <select value={quote.status} onChange={(e) => updateStatus(quote.id, e.target.value as QuoteStatus)} className="rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-xs">
@@ -201,7 +204,7 @@ export default function QuotesTab({ token }: Props) {
             </div>
             <ul className="mt-2 list-disc pl-5 text-sm text-slate-300">
               {quote.items.map((item, idx) => (
-                <li key={idx}>{item.label} x{item.quantity} @ {item.unitPrice.toFixed(2)} EUR</li>
+                <li key={idx}>{item.label} x{item.quantity} @ {formatUsd(item.unitPrice)}</li>
               ))}
             </ul>
             {quote.notes && <p className="mt-2 text-xs text-slate-400">Note: {quote.notes}</p>}

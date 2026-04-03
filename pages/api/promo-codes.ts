@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Vérifier le montant minimum
       if (orderAmount < promoCode.minOrderAmount) {
         return res.status(400).json({
-          error: `Montant minimum: ${promoCode.minOrderAmount}€`,
+          error: `Montant minimum: $${promoCode.minOrderAmount}`,
         });
       }
 

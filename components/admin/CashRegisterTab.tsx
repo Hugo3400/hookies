@@ -20,6 +20,9 @@ type Props = {
   token: string;
 };
 
+const formatUsd = (amount: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+
 export default function CashRegisterTab({ token }: Props) {
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -166,7 +169,7 @@ export default function CashRegisterTab({ token }: Props) {
               <div key={item.id} className="flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2">
                 <div>
                   <p className="font-semibold text-slate-100">{item.name}</p>
-                  <p className="text-xs text-slate-400">{item.price.toFixed(2)} EUR</p>
+                  <p className="text-xs text-slate-400">{formatUsd(item.price)}</p>
                 </div>
                 <button
                   type="button"
@@ -228,7 +231,7 @@ export default function CashRegisterTab({ token }: Props) {
               <div key={line.menuItemId} className="flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2">
                 <div>
                   <p className="font-semibold text-slate-100">{line.name}</p>
-                  <p className="text-xs text-slate-400">{line.price.toFixed(2)} EUR</p>
+                  <p className="text-xs text-slate-400">{formatUsd(line.price)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button type="button" onClick={() => changeQuantity(line.menuItemId, line.quantity - 1)} className="rounded bg-white/10 p-1">
@@ -248,7 +251,7 @@ export default function CashRegisterTab({ token }: Props) {
 
           <div className="mt-4 flex items-center justify-between rounded-lg border border-amber-500/30 bg-amber-900/15 px-4 py-3">
             <span className="text-sm text-amber-100">Total</span>
-            <span className="text-xl font-black text-amber-300">{total.toFixed(2)} EUR</span>
+            <span className="text-xl font-black text-amber-300">{formatUsd(total)}</span>
           </div>
 
           <button
