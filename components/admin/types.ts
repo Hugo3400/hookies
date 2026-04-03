@@ -45,7 +45,7 @@ export type AdminReservation = {
   user: { id: string; name: string; email: string; phone?: string };
 };
 
-export type MenuCategory = 'BURGER' | 'SIDE' | 'DRINK' | 'DESSERT' | 'SAUCE';
+export type MenuCategory = 'BURGER' | 'PLAT' | 'SIDE' | 'DRINK' | 'DESSERT' | 'SAUCE';
 
 export type AdminMenuItem = {
   id: string;
