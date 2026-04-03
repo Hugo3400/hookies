@@ -13,12 +13,29 @@ import UsersTab from '@/components/admin/UsersTab';
 import WeeklyMenuTab from '@/components/admin/WeeklyMenuTab';
 import SettingsTab from '@/components/admin/SettingsTab';
 import LogsTab from '@/components/admin/LogsTab';
+import CashRegisterTab from '@/components/admin/CashRegisterTab';
+import IngredientCalculatorTab from '@/components/admin/IngredientCalculatorTab';
+import AgendaTab from '@/components/admin/AgendaTab';
+import QuotesTab from '@/components/admin/QuotesTab';
 import { useAdmin } from '@/hooks/useAdmin';
 import type { AdminTab } from '@/components/admin/types';
 
 type AuthStatus = 'loading' | 'allowed' | 'denied';
 
-const VALID_ADMIN_TABS: AdminTab[] = ['dashboard', 'orders', 'reservations', 'menu', 'users', 'weekly-menu', 'settings', 'logs'];
+const VALID_ADMIN_TABS: AdminTab[] = [
+  'dashboard',
+  'orders',
+  'reservations',
+  'cash-register',
+  'ingredients',
+  'agenda',
+  'quotes',
+  'menu',
+  'users',
+  'weekly-menu',
+  'settings',
+  'logs',
+];
 
 function getInitialAdminTab(): AdminTab {
   if (typeof window === 'undefined') return 'dashboard';
@@ -85,6 +102,9 @@ export default function AdminPage() {
     }
     if (activeTab === 'settings') {
       loadSettings();
+      return;
+    }
+    if (activeTab === 'cash-register' || activeTab === 'ingredients' || activeTab === 'agenda' || activeTab === 'quotes') {
       return;
     }
     loadWeeklyMenu();
@@ -208,6 +228,18 @@ export default function AdminPage() {
                   onSave={admin.saveMenuItem}
                   onDelete={admin.deleteMenuItem}
                 />
+              )}
+              {activeTab === 'cash-register' && (
+                <CashRegisterTab token={token!} />
+              )}
+              {activeTab === 'ingredients' && (
+                <IngredientCalculatorTab />
+              )}
+              {activeTab === 'agenda' && (
+                <AgendaTab token={token!} canEdit={userRole === 'ADMIN' || userRole === 'WEBMASTER' || userRole === 'EMPLOYEE'} />
+              )}
+              {activeTab === 'quotes' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
+                <QuotesTab token={token!} />
               )}
               {activeTab === 'users' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
                 <UsersTab

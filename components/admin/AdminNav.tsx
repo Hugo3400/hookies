@@ -1,11 +1,28 @@
 import type { AdminTab } from './types';
-import { FaChartPie, FaHamburger, FaCalendarCheck, FaClipboardList, FaUsers, FaCalendarWeek, FaCog, FaStream } from 'react-icons/fa';
+import {
+  FaChartPie,
+  FaHamburger,
+  FaCalendarCheck,
+  FaClipboardList,
+  FaUsers,
+  FaCalendarWeek,
+  FaCog,
+  FaStream,
+  FaCashRegister,
+  FaCalculator,
+  FaCalendarAlt,
+  FaFileInvoiceDollar,
+} from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 
 const TABS: { key: AdminTab; label: string; icon: IconType; adminOnly?: boolean }[] = [
   { key: 'dashboard', label: 'Dashboard', icon: FaChartPie },
   { key: 'orders', label: 'Commandes', icon: FaHamburger },
   { key: 'reservations', label: 'Réservations', icon: FaCalendarCheck },
+  { key: 'cash-register', label: 'Caisse', icon: FaCashRegister },
+  { key: 'ingredients', label: 'Ingrédients', icon: FaCalculator },
+  { key: 'agenda', label: 'Agenda', icon: FaCalendarAlt },
+  { key: 'quotes', label: 'Devis', icon: FaFileInvoiceDollar, adminOnly: true },
   { key: 'menu', label: 'Menu', icon: FaClipboardList, adminOnly: true },
   { key: 'users', label: 'Clients', icon: FaUsers, adminOnly: true },
   { key: 'weekly-menu', label: 'Menu semaine', icon: FaCalendarWeek, adminOnly: true },
