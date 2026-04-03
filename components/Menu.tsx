@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { IconType } from 'react-icons';
 import { FaHamburger, FaCocktail, FaIceCream, FaPepperHot, FaUtensils } from 'react-icons/fa';
 
-type MenuCategory = 'BURGER' | 'SIDE' | 'DRINK' | 'DESSERT' | 'SAUCE';
+type MenuCategory = 'BURGER' | 'PLAT' | 'SIDE' | 'DRINK' | 'DESSERT' | 'SAUCE';
 
 type MenuItem = {
   id: string;
@@ -17,6 +17,7 @@ type MenuItem = {
 
 const CATEGORY_LABELS: Record<MenuCategory, string> = {
   BURGER: 'Burgers',
+  PLAT: 'Plats',
   SIDE: 'Accompagnements',
   DRINK: 'Boissons',
   DESSERT: 'Desserts',
@@ -25,6 +26,7 @@ const CATEGORY_LABELS: Record<MenuCategory, string> = {
 
 const CATEGORY_ICONS: Record<MenuCategory, IconType> = {
   BURGER: FaHamburger,
+  PLAT: FaUtensils,
   SIDE: FaPepperHot,
   DRINK: FaCocktail,
   DESSERT: FaIceCream,
