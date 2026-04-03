@@ -236,6 +236,7 @@ export function useEspaceClient() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    let cancelled = false;
 
     // Discord OAuth: token in URL query param
     const urlParams = new URLSearchParams(window.location.search);
@@ -255,12 +256,14 @@ export function useEspaceClient() {
       fetch('/api/auth/me', { headers: { Authorization: `Bearer ${urlToken}` } })
         .then(r => r.ok ? r.json() : null)
         .then(data => {
-          if (data?.user) {
+          if (!cancelled && data?.user) {
             saveSession(urlToken, data.user);
           }
         })
         .catch(() => {});
-      return;
+      return () => {
+        cancelled = true;
+      };
     }
 
     const savedToken = window.localStorage.getItem('hookies_token');
@@ -269,14 +272,35 @@ export function useEspaceClient() {
 
     try {
       const parsedUser = JSON.parse(savedUser) as AuthUser;
-      setToken(savedToken);
-      setUser(parsedUser);
-      setProfileForm((prev) => ({ ...prev, name: parsedUser.name || '', phone: parsedUser.phone || '' }));
+      fetch('/api/auth/me', { headers: { Authorization: `Bearer ${savedToken}` } })
+        .then((response) => (response.ok ? response.json() : null))
+        .then((data) => {
+          if (cancelled) return;
+          if (data?.user) {
+            saveSession(savedToken, data.user);
+            setProfileForm((prev) => ({
+              ...prev,
+              name: data.user.name || parsedUser.name || '',
+              phone: data.user.phone || parsedUser.phone || '',
+            }));
+            return;
+          }
+          handleLogout();
+        })
+        .catch(() => {
+          if (!cancelled) {
+            handleLogout();
+          }
+        });
     } catch {
       window.localStorage.removeItem('hookies_token');
       window.localStorage.removeItem('hookies_user');
     }
-  }, [saveSession]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [handleLogout, saveSession]);
 
   useEffect(() => {
     void loadMenu();
