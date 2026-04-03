@@ -184,6 +184,17 @@ export function useAdmin(token: string | null) {
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur mise à jour'); }
   }, [token, showError, showSuccess]);
 
+  const updateUserPoints = useCallback(async (id: string, loyaltyPoints: number) => {
+    if (!token) return;
+    try {
+      const updated = await apiFetch<AdminUserEntry>('/api/admin/users', token, {
+        method: 'PATCH', body: JSON.stringify({ id, loyaltyPoints }),
+      });
+      setUsers(prev => prev.map(u => u.id === id ? { ...u, loyaltyPoints: updated.loyaltyPoints } : u));
+      showSuccess('Points fidélité mis à jour');
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur mise à jour points'); }
+  }, [token, showError, showSuccess]);
+
   const deleteUser = useCallback(async (id: string) => {
     if (!token) return;
     try {
@@ -234,6 +245,6 @@ export function useAdmin(token: string | null) {
     loading, error, success,
     loadStats, loadOrders, loadReservations, loadMenu, loadUsers, loadWeeklyMenu, loadSettings,
     updateOrderStatus, deleteOrder, updateReservationStatus,
-    saveMenuItem, deleteMenuItem, updateUserRole, deleteUser, saveWeeklyMenu, saveSettings,
+    saveMenuItem, deleteMenuItem, updateUserRole, updateUserPoints, deleteUser, saveWeeklyMenu, saveSettings,
   };
 }

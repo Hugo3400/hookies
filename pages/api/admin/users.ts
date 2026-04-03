@@ -35,10 +35,27 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   }
 
   if (req.method === 'PATCH') {
-    const { id, role } = req.body;
-    if (!id || !role) return res.status(400).json({ error: 'id et role requis' });
+    const { id, role, loyaltyPoints } = req.body;
+    if (!id) return res.status(400).json({ error: 'id requis' });
+
+    const hasRoleUpdate = role != null;
+    const hasPointsUpdate = loyaltyPoints != null;
+    if (!hasRoleUpdate && !hasPointsUpdate) {
+      return res.status(400).json({ error: 'Aucune mise à jour fournie' });
+    }
+
     const validRoles = ['CLIENT', 'ADMIN', 'EMPLOYEE', 'DELIVERY', 'KIOSK', 'WEBMASTER'];
-    if (!validRoles.includes(role)) return res.status(400).json({ error: 'Rôle invalide' });
+    if (hasRoleUpdate && !validRoles.includes(role)) {
+      return res.status(400).json({ error: 'Rôle invalide' });
+    }
+
+    let parsedPoints: number | null = null;
+    if (hasPointsUpdate) {
+      parsedPoints = Number(loyaltyPoints);
+      if (!Number.isFinite(parsedPoints) || parsedPoints < 0 || !Number.isInteger(parsedPoints)) {
+        return res.status(400).json({ error: 'Points invalides (entier >= 0 attendu)' });
+      }
+    }
 
     // Vérifier que l'utilisateur n'essaie pas de modifier un compte WEBMASTER
     try {
@@ -48,24 +65,44 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       }
 
       // Vérifier que quelqu'un n'essaie pas de se donner le rôle WEBMASTER
-      if (role === 'WEBMASTER') {
+      if (hasRoleUpdate && role === 'WEBMASTER') {
         return res.status(403).json({ error: 'Impossible d\'assigner le rôle WEBMASTER' });
+      }
+
+      if (hasPointsUpdate && targetUser?.role !== 'CLIENT') {
+        return res.status(403).json({ error: 'Les points ne sont modifiables que pour les comptes CLIENT' });
       }
 
       const updated = await prisma.user.update({
         where: { id },
-        data: { role },
-        select: { id: true, email: true, name: true, role: true },
+        data: {
+          ...(hasRoleUpdate && { role }),
+          ...(hasPointsUpdate && parsedPoints != null && { loyaltyPoints: parsedPoints }),
+        },
+        select: { id: true, email: true, name: true, role: true, loyaltyPoints: true },
       });
 
-      logAction({
-        actorId: req.user?.userId,
-        actorRole: req.user?.role,
-        action: 'USER_ROLE_CHANGED',
-        target: updated.name,
-        details: `Rôle → ${role}`,
-        req,
-      });
+      if (hasRoleUpdate) {
+        logAction({
+          actorId: req.user?.userId,
+          actorRole: req.user?.role,
+          action: 'USER_ROLE_CHANGED',
+          target: updated.name,
+          details: `Rôle → ${role}`,
+          req,
+        });
+      }
+
+      if (hasPointsUpdate) {
+        logAction({
+          actorId: req.user?.userId,
+          actorRole: req.user?.role,
+          action: 'USER_POINTS_CHANGED',
+          target: updated.name,
+          details: `Points fidélité → ${updated.loyaltyPoints}`,
+          req,
+        });
+      }
 
       return res.status(200).json({
         ...updated,
