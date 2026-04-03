@@ -212,12 +212,18 @@ export function useEspaceClient() {
       );
 
       setProfileForm((prev) => ({ ...prev, name: profileData?.name || '', phone: profileData?.phone || '' }));
-    } catch {
+    } catch (err) {
+      const status = (err as { status?: number } | null)?.status;
+      if (status === 401) {
+        handleLogout();
+        showMessage('Session expirée. Merci de vous reconnecter.', true);
+        return;
+      }
       showMessage('Erreur chargement des données client.', true);
     } finally {
       if (!silent) setLoading((prev) => ({ ...prev, data: false }));
     }
-  }, [showMessage]);
+  }, [handleLogout, showMessage]);
 
   const saveSession = useCallback((sessionToken: string, sessionUser: AuthUser) => {
     setToken(sessionToken);
