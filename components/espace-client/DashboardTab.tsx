@@ -1,8 +1,11 @@
-import { FaBox, FaCalendarAlt, FaCoins, FaDollarSign } from 'react-icons/fa';
+import { FaBox, FaCalendarAlt, FaCoins, FaDollarSign, FaCog } from 'react-icons/fa';
 import type { Order, Reservation } from './types';
+
+const STAFF_ROLES = ['ADMIN', 'EMPLOYEE', 'WEBMASTER'];
 
 type DashboardTabProps = {
   userName?: string;
+  userRole?: string;
   loyaltyPoints: number;
   orders: Order[];
   reservations: Reservation[];
@@ -13,6 +16,7 @@ type DashboardTabProps = {
 
 export default function DashboardTab({
   userName,
+  userRole,
   loyaltyPoints,
   orders,
   reservations,
@@ -37,6 +41,14 @@ export default function DashboardTab({
           >
             Commander maintenant
           </button>
+          {userRole && STAFF_ROLES.includes(userRole) && (
+            <a
+              href="/admin"
+              className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-5 py-2.5 font-semibold text-amber-200 transition hover:bg-amber-500/20"
+            >
+              <FaCog className="h-4 w-4" /> Administration
+            </a>
+          )}
         </div>
         <p className={`mt-4 text-sm font-semibold ${isOpen ? 'text-green-300' : 'text-red-300'}`}>{openingLabel}</p>
       </div>

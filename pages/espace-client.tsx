@@ -79,6 +79,7 @@ export default function EspaceClientPage() {
             {state.activeTab === 'dashboard' && (
               <DashboardTab
                 userName={state.user?.name}
+                userRole={state.user?.role}
                 loyaltyPoints={state.user?.loyaltyPoints || 0}
                 orders={state.orders}
                 reservations={state.reservations}
