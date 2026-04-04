@@ -35,20 +35,22 @@ export default function DashboardTab({
             <h2 className="font-display text-2xl font-black text-amber-100">Salut {userName || 'Capitaine'}</h2>
             <p className="mt-2 text-slate-300">Ton espace client premium est prêt.</p>
           </div>
-          <button
-            onClick={onGoBorne}
-            className="rounded-lg bg-amber-500 px-5 py-2.5 font-semibold text-slate-950 transition hover:bg-amber-400"
-          >
-            Commander maintenant
-          </button>
-          {userRole && STAFF_ROLES.includes(userRole) && (
-            <a
-              href="/admin"
-              className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-5 py-2.5 font-semibold text-amber-200 transition hover:bg-amber-500/20"
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={onGoBorne}
+              className="rounded-lg bg-amber-500 px-5 py-2.5 font-semibold text-slate-950 transition hover:bg-amber-400"
             >
-              <FaCog className="h-4 w-4" /> Administration
-            </a>
-          )}
+              Commander maintenant
+            </button>
+            {userRole && STAFF_ROLES.includes(userRole) && (
+              <a
+                href="/admin"
+                className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-5 py-2.5 font-semibold text-amber-200 transition hover:bg-amber-500/20"
+              >
+                <FaCog className="h-4 w-4" /> Administration
+              </a>
+            )}
+          </div>
         </div>
         <p className={`mt-4 text-sm font-semibold ${isOpen ? 'text-green-300' : 'text-red-300'}`}>{openingLabel}</p>
       </div>
