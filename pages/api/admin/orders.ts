@@ -39,7 +39,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       const updatedOrder = await prisma.order.update({
         where: { id },
         data: { status },
-        include: { user: { select: { id: true, discordId: true, name: true } } },
+        include: { user: { select: { id: true, name: true } } },
       });
 
       // Log

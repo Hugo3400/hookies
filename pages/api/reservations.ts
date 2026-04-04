@@ -46,7 +46,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
       const client = await prisma.user.findUnique({
         where: { id: req.user?.userId },
-        select: { name: true, email: true, discordId: true },
+        select: { name: true, email: true },
       });
 
       // Notification in-app

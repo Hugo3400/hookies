@@ -35,7 +35,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       const updated = await prisma.reservation.update({
         where: { id },
         data: { status },
-        include: { user: { select: { id: true, name: true, email: true, discordId: true } } },
+        include: { user: { select: { id: true, name: true, email: true } } },
       });
 
       // Notification in-app
