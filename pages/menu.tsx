@@ -10,7 +10,7 @@ export default function MenuPage() {
         <title>La Carte | Hookies</title>
         <meta
           name="description"
-          content="Carte du restaurant Hookies : burgers au feu de bois, fish & chips, rhums arrangés et desserts maison."
+          content="Carte du restaurant Hookies : fish burgers, fruits de mer, huîtres, moules frites et sauces maison."
         />
       </Head>
 
@@ -20,7 +20,7 @@ export default function MenuPage() {
           <div className="mx-auto w-full max-w-7xl">
             <h1 className="font-pirate text-4xl text-gold md:text-5xl">La Carte</h1>
             <p className="mt-3 max-w-lg text-sm text-parchment/60">
-              Nos burgers, plats du jour, rhums et desserts maison.
+              Fish burgers, fruits de mer, huîtres, moules frites et sauces maison.
             </p>
             <div className="rope-line mt-4 w-24" />
           </div>

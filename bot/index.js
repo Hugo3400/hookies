@@ -76,7 +76,7 @@ function generateLoginToken(userId, role) {
 }
 
 function hookiesEmbed() {
-  return new EmbedBuilder().setColor(0xc9952b).setFooter({ text: 'Hookies — Taverne & Grillades' });
+  return new EmbedBuilder().setColor(0xc9952b).setFooter({ text: 'Hookies — Taverne & Fruits de mer' });
 }
 
 // --- Help embed ---
@@ -84,7 +84,7 @@ function helpEmbed() {
   return hookiesEmbed()
     .setTitle('🏴‍☠️ Hookies — Bot de la Taverne')
     .setDescription(
-      'Ahoy ! Je suis le bot de **Hookies — Taverne & Grillades**.\n' +
+      'Ahoy ! Je suis le bot de **Hookies — Taverne & Fruits de mer**.\n' +
       'Utilise les commandes ci-dessous en message privé :\n\n' +
       '`/register` — Créer ton compte\n' +
       '`/login` — Recevoir un lien de connexion\n' +

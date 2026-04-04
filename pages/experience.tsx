@@ -10,7 +10,7 @@ export default function ExperiencePage() {
         <title>L'Aventure | Hookies</title>
         <meta
           name="description"
-          content="Découvrez l'univers Hookies : grill au feu de bois, décor de taverne, rhums arrangés et soirées pirates."
+          content="Découvrez l'univers Hookies : fruits de mer, décor de taverne, rhums arrangés et soirées pirates."
         />
       </Head>
 
@@ -20,7 +20,7 @@ export default function ExperiencePage() {
           <div className="mx-auto w-full max-w-7xl">
             <h1 className="font-pirate text-4xl text-gold md:text-5xl">L'Aventure Hookies</h1>
             <p className="mt-3 max-w-lg text-sm text-parchment/60">
-              Décor de taverne, cuisine visible et soirées pirates. Voilà ce qui nous attend.
+              Décor de taverne, cuisine visible et soirées pirates. Voilà ce qui vous attend.
             </p>
             <div className="rope-line mt-4 w-24" />
           </div>

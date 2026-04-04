@@ -21,7 +21,7 @@ export default function Header() {
           <img src="/favicon.png" alt="Hookies" className="h-12 w-12 rounded-sm" />
           <div>
             <span className="font-pirate text-3xl text-gold md:text-4xl">Hookies</span>
-            <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">Taverne &amp; Grillades</p>
+            <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">Taverne &amp; Fruits de mer</p>
           </div>
         </Link>
 

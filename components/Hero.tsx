@@ -20,19 +20,19 @@ const FALLBACK_WEEKLY_MENU: WeeklyMenuData = {
   weekLabel: 'Semaine en cours',
   items: [
     {
-      name: 'Menu Flibustier',
-      description: 'Burger au feu de bois, frites maison et sauce épicée.',
-      price: '$18',
+      name: 'Ration du Moussaillon',
+      description: 'Fish burger, petite portion de frites et boisson du marin.',
+      price: '$300',
     },
     {
-      name: 'Menu Kraken',
-      description: 'Filet de poisson pané, potatoes rustiques et salade.',
-      price: '$21',
+      name: 'Le Kraken Croustillant',
+      description: 'Filet de poisson pané, onion rings dorés, salade croquante et sauce citronnée.',
+      price: '$500',
     },
     {
-      name: 'Menu Capitaine',
-      description: 'Double burger, cheddar affiné et oignons caramélisés.',
-      price: '$24',
+      name: 'Le Trésor du Capitaine',
+      description: 'Double fish burger du capitaine, grande portion de frites et boisson du marin.',
+      price: '$500',
     },
   ],
 };
@@ -83,7 +83,7 @@ export default function Hero() {
           </h1>
 
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-parchment/80">
-            Grillades au feu de bois, fish &amp; chips croustillants, rhums arrangés et ambiance de corsaire. On vous attend 7j/7 de 11h30 à 23h30.
+            Fish burgers, fruits de mer, huîtres, moules frites et ambiance de corsaire. On vous attend 7j/7 de 11h30 à 23h30.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">

@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <span className="font-pirate text-3xl text-gold">Hookies</span>
             <p className="mt-3 text-sm text-parchment/50">
-              Restaurant pirate &amp; grillades au feu de bois. Ouvert 7j/7 de 11h30 à 23h30.
+              Restaurant pirate &amp; fruits de mer. Ouvert 7j/7 de 11h30 à 23h30.
             </p>
           </div>
 
@@ -29,7 +29,7 @@ export default function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-2 text-xs text-parchment/35 md:flex-row">
           <p>&copy; 2026 Hookies. Tous droits réservés.</p>
-          <p>Taverne &amp; Grillades au feu de bois.</p>
+          <p>Taverne &amp; Fruits de mer.</p>
         </div>
       </div>
     </footer>

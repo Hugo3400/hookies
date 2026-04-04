@@ -4,7 +4,7 @@ import type { AdminMenuItem, MenuCategory } from './types';
 
 const CATEGORIES: MenuCategory[] = ['BURGER', 'PLAT', 'SIDE', 'DRINK', 'DESSERT', 'SAUCE'];
 const CATEGORY_LABELS: Record<MenuCategory, string> = {
-  BURGER: 'Burgers', PLAT: 'Plats', SIDE: 'Accompagnements', DRINK: 'Boissons', DESSERT: 'Desserts', SAUCE: 'Sauces',
+  BURGER: 'Fish Burgers', PLAT: 'Plats', SIDE: 'Accompagnements', DRINK: 'Boissons', DESSERT: 'Desserts', SAUCE: 'Sauces',
 };
 
 const EMPTY_ITEM: Partial<AdminMenuItem> & { id?: string } = {

@@ -16,30 +16,30 @@ type WeeklyMenuPayload = {
 
 const DEFAULT_WEEKLY_MENU: WeeklyMenuPayload = {
   title: 'Menus de la semaine',
-  subtitle: 'Selection du capitaine',
+  subtitle: 'La sélection du capitaine',
   weekLabel: 'Semaine en cours',
   items: [
     {
-      name: 'Menu Flibustier',
-      description: 'Burger signature, frites de cale et sauce epicee maison.',
-      price: '$18',
+      name: 'Ration du Moussaillon',
+      description: 'Fish burger, petite portion de frites et boisson du marin.',
+      price: '$300',
     },
     {
-      name: 'Menu Kraken',
-      description: 'Filet de poisson pane, potatoes rustiques et salade croquante.',
-      price: '$21',
+      name: 'Le Kraken Croustillant',
+      description: 'Filet de poisson pané, onion rings dorés, salade croquante et sauce citronnée.',
+      price: '$500',
     },
     {
-      name: 'Menu Capitaine',
-      description: 'Double burger premium, cheddar affine et oignons carameles.',
-      price: '$24',
+      name: 'Le Trésor du Capitaine',
+      description: 'Double fish burger du capitaine, grande portion de frites et boisson du marin.',
+      price: '$500',
     },
   ],
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Methode non autorisee' });
+    return res.status(405).json({ error: 'Méthode non autorisée' });
   }
 
   try {

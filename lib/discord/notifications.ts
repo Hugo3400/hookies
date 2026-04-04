@@ -26,7 +26,7 @@ function getClient(): Client | null {
 function hookiesEmbed() {
   return new EmbedBuilder()
     .setColor(0xc9952b)
-    .setFooter({ text: 'Hookies — Taverne & Grillades' });
+    .setFooter({ text: 'Hookies — Taverne & Fruits de mer' });
 }
 
 // ---- Notifications ----

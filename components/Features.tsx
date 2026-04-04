@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaFire, FaDrumstickBite, FaGlassCheers, FaUsers } from 'react-icons/fa';
+import { FaAnchor, FaFish, FaGlassCheers, FaUsers } from 'react-icons/fa';
 
 export default function Features() {
   return (
@@ -12,19 +12,19 @@ export default function Features() {
         <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
           {/* Large featured card */}
           <div className="wood-card row-span-2 p-8">
-            <FaFire className="text-3xl text-gold" />
-            <h3 className="mt-4 font-pirate text-3xl text-parchment">Grill au feu de bois</h3>
+            <FaAnchor className="text-3xl text-gold" />
+            <h3 className="mt-4 font-pirate text-3xl text-parchment">Fruits de mer & poisson frais</h3>
             <p className="mt-3 text-sm leading-relaxed text-parchment/70">
-              Nos viandes sont grillées à la flamme dans notre cuisine ouverte. Vous sentez la braise depuis la salle.
-              Côte de boeuf maturée, ribs fumés, poulet mariné — tout est cuit sous vos yeux.
+              Huîtres, homard, langouste, moules frites, tartares de saumon et de crabe — tout arrive frais du port.
+              Calamars grillés, soupe de poisson, paniers du pêcheur — la mer dans votre assiette.
             </p>
           </div>
 
           <div className="wood-card p-6">
-            <FaDrumstickBite className="text-2xl text-gold" />
-            <h3 className="mt-3 font-pirate text-2xl text-parchment">Fish &amp; Chips de la cale</h3>
+            <FaFish className="text-2xl text-gold" />
+            <h3 className="mt-3 font-pirate text-2xl text-parchment">Fish burgers du capitaine</h3>
             <p className="mt-2 text-sm text-parchment/70">
-              Poisson frais pané à la bière, frites épaisses et sauce tartare maison. Le classique du port, version Hookies.
+              Fish burgers croustillants, filet de poisson pané, onion rings dorés et sauces maison. Le classique du port, version Hookies.
             </p>
           </div>
 

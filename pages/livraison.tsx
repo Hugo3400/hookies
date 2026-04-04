@@ -26,7 +26,7 @@ export default function LivraisonPage() {
         <title>Livraison | Hookies</title>
         <meta
           name="description"
-          content="Commandez Hookies en livraison : burgers, fish & chips et plats du jour livrés chez vous."
+          content="Commandez Hookies en livraison : fish burgers, fruits de mer et sandwichs du pont livrés chez vous."
         />
       </Head>
 

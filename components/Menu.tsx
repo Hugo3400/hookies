@@ -16,7 +16,7 @@ type MenuItem = {
 };
 
 const CATEGORY_LABELS: Record<MenuCategory, string> = {
-  BURGER: 'Burgers',
+  BURGER: 'Fish Burgers',
   PLAT: 'Plats',
   SIDE: 'Accompagnements',
   DRINK: 'Boissons',
@@ -68,7 +68,7 @@ export default function Menu() {
       <div className="mx-auto w-full max-w-7xl">
         <h2 className="font-pirate text-center text-4xl text-gold md:text-5xl">La Carte</h2>
         <p className="mx-auto mt-3 max-w-lg text-center text-sm text-parchment/60">
-          Burgers au feu de bois, poisson frais, rhums et desserts maison.
+          Fish burgers, fruits de mer, huîtres, moules frites et sauces maison.
         </p>
         <div className="rope-line mx-auto mt-4 w-32" />
 
