@@ -238,7 +238,7 @@ export function useEspaceClient() {
     if (typeof window === 'undefined') return;
     let cancelled = false;
 
-    // Discord OAuth: token in URL query param
+    // Token in URL query param (e.g. from email link)
     const urlParams = new URLSearchParams(window.location.search);
     const urlToken = urlParams.get('token');
     const urlError = urlParams.get('error');

@@ -5,8 +5,6 @@ export type AuthUser = {
   id: string;
   name: string;
   email?: string;
-  discordId?: string;
-  discordTag?: string;
   role: string;
   phone?: string;
   loyaltyPoints?: number;

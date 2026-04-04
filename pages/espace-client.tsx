@@ -27,6 +27,12 @@ export default function EspaceClientPage() {
           <AuthPanel
             error={state.error}
             successMessage={state.successMessage}
+            authMode={state.authMode}
+            setAuthMode={state.setAuthMode}
+            authForm={state.authForm}
+            setAuthForm={state.setAuthForm}
+            handleAuthSubmit={state.handleAuthSubmit}
+            loading={state.loading.auth}
           />
           <Footer />
         </main>
@@ -47,7 +53,7 @@ export default function EspaceClientPage() {
             <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="font-display text-3xl font-black text-amber-200">Bienvenue, {state.user?.name}</h1>
-                <p className="mt-2 text-slate-300">{state.user?.email || state.user?.discordTag || ''}</p>
+                <p className="mt-2 text-slate-300">{state.user?.email || ''}</p>
               </div>
               <button
                 onClick={state.handleLogout}
