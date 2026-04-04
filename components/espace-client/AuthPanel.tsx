@@ -56,6 +56,7 @@ export default function AuthPanel({
                   type="text"
                   placeholder="Nom"
                   required
+                  autoComplete="name"
                   value={authForm.name}
                   onChange={(e) => setAuthForm({ ...authForm, name: e.target.value })}
                   className="w-full rounded-lg border border-slate-600 bg-slate-800/50 py-3 pl-10 pr-4 text-white placeholder-slate-400 focus:border-amber-500 focus:outline-none"
@@ -69,6 +70,7 @@ export default function AuthPanel({
                 type="email"
                 placeholder="Email"
                 required
+                autoComplete="email"
                 value={authForm.email}
                 onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
                 className="w-full rounded-lg border border-slate-600 bg-slate-800/50 py-3 pl-10 pr-4 text-white placeholder-slate-400 focus:border-amber-500 focus:outline-none"
@@ -81,6 +83,7 @@ export default function AuthPanel({
                 type="password"
                 placeholder="Mot de passe"
                 required
+                autoComplete="current-password"
                 value={authForm.password}
                 onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
                 className="w-full rounded-lg border border-slate-600 bg-slate-800/50 py-3 pl-10 pr-4 text-white placeholder-slate-400 focus:border-amber-500 focus:outline-none"
@@ -93,6 +96,7 @@ export default function AuthPanel({
                 <input
                   type="tel"
                   placeholder="Téléphone (optionnel)"
+                  autoComplete="tel"
                   value={authForm.phone}
                   onChange={(e) => setAuthForm({ ...authForm, phone: e.target.value })}
                   className="w-full rounded-lg border border-slate-600 bg-slate-800/50 py-3 pl-10 pr-4 text-white placeholder-slate-400 focus:border-amber-500 focus:outline-none"
