@@ -4,7 +4,7 @@ import Link from 'next/link';
 type WeeklyMenuItem = {
   name: string;
   description: string;
-  price: string;
+  price: string | number;
 };
 
 type WeeklyMenuData = {
@@ -39,6 +39,14 @@ const FALLBACK_WEEKLY_MENU: WeeklyMenuData = {
 
 export default function Hero() {
   const [weeklyMenu, setWeeklyMenu] = useState<WeeklyMenuData>(FALLBACK_WEEKLY_MENU);
+
+  const formatWeeklyPrice = (price: string | number) => {
+    if (typeof price === 'number') return `$${price}`;
+    const trimmed = price.trim();
+    if (!trimmed) return '$0';
+    if (trimmed.startsWith('$')) return trimmed;
+    return `$${trimmed}`;
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -108,7 +116,7 @@ export default function Hero() {
                   <p className="font-bold text-rum">{item.name}</p>
                   <p className="mt-0.5 text-sm text-rum/70">{item.description}</p>
                 </div>
-                <p className="whitespace-nowrap font-bold text-blood">{item.price}</p>
+                <p className="whitespace-nowrap font-bold text-blood">{formatWeeklyPrice(item.price)}</p>
               </div>
             ))}
           </div>
