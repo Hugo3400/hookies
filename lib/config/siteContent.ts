@@ -114,6 +114,8 @@ export const EMAIL_CONTENT = {
     title: 'Nouveau Message',
     subtitle: 'Un client souhaite etre recontacte',
     intro: 'Un nouveau message a ete recu depuis le formulaire de contact.',
+    subjectPrefix: '[Hookies] Nouveau message contact -',
+    textHeader: 'Nouveau message depuis la page contact:',
   },
   reservationCustomer: {
     title: 'Reservation Confirmee!',
@@ -136,4 +138,23 @@ export const EMAIL_CONTENT = {
     subjectPrefix: '[Hookies] Nouvelle reservation -',
     textHeader: 'Nouvelle reservation client:',
   },
+};
+
+export const CONTACT_API_CONTENT = {
+  methodNotAllowed: 'Methode non autorisee',
+  missingFields: 'Nom, email et message sont requis',
+  missingAdminEmail: 'Email admin non configure',
+  smtpMissing: 'SMTP non configure',
+  emailSendFailure: 'Echec envoi email',
+};
+
+export const RESERVATION_API_CONTENT = {
+  methodNotAllowed: 'Methode non autorisee',
+  getError: 'Erreur lors de la recuperation des reservations',
+  createError: 'Erreur lors de la creation de la reservation',
+  logTargetPrefix: 'Reservation',
+  logDetailsPrefix: 'Couverts',
+  logDetailsClientLabel: 'Client',
+  logAnonymous: 'Anonyme',
+  noSpecialRequest: 'Aucune',
 };
