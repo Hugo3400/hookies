@@ -9,6 +9,7 @@ import {
 } from '@/lib/email/templates';
 import { notifyReservationCreated } from '@/lib/notifications';
 import { logAction } from '@/lib/admin/logger';
+import { EMAIL_CONTENT } from '@/lib/config/siteContent';
 
 function formatReservationDate(value: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
@@ -62,20 +63,20 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         const customerText = [
           `Bonjour ${client.name},`,
           '',
-          'Votre reservation a bien ete enregistree.',
+          EMAIL_CONTENT.reservationCustomer.textRegistered,
           `Date: ${reservationDate}`,
           `Heure: ${reservation.time}`,
           `Nombre de personnes: ${reservation.guestCount}`,
           `Demande speciale: ${reservation.specialRequest || 'Aucune'}`,
           '',
-          'Nous vous confirmerons rapidement.',
-          'Equipe Hookies',
+          EMAIL_CONTENT.reservationCustomer.textConfirmSoon,
+          EMAIL_CONTENT.reservationCustomer.textTeam,
         ].join('\n');
 
         const tasks: Promise<boolean>[] = [
           sendEmail({
             to: client.email,
-            subject: '[Hookies] Reservation recue',
+            subject: EMAIL_CONTENT.reservationCustomer.subject,
             text: customerText,
             html: buildReservationCustomerEmail({
               name: client.name,
@@ -90,7 +91,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
         if (adminEmail) {
           const adminText = [
-            'Nouvelle reservation client:',
+            EMAIL_CONTENT.reservationAdmin.textHeader,
             `Client: ${client.name}`,
             `Email: ${client.email}`,
             `Date: ${reservationDate}`,
@@ -102,7 +103,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
           tasks.push(
             sendEmail({
               to: adminEmail,
-              subject: `[Hookies] Nouvelle reservation - ${client.name}`,
+              subject: `${EMAIL_CONTENT.reservationAdmin.subjectPrefix} ${client.name}`,
               text: adminText,
               html: buildReservationAdminEmail({
                 name: client.name,
