@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { DEFAULT_WEEKLY_MENU } from '@/lib/config/siteDefaults';
 
 type WeeklyMenuItem = {
   name: string;
@@ -15,26 +16,14 @@ type WeeklyMenuData = {
 };
 
 const FALLBACK_WEEKLY_MENU: WeeklyMenuData = {
-  title: 'Menus de la semaine',
-  subtitle: 'La sélection du capitaine',
-  weekLabel: 'Semaine en cours',
-  items: [
-    {
-      name: 'Ration du Moussaillon',
-      description: 'Fish burger, petite portion de frites et boisson du marin.',
-      price: '$300',
-    },
-    {
-      name: 'Le Kraken Croustillant',
-      description: 'Filet de poisson pané, onion rings dorés, salade croquante et sauce citronnée.',
-      price: '$500',
-    },
-    {
-      name: 'Le Trésor du Capitaine',
-      description: 'Double fish burger du capitaine, grande portion de frites et boisson du marin.',
-      price: '$500',
-    },
-  ],
+  title: DEFAULT_WEEKLY_MENU.title,
+  subtitle: DEFAULT_WEEKLY_MENU.subtitle,
+  weekLabel: DEFAULT_WEEKLY_MENU.weekLabel,
+  items: DEFAULT_WEEKLY_MENU.items.map((item) => ({
+    name: item.name,
+    description: item.description,
+    price: item.price,
+  })),
 };
 
 export default function Hero() {
