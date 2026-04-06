@@ -2,20 +2,14 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
-type DeliveryZone = { name: string; description: string; fee: number };
-
-const DEFAULT_ZONES: DeliveryZone[] = [
-  { name: 'Los Santos County', description: 'Livraison dans tout le comté de Los Santos.', fee: 2.90 },
-  { name: 'Blaine County', description: 'Livraison dans le comté de Blaine.', fee: 4.90 },
-];
+import { DEFAULT_DELIVERY_ZONES, type DeliveryZone } from '@/lib/config/siteDefaults';
 
 export default function LivraisonPage() {
-  const [zones, setZones] = useState<DeliveryZone[]>(DEFAULT_ZONES);
+  const [zones, setZones] = useState<DeliveryZone[]>(DEFAULT_DELIVERY_ZONES);
 
   useEffect(() => {
     fetch('/api/public/delivery-zones')
-      .then(r => r.ok ? r.json() : DEFAULT_ZONES)
+      .then(r => r.ok ? r.json() : DEFAULT_DELIVERY_ZONES)
       .then(data => setZones(data))
       .catch(() => {});
   }, []);

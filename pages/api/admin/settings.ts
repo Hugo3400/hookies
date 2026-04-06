@@ -1,6 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { verifyToken } from '@/lib/auth/auth';
+import {
+  CONFIG_KEYS,
+  DEFAULT_DELIVERY_ZONES,
+  DEFAULT_LOYALTY_CONFIG,
+  type DeliveryZone,
+  type LoyaltyConfig,
+} from '@/lib/config/siteDefaults';
 
 async function getAdmin(req: NextApiRequest) {
   const auth = req.headers.authorization;
@@ -20,49 +27,7 @@ async function getAdmin(req: NextApiRequest) {
     : null;
 }
 
-// Config keys
-const DELIVERY_ZONES_KEY = 'DELIVERY_ZONES';
-const LOYALTY_CONFIG_KEY = 'LOYALTY_CONFIG';
-
-export type DeliveryZone = {
-  name: string;
-  description: string;
-  fee: number;
-};
-
-export type LoyaltyReward = {
-  points: number;
-  label: string;
-};
-
-export type LoyaltyConfig = {
-  bonusPercent: number;
-  bonusThreshold: number;
-  referralEnabled: boolean;
-  referralDiscount: number;
-  referralPoints: number;
-  nextRewardGoal: number;
-  rewards: LoyaltyReward[];
-};
-
-const DEFAULT_ZONES: DeliveryZone[] = [
-  { name: 'Los Santos County', description: 'Livraison dans tout le comté de Los Santos.', fee: 2.90 },
-  { name: 'Blaine County', description: 'Livraison dans le comté de Blaine.', fee: 4.90 },
-];
-
-const DEFAULT_LOYALTY: LoyaltyConfig = {
-  bonusPercent: 10,
-  bonusThreshold: 200,
-  referralEnabled: true,
-  referralDiscount: 5,
-  referralPoints: 50,
-  nextRewardGoal: 500,
-  rewards: [
-    { points: 100, label: 'Boisson offerte' },
-    { points: 250, label: 'Dessert offert' },
-    { points: 500, label: 'Menu offert' },
-  ],
-};
+export type { DeliveryZone, LoyaltyConfig } from '@/lib/config/siteDefaults';
 
 async function getConfig<T>(key: string, fallback: T): Promise<T> {
   const row = await prisma.configuration.findUnique({ where: { key } });
@@ -85,8 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     if (req.method === 'GET') {
       const [deliveryZones, loyaltyConfig] = await Promise.all([
-        getConfig(DELIVERY_ZONES_KEY, DEFAULT_ZONES),
-        getConfig(LOYALTY_CONFIG_KEY, DEFAULT_LOYALTY),
+        getConfig(CONFIG_KEYS.DELIVERY_ZONES, DEFAULT_DELIVERY_ZONES),
+        getConfig(CONFIG_KEYS.LOYALTY_CONFIG, DEFAULT_LOYALTY_CONFIG),
       ]);
       return res.json({ deliveryZones, loyaltyConfig });
     }
@@ -94,8 +59,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'PUT') {
       if (admin.role !== 'ADMIN' && admin.role !== 'WEBMASTER') return res.status(403).json({ error: 'Réservé aux administrateurs' });
       const { deliveryZones, loyaltyConfig } = req.body;
-      if (deliveryZones) await setConfig(DELIVERY_ZONES_KEY, deliveryZones);
-      if (loyaltyConfig) await setConfig(LOYALTY_CONFIG_KEY, loyaltyConfig);
+      if (deliveryZones) await setConfig(CONFIG_KEYS.DELIVERY_ZONES, deliveryZones);
+      if (loyaltyConfig) await setConfig(CONFIG_KEYS.LOYALTY_CONFIG, loyaltyConfig);
       return res.json({ success: true });
     }
 
