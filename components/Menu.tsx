@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { IconType } from 'react-icons';
 import { FaHamburger, FaCocktail, FaIceCream, FaPepperHot, FaUtensils } from 'react-icons/fa';
+import { MENU_CONTENT } from '@/lib/config/siteContent';
 
 type MenuCategory = 'BURGER' | 'PLAT' | 'SIDE' | 'DRINK' | 'DESSERT' | 'SAUCE';
 
@@ -66,9 +67,9 @@ export default function Menu() {
   return (
     <section id="menu" className="px-4 py-16 md:px-6 md:py-20">
       <div className="mx-auto w-full max-w-7xl">
-        <h2 className="font-pirate text-center text-4xl text-gold md:text-5xl">La Carte</h2>
+        <h2 className="font-pirate text-center text-4xl text-gold md:text-5xl">{MENU_CONTENT.heading}</h2>
         <p className="mx-auto mt-3 max-w-lg text-center text-sm text-parchment/60">
-          Fish burgers, fruits de mer, huîtres, moules frites et sauces maison.
+          {MENU_CONTENT.intro}
         </p>
         <div className="rope-line mx-auto mt-4 w-32" />
 
@@ -80,7 +81,7 @@ export default function Menu() {
               filter === 'ALL' ? 'bg-gold text-plank' : 'border border-rope/30 text-parchment/70 hover:border-gold/50 hover:text-gold'
             }`}
           >
-            Tout
+            {MENU_CONTENT.allCategoriesLabel}
           </button>
           {categories.map(cat => (
             <button
@@ -96,11 +97,11 @@ export default function Menu() {
         </div>
 
         {loading && (
-          <p className="mt-10 text-center text-parchment/50">Chargement...</p>
+          <p className="mt-10 text-center text-parchment/50">{MENU_CONTENT.loadingLabel}</p>
         )}
 
         {!loading && filtered.length === 0 && (
-          <p className="mt-10 text-center text-parchment/50">Aucun plat disponible pour le moment.</p>
+          <p className="mt-10 text-center text-parchment/50">{MENU_CONTENT.emptyLabel}</p>
         )}
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -127,7 +128,7 @@ export default function Menu() {
                     href="/espace-client"
                     className="rounded-sm border border-gold/40 bg-gold/10 px-4 py-1.5 text-xs font-bold text-gold transition hover:bg-gold/20"
                   >
-                    Commander
+                    {MENU_CONTENT.orderCtaLabel}
                   </Link>
                 </div>
               </div>
