@@ -1,42 +1,7 @@
 import type { NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
-
-type WeeklyMenuItem = {
-  name: string;
-  description: string;
-  price: number;
-};
-
-type WeeklyMenuPayload = {
-  title: string;
-  subtitle: string;
-  weekLabel: string;
-  items: WeeklyMenuItem[];
-};
-
-const DEFAULT_WEEKLY_MENU: WeeklyMenuPayload = {
-  title: 'Menus de la semaine',
-  subtitle: 'Selection du capitaine',
-  weekLabel: 'Semaine en cours',
-  items: [
-    {
-      name: 'Menu Flibustier',
-      description: 'Burger signature, frites de cale et sauce epicee maison.',
-      price: 18,
-    },
-    {
-      name: 'Menu Kraken',
-      description: 'Filet de poisson pane, potatoes rustiques et salade croquante.',
-      price: 21,
-    },
-    {
-      name: 'Menu Capitaine',
-      description: 'Double burger premium, cheddar affine et oignons carameles.',
-      price: 24,
-    },
-  ],
-};
+import { CONFIG_KEYS, DEFAULT_WEEKLY_MENU, type WeeklyMenuPayload, type WeeklyMenuItem } from '@/lib/config/siteDefaults';
 
 function toNumberPrice(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
@@ -100,7 +65,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
       const config = await prisma.configuration.findUnique({
-        where: { key: 'WEEKLY_MENU' },
+        where: { key: CONFIG_KEYS.WEEKLY_MENU },
       });
 
       if (!config) {
@@ -123,9 +88,9 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
     try {
       const saved = await prisma.configuration.upsert({
-        where: { key: 'WEEKLY_MENU' },
+        where: { key: CONFIG_KEYS.WEEKLY_MENU },
         create: {
-          key: 'WEEKLY_MENU',
+          key: CONFIG_KEYS.WEEKLY_MENU,
           value: JSON.stringify(cleanPayload),
         },
         update: {

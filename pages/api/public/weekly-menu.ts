@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
+import { CONFIG_KEYS, DEFAULT_WEEKLY_MENU } from '@/lib/config/siteDefaults';
 
 type WeeklyMenuItem = {
   name: string;
@@ -14,28 +15,18 @@ type WeeklyMenuPayload = {
   items: WeeklyMenuItem[];
 };
 
-const DEFAULT_WEEKLY_MENU: WeeklyMenuPayload = {
-  title: 'Menus de la semaine',
-  subtitle: 'La sélection du capitaine',
-  weekLabel: 'Semaine en cours',
-  items: [
-    {
-      name: 'Ration du Moussaillon',
-      description: 'Fish burger, petite portion de frites et boisson du marin.',
-      price: '$300',
-    },
-    {
-      name: 'Le Kraken Croustillant',
-      description: 'Filet de poisson pané, onion rings dorés, salade croquante et sauce citronnée.',
-      price: '$500',
-    },
-    {
-      name: 'Le Trésor du Capitaine',
-      description: 'Double fish burger du capitaine, grande portion de frites et boisson du marin.',
-      price: '$500',
-    },
-  ],
-};
+function toPublicWeeklyMenu(payload = DEFAULT_WEEKLY_MENU): WeeklyMenuPayload {
+  return {
+    title: payload.title,
+    subtitle: payload.subtitle,
+    weekLabel: payload.weekLabel,
+    items: payload.items.map((item) => ({
+      name: item.name,
+      description: item.description,
+      price: formatPublicPrice(item.price),
+    })),
+  };
+}
 
 function formatPublicPrice(value: unknown): string {
   if (typeof value === 'number' && Number.isFinite(value)) {
@@ -99,18 +90,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const config = await prisma.configuration.findUnique({
-      where: { key: 'WEEKLY_MENU' },
+      where: { key: CONFIG_KEYS.WEEKLY_MENU },
     });
 
     if (!config) {
-      return res.status(200).json(DEFAULT_WEEKLY_MENU);
+      return res.status(200).json(toPublicWeeklyMenu());
     }
 
     const parsed = JSON.parse(config.value);
     const normalized = normalizePublicPayload(parsed);
-    return res.status(200).json(normalized || DEFAULT_WEEKLY_MENU);
+    return res.status(200).json(normalized || toPublicWeeklyMenu());
   } catch (error) {
     console.error('Erreur weekly-menu public:', error);
-    return res.status(200).json(DEFAULT_WEEKLY_MENU);
+    return res.status(200).json(toPublicWeeklyMenu());
   }
 }
