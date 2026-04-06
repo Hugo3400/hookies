@@ -1,7 +1,14 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret || secret.trim().length < 32) {
+    throw new Error('JWT_SECRET manquant ou trop court (minimum 32 caracteres).');
+  }
+  return secret;
+}
+
 const LEGACY_USER_ID_MAP: Record<string, string> = {
   cmnd2zl6800001437px42dhqn: 'cmmxevjwa0000e0906v9i2fki',
 };
@@ -30,12 +37,12 @@ export const comparePassword = async (
 };
 
 export const generateToken = (userId: string, role: string): string => {
-  return jwt.sign({ userId, role }, JWT_SECRET, { expiresIn: '24h' });
+  return jwt.sign({ userId, role }, getJwtSecret(), { expiresIn: '24h' });
 };
 
 export const verifyToken = (token: string): any => {
   try {
-    return normalizeAuthPayload(jwt.verify(token, JWT_SECRET));
+    return normalizeAuthPayload(jwt.verify(token, getJwtSecret()));
   } catch (error) {
     return null;
   }

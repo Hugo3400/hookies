@@ -44,7 +44,11 @@ export async function sendEmail(params: SendEmailParams): Promise<boolean> {
   }
 
   try {
-    const fromAddress = process.env.MAIL_FROM || process.env.MAIL_USER || 'no-reply@hookies.fr';
+    const fromAddress = process.env.MAIL_FROM || process.env.MAIL_USER;
+    if (!fromAddress) {
+      console.warn('Email non envoye: MAIL_FROM ou MAIL_USER manquant.');
+      return false;
+    }
 
     await getTransporter().sendMail({
       from: fromAddress,
