@@ -1,30 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
-
-const DEFAULT_LOYALTY = {
-  bonusPercent: 10,
-  bonusThreshold: 200,
-  referralEnabled: true,
-  referralDiscount: 5,
-  referralPoints: 50,
-  nextRewardGoal: 500,
-  rewards: [
-    { points: 100, label: 'Boisson offerte' },
-    { points: 250, label: 'Dessert offert' },
-    { points: 500, label: 'Menu offert' },
-  ],
-};
+import { CONFIG_KEYS, DEFAULT_LOYALTY_CONFIG } from '@/lib/config/siteDefaults';
 
 export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   try {
-    const row = await prisma.configuration.findUnique({ where: { key: 'LOYALTY_CONFIG' } });
-    if (!row) return res.json(DEFAULT_LOYALTY);
+    const row = await prisma.configuration.findUnique({ where: { key: CONFIG_KEYS.LOYALTY_CONFIG } });
+    if (!row) return res.json(DEFAULT_LOYALTY_CONFIG);
     try {
       return res.json(JSON.parse(row.value));
     } catch {
-      return res.json(DEFAULT_LOYALTY);
+      return res.json(DEFAULT_LOYALTY_CONFIG);
     }
   } catch {
-    return res.json(DEFAULT_LOYALTY);
+    return res.json(DEFAULT_LOYALTY_CONFIG);
   }
 }
