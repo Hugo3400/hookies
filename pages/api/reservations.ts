@@ -9,7 +9,7 @@ import {
 } from '@/lib/email/templates';
 import { notifyReservationCreated } from '@/lib/notifications';
 import { logAction } from '@/lib/admin/logger';
-import { EMAIL_CONTENT } from '@/lib/config/siteContent';
+import { EMAIL_CONTENT, RESERVATION_API_CONTENT } from '@/lib/config/siteContent';
 
 function formatReservationDate(value: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
@@ -28,7 +28,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       });
       res.status(200).json(reservations);
     } catch (error) {
-      res.status(500).json({ error: 'Erreur lors de la récupération des réservations' });
+      res.status(500).json({ error: RESERVATION_API_CONTENT.getError });
     }
   } else if (req.method === 'POST') {
     // Créer une nouvelle réservation
@@ -67,7 +67,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
           `Date: ${reservationDate}`,
           `Heure: ${reservation.time}`,
           `Nombre de personnes: ${reservation.guestCount}`,
-          `Demande speciale: ${reservation.specialRequest || 'Aucune'}`,
+          `Demande speciale: ${reservation.specialRequest || RESERVATION_API_CONTENT.noSpecialRequest}`,
           '',
           EMAIL_CONTENT.reservationCustomer.textConfirmSoon,
           EMAIL_CONTENT.reservationCustomer.textTeam,
@@ -97,7 +97,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
             `Date: ${reservationDate}`,
             `Heure: ${reservation.time}`,
             `Couverts: ${reservation.guestCount}`,
-            `Demande speciale: ${reservation.specialRequest || 'Aucune'}`,
+            `Demande speciale: ${reservation.specialRequest || RESERVATION_API_CONTENT.noSpecialRequest}`,
           ].join('\n');
 
           tasks.push(
@@ -124,18 +124,18 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         actorId: req.user?.userId ?? null,
         actorRole: 'CLIENT',
         action: 'RESERVATION_PLACED',
-        target: `Réservation ${formatReservationDate(reservation.date)} ${reservation.time}`,
-        details: `Couverts: ${reservation.guestCount} | Client: ${client?.name ?? 'Anonyme'}`,
+        target: `${RESERVATION_API_CONTENT.logTargetPrefix} ${formatReservationDate(reservation.date)} ${reservation.time}`,
+        details: `${RESERVATION_API_CONTENT.logDetailsPrefix}: ${reservation.guestCount} | ${RESERVATION_API_CONTENT.logDetailsClientLabel}: ${client?.name ?? RESERVATION_API_CONTENT.logAnonymous}`,
         req,
       });
 
       res.status(201).json(reservation);
     } catch (error) {
       console.error('Erreur création réservation:', error);
-      res.status(500).json({ error: 'Erreur lors de la création de la réservation' });
+      res.status(500).json({ error: RESERVATION_API_CONTENT.createError });
     }
   } else {
-    res.status(405).json({ error: 'Méthode non autorisée' });
+    res.status(405).json({ error: RESERVATION_API_CONTENT.methodNotAllowed });
   }
 }
 
