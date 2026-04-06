@@ -1,16 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaCoins, FaGift, FaPercent, FaUsers, FaCopy, FaCheck } from 'react-icons/fa';
-
-type LoyaltyReward = { points: number; label: string };
-type LoyaltyConfig = {
-  bonusPercent: number;
-  bonusThreshold: number;
-  referralEnabled: boolean;
-  referralDiscount: number;
-  referralPoints: number;
-  nextRewardGoal: number;
-  rewards: LoyaltyReward[];
-};
+import { DEFAULT_LOYALTY_CONFIG, type LoyaltyConfig } from '@/lib/config/siteDefaults';
 
 type LoyaltyTabProps = {
   userName?: string;
@@ -19,22 +9,8 @@ type LoyaltyTabProps = {
   token: string;
 };
 
-const DEFAULT_CONFIG: LoyaltyConfig = {
-  bonusPercent: 10,
-  bonusThreshold: 200,
-  referralEnabled: true,
-  referralDiscount: 5,
-  referralPoints: 50,
-  nextRewardGoal: 500,
-  rewards: [
-    { points: 100, label: 'Boisson offerte' },
-    { points: 250, label: 'Dessert offert' },
-    { points: 500, label: 'Menu offert' },
-  ],
-};
-
 export default function LoyaltyTab({ userName, points, referralCode, token }: LoyaltyTabProps) {
-  const [config, setConfig] = useState<LoyaltyConfig>(DEFAULT_CONFIG);
+  const [config, setConfig] = useState<LoyaltyConfig>(DEFAULT_LOYALTY_CONFIG);
   const [referralInput, setReferralInput] = useState('');
   const [referralMsg, setReferralMsg] = useState<{ text: string; ok: boolean } | null>(null);
   const [referralLoading, setReferralLoading] = useState(false);
@@ -42,7 +18,7 @@ export default function LoyaltyTab({ userName, points, referralCode, token }: Lo
 
   useEffect(() => {
     fetch('/api/public/loyalty-config')
-      .then(r => r.ok ? r.json() : DEFAULT_CONFIG)
+      .then(r => r.ok ? r.json() : DEFAULT_LOYALTY_CONFIG)
       .then(data => setConfig(data))
       .catch(() => {});
   }, []);
