@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { SITE_BRAND, SITE_NAV_LINKS } from '@/lib/config/siteContent';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const links = [
-    { href: '/', label: 'Accueil' },
-    { href: '/experience', label: 'L\'Aventure' },
-    { href: '/menu', label: 'La Carte' },
-    { href: '/reservation', label: 'Réserver' },
-    { href: '/livraison', label: 'Livraison' },
-    { href: '/contact', label: 'Contact' },
-  ];
+  const links = SITE_NAV_LINKS;
 
   return (
     <header className="sticky top-0 z-50 border-b-2 border-rope/30 bg-plank/95 backdrop-blur-sm">
@@ -20,8 +14,8 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-3">
           <img src="/favicon.png" alt="Hookies" className="h-12 w-12 rounded-sm" />
           <div>
-            <span className="font-pirate text-3xl text-gold md:text-4xl">Hookies</span>
-            <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">Taverne &amp; Fruits de mer</p>
+            <span className="font-pirate text-3xl text-gold md:text-4xl">{SITE_BRAND.name}</span>
+            <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">{SITE_BRAND.tagline}</p>
           </div>
         </Link>
 

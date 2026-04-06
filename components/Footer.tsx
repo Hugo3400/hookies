@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { SITE_BRAND, SITE_NAV_LINKS } from '@/lib/config/siteContent';
 
 export default function Footer() {
   return (
@@ -7,20 +8,20 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-7xl">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
           <div>
-            <span className="font-pirate text-3xl text-gold">Hookies</span>
+            <span className="font-pirate text-3xl text-gold">{SITE_BRAND.name}</span>
             <p className="mt-3 text-sm text-parchment/50">
-              Restaurant pirate &amp; fruits de mer. Ouvert 7j/7 de 11h30 à 23h30.
+              Restaurant pirate &amp; fruits de mer. Ouvert 7j/7 de 11h30 a 23h30.
             </p>
           </div>
 
           <div>
             <p className="font-subtitle text-xs tracking-[0.15em] text-gold/80">Plan du site</p>
             <ul className="mt-3 space-y-1.5 text-sm text-parchment/60">
-              <li><Link href="/" className="transition hover:text-gold">Accueil</Link></li>
-              <li><Link href="/menu" className="transition hover:text-gold">La Carte</Link></li>
-              <li><Link href="/reservation" className="transition hover:text-gold">Réserver</Link></li>
-              <li><Link href="/livraison" className="transition hover:text-gold">Livraison</Link></li>
-              <li><Link href="/contact" className="transition hover:text-gold">Contact</Link></li>
+              {SITE_NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="transition hover:text-gold">{link.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -28,8 +29,8 @@ export default function Footer() {
         <div className="rope-line my-8" />
 
         <div className="flex flex-col items-center justify-between gap-2 text-xs text-parchment/35 md:flex-row">
-          <p>&copy; 2026 Hookies. Tous droits réservés.</p>
-          <p>Taverne &amp; Fruits de mer.</p>
+          <p>&copy; {SITE_BRAND.year} {SITE_BRAND.name}. {SITE_BRAND.legalLine}</p>
+          <p>{SITE_BRAND.tagline}.</p>
         </div>
       </div>
     </footer>

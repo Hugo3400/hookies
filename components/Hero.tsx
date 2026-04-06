@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DEFAULT_WEEKLY_MENU } from '@/lib/config/siteDefaults';
+import { HERO_CONTENT } from '@/lib/config/siteContent';
 
 type WeeklyMenuItem = {
   name: string;
@@ -75,20 +76,20 @@ export default function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-20 pt-16 md:px-6 md:pt-24">
         <div className="max-w-2xl">
           <h1 className="font-pirate text-5xl leading-tight text-bone md:text-7xl">
-            Bienvenue à bord,<br />
-            <span className="gold-text">moussaillon.</span>
+            {HERO_CONTENT.headingLine1}<br />
+            <span className="gold-text">{HERO_CONTENT.headingAccent}</span>
           </h1>
 
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-parchment/80">
-            Fish burgers, fruits de mer, huîtres, moules frites et ambiance de corsaire. On vous attend 7j/7 de 11h30 à 23h30.
+            {HERO_CONTENT.description}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/reservation" className="rounded-sm bg-gold px-7 py-3 text-sm font-bold text-plank transition hover:bg-gold-light">
-              Réserver une table
+              {HERO_CONTENT.ctaReservation}
             </Link>
             <Link href="/menu" className="rounded-sm border-2 border-parchment/25 px-7 py-3 text-sm font-bold text-parchment transition hover:border-gold/50 hover:text-gold">
-              Voir la carte
+              {HERO_CONTENT.ctaMenu}
             </Link>
           </div>
         </div>
