@@ -32,6 +32,11 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       }
 
       if (id) {
+        // Verify ownership: only mark own notifications as read
+        const notif = await prisma.notification.findUnique({ where: { id } });
+        if (!notif || notif.userId !== userId) {
+          return res.status(404).json({ error: 'Notification introuvable' });
+        }
         await prisma.notification.update({
           where: { id },
           data: { isRead: true },

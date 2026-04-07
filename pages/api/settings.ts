@@ -1,9 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '@/lib/db/prisma';
+import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
 
-const prisma = new PrismaClient();
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     let settings = await prisma.restaurantSettings.findFirst();
 
@@ -24,20 +23,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === 'PUT') {
-      // Admin only - mettre à jour les paramètres
       const { name, phone, email, address, openingHours, deliveryFee, minOrderAmount, pointsPerEuro } = req.body;
 
       const updated = await prisma.restaurantSettings.update({
         where: { id: settings.id },
         data: {
-          ...(name && { name }),
-          ...(phone && { phone }),
-          ...(email && { email }),
-          ...(address && { address }),
+          ...(name && { name: String(name).slice(0, 100) }),
+          ...(phone && { phone: String(phone).slice(0, 20) }),
+          ...(email && { email: String(email).slice(0, 100) }),
+          ...(address && { address: String(address).slice(0, 200) }),
           ...(openingHours && { openingHours: JSON.stringify(openingHours) }),
-          ...(deliveryFee && { deliveryFee: parseFloat(deliveryFee) }),
-          ...(minOrderAmount && { minOrderAmount: parseFloat(minOrderAmount) }),
-          ...(pointsPerEuro && { pointsPerEuro: parseFloat(pointsPerEuro) }),
+          ...(deliveryFee != null && { deliveryFee: parseFloat(deliveryFee) }),
+          ...(minOrderAmount != null && { minOrderAmount: parseFloat(minOrderAmount) }),
+          ...(pointsPerEuro != null && { pointsPerEuro: parseFloat(pointsPerEuro) }),
         },
       });
 
@@ -50,3 +48,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: 'Erreur serveur' });
   }
 }
+
+export default withAdminAuth(handler);

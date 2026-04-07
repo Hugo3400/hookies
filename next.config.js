@@ -5,11 +5,23 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  env: {
-    DB_HOST: process.env.DB_HOST,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_NAME: process.env.DB_NAME,
+  // SECURITY: DB credentials must NEVER be in `env` (exposed to client bundle).
+  // They are available server-side via process.env automatically.
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+    ];
   },
 };
 
