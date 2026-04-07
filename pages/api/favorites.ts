@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/db/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { verifyToken } from '@/lib/auth/auth';
-
-const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -21,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json(favorites?.favorites || []);
     } catch (err) {
       console.error('[favorites GET]', err instanceof Error ? err.message : String(err));
-      return res.status(400).json({ error: 'Erreur favoris', details: err instanceof Error ? err.message : 'Unknown' });
+      return res.status(400).json({ error: 'Erreur favoris' });
     }
   }
 
@@ -47,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ success: true });
     } catch (err) {
       console.error('[favorites POST]', err instanceof Error ? err.message : String(err));
-      return res.status(400).json({ error: 'Erreur ajout favori', details: err instanceof Error ? err.message : 'Unknown' });
+      return res.status(400).json({ error: 'Erreur ajout favori' });
     }
   }
 
@@ -73,7 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ success: true });
     } catch (err) {
       console.error('[favorites DELETE]', err instanceof Error ? err.message : String(err));
-      return res.status(400).json({ error: 'Erreur retrait favori', details: err instanceof Error ? err.message : 'Unknown' });
+      return res.status(400).json({ error: 'Erreur retrait favori' });
     }
   }
 

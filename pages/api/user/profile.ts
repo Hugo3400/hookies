@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/db/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import bcryptjs from 'bcryptjs';
 import { verifyToken } from '@/lib/auth/auth';
-
-const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -80,6 +78,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Méthode non autorisée' });
   } catch (err) {
     console.error('[profile]', err instanceof Error ? err.message : String(err));
-    return res.status(400).json({ error: 'Erreur profil', details: err instanceof Error ? err.message : 'Unknown' });
+    return res.status(400).json({ error: 'Erreur profil' });
   }
 }

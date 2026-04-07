@@ -87,7 +87,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       const order = await prismaAny.order.create({
         data: {
           userId: req.user?.userId || undefined,
-          orderNumber: `ORD-${Date.now()}`,
+          orderNumber: `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
           totalPrice,
           finalPrice,
           discountApplied,

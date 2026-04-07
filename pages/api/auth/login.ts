@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { comparePassword, generateToken } from '@/lib/auth/auth';
 import { logAction } from '@/lib/admin/logger';
+import { rateLimit } from '@/lib/rateLimit';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,10 +12,16 @@ export default async function handler(
     return res.status(405).json({ error: 'Méthode non autorisée' });
   }
 
+  if (rateLimit(req, res, { max: 5, windowMs: 60_000, keyPrefix: 'login' })) return;
+
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email et mot de passe requis' });
+  }
+
+  if (typeof email !== 'string' || typeof password !== 'string' || email.length > 255 || password.length > 200) {
+    return res.status(400).json({ error: 'Données invalides' });
   }
 
   try {

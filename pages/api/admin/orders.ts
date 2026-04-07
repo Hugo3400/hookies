@@ -35,6 +35,11 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     // Mettre à jour une commande
     const { id, status } = req.body;
 
+    const VALID_STATUSES = ['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'DELIVERING', 'DELIVERED', 'COMPLETED', 'CANCELLED'];
+    if (!id || !status || !VALID_STATUSES.includes(status)) {
+      return res.status(400).json({ error: 'id et status valide requis' });
+    }
+
     try {
       const updatedOrder = await prisma.order.update({
         where: { id },

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { hasMailConfig, sendEmail } from '@/lib/email/mailer';
 import { buildContactAdminEmail } from '@/lib/email/templates';
 import { CONTACT_API_CONTENT, EMAIL_CONTENT } from '@/lib/config/siteContent';
+import { rateLimit } from '@/lib/rateLimit';
 
 type ContactBody = {
   name?: string;
@@ -14,10 +15,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: CONTACT_API_CONTENT.methodNotAllowed });
   }
 
+  if (rateLimit(req, res, { max: 5, windowMs: 60_000, keyPrefix: 'contact' })) return;
+
   const { name, email, message } = req.body as ContactBody;
 
   if (!name || !email || !message) {
     return res.status(400).json({ error: CONTACT_API_CONTENT.missingFields });
+  }
+
+  if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
+    return res.status(400).json({ error: 'Données invalides' });
+  }
+
+  if (name.length > 100 || email.length > 255 || message.length > 5000) {
+    return res.status(400).json({ error: 'Données trop longues (nom: 100, email: 255, message: 5000)' });
   }
 
   const adminEmail = process.env.MAIL_ADMIN_TO;

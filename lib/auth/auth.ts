@@ -40,9 +40,25 @@ export const generateToken = (userId: string, role: string): string => {
   return jwt.sign({ userId, role }, getJwtSecret(), { expiresIn: '24h' });
 };
 
-export const verifyToken = (token: string): any => {
+export interface TokenPayload {
+  userId: string;
+  role: string;
+  iat?: number;
+  exp?: number;
+}
+
+export const verifyToken = (token: string): TokenPayload | null => {
   try {
-    return normalizeAuthPayload(jwt.verify(token, getJwtSecret()));
+    const payload = normalizeAuthPayload(jwt.verify(token, getJwtSecret()));
+    if (
+      !payload ||
+      typeof payload !== 'object' ||
+      typeof payload.userId !== 'string' ||
+      typeof payload.role !== 'string'
+    ) {
+      return null;
+    }
+    return payload as TokenPayload;
   } catch (error) {
     return null;
   }
