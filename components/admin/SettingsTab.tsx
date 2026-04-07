@@ -25,8 +25,8 @@ type LoyaltyConfig = {
 type Props = {
   loading: boolean;
   onLoad: () => void;
-  data: { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig } | null;
-  onSave: (data: { deliveryZones?: DeliveryZone[]; loyaltyConfig?: LoyaltyConfig }) => Promise<void>;
+  data: { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig; maintenanceMode: boolean } | null;
+  onSave: (data: { deliveryZones?: DeliveryZone[]; loyaltyConfig?: LoyaltyConfig; maintenanceMode?: boolean }) => Promise<void>;
 };
 
 export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
@@ -41,6 +41,7 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
     rewards: [],
   });
   const [saving, setSaving] = useState(false);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
 
   useEffect(() => { onLoad(); }, [onLoad]);
 
@@ -48,13 +49,14 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
     if (data) {
       setZones(data.deliveryZones);
       setLoyalty(data.loyaltyConfig);
+      setMaintenanceMode(Boolean(data.maintenanceMode));
     }
   }, [data]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await onSave({ deliveryZones: zones, loyaltyConfig: loyalty });
+      await onSave({ deliveryZones: zones, loyaltyConfig: loyalty, maintenanceMode });
     } finally {
       setSaving(false);
     }
@@ -64,6 +66,23 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
 
   return (
     <div className="space-y-8">
+      <div className="rounded-xl border border-amber-500/30 bg-amber-900/10 p-6">
+        <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-amber-100">
+          {maintenanceMode ? <FaToggleOn /> : <FaToggleOff />} Mode maintenance
+        </h2>
+        <p className="mb-4 text-sm text-amber-100/80">
+          Quand activé, le site public est redirigé vers la page de maintenance. L admin reste accessible via /admin.
+        </p>
+        <button
+          type="button"
+          onClick={() => setMaintenanceMode((prev) => !prev)}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${maintenanceMode ? 'border border-red-600/40 bg-red-900/30 text-red-200 hover:bg-red-900/45' : 'border border-green-500/40 bg-green-700/20 text-green-200 hover:bg-green-700/35'}`}
+        >
+          {maintenanceMode ? <FaToggleOn className="text-lg" /> : <FaToggleOff className="text-lg" />}
+          {maintenanceMode ? 'Maintenance activée' : 'Maintenance désactivée'}
+        </button>
+      </div>
+
       {/* Delivery zones */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-6">
         <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-amber-100">

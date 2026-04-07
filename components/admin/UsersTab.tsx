@@ -9,11 +9,14 @@ type Props = {
   onRoleChange: (id: string, role: string) => Promise<void>;
   onPointsChange: (id: string, loyaltyPoints: number) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  onCreate: (payload: { name: string; email: string; password: string; phone?: string; loyaltyPoints?: number }) => Promise<void>;
 };
 
-export default function UsersTab({ users, loading, onLoad, onRoleChange, onPointsChange, onDelete }: Props) {
+export default function UsersTab({ users, loading, onLoad, onRoleChange, onPointsChange, onDelete, onCreate }: Props) {
   useEffect(() => { onLoad(); }, [onLoad]);
   const [pointsDraft, setPointsDraft] = useState<Record<string, string>>({});
+  const [creating, setCreating] = useState(false);
+  const [newClient, setNewClient] = useState({ name: '', email: '', password: '', phone: '', loyaltyPoints: '0' });
 
   const pointsById = useMemo(() => {
     const map: Record<string, string> = {};
@@ -51,8 +54,85 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange, onPoint
     setPointsDraft((prev) => ({ ...prev, [user.id]: String(parsed) }));
   };
 
+  const handleCreate = async () => {
+    const name = newClient.name.trim();
+    const email = newClient.email.trim();
+    const password = newClient.password;
+    const phone = newClient.phone.trim();
+    const pointsRaw = newClient.loyaltyPoints.trim();
+    const loyaltyPoints = Number(pointsRaw || '0');
+
+    if (!name || !email || !password) {
+      window.alert('Nom, email et mot de passe sont obligatoires.');
+      return;
+    }
+    if (!Number.isFinite(loyaltyPoints) || loyaltyPoints < 0 || !Number.isInteger(loyaltyPoints)) {
+      window.alert('Points invalides: entrez un entier >= 0.');
+      return;
+    }
+
+    setCreating(true);
+    try {
+      await onCreate({ name, email, password, phone: phone || undefined, loyaltyPoints });
+      setNewClient({ name: '', email: '', password: '', phone: '', loyaltyPoints: '0' });
+    } finally {
+      setCreating(false);
+    }
+  };
+
   return (
     <div>
+      <div className="mb-5 rounded-xl border border-amber-500/25 bg-amber-900/10 p-4">
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-widest text-amber-200">Créer un client</h3>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
+          <input
+            type="text"
+            value={newClient.name}
+            onChange={(e) => setNewClient((prev) => ({ ...prev, name: e.target.value }))}
+            placeholder="Nom"
+            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+          <input
+            type="email"
+            value={newClient.email}
+            onChange={(e) => setNewClient((prev) => ({ ...prev, email: e.target.value }))}
+            placeholder="Email"
+            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+          <input
+            type="password"
+            value={newClient.password}
+            onChange={(e) => setNewClient((prev) => ({ ...prev, password: e.target.value }))}
+            placeholder="Mot de passe"
+            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+          <input
+            type="text"
+            value={newClient.phone}
+            onChange={(e) => setNewClient((prev) => ({ ...prev, phone: e.target.value }))}
+            placeholder="Téléphone (optionnel)"
+            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+          <input
+            type="number"
+            min={0}
+            step={1}
+            value={newClient.loyaltyPoints}
+            onChange={(e) => setNewClient((prev) => ({ ...prev, loyaltyPoints: e.target.value }))}
+            placeholder="Points"
+            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => void handleCreate()}
+          disabled={creating}
+          className="mt-3 inline-flex items-center gap-2 rounded-lg border border-emerald-600/40 bg-emerald-900/25 px-4 py-2 text-sm font-semibold text-emerald-200 hover:bg-emerald-900/40 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {creating ? 'Création...' : 'Créer le client'}
+        </button>
+      </div>
+
       <p className="mb-4 text-sm text-slate-400">{users.length} client(s) enregistré(s)</p>
       {loading && <p className="text-slate-400">Chargement...</p>}
       <div className="overflow-x-auto rounded-xl border border-white/10">

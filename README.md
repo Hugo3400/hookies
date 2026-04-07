@@ -46,11 +46,13 @@ MAIL_PORT="587"
 MAIL_USER="smtp-user@example.com"
 MAIL_PASS="smtp-password"
 MAIL_FROM="no-reply@hookies.fr"
+MAINTENANCE_MODE="false"
 ```
 
 Notes:
 - `JWT_SECRET` est obligatoire et doit contenir au minimum 32 caracteres.
 - Pour l'envoi d'emails, renseigner SMTP complet (`MAIL_HOST`, `MAIL_PORT`, `MAIL_USER`, `MAIL_PASS`) et idealement `MAIL_FROM`.
+- `MAINTENANCE_MODE=true` active le mode maintenance global: les pages web sont redirigees vers `/maintenance`, et les routes API renvoient `503` au format JSON.
 
 ## 📚 Structure du projet
 

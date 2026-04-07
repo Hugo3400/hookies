@@ -1,7 +1,7 @@
 import type { NextApiResponse } from 'next';
 import prisma from '@/lib/db/prisma';
 import { withAdminAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
-import { maskEmail } from '@/lib/auth/auth';
+import { hashPassword, maskEmail } from '@/lib/auth/auth';
 import { logAction } from '@/lib/admin/logger';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
@@ -110,6 +110,80 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       });
     } catch (error) {
       return res.status(500).json({ error: 'Erreur mise à jour utilisateur' });
+    }
+  }
+
+  if (req.method === 'POST') {
+    const { name, email, password, phone, loyaltyPoints } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'name, email et password requis' });
+    }
+
+    const emailNormalized = String(email).trim().toLowerCase();
+    const nameNormalized = String(name).trim();
+    const phoneNormalized = typeof phone === 'string' ? phone.trim() : null;
+    const parsedPoints = loyaltyPoints == null ? 0 : Number(loyaltyPoints);
+
+    if (!nameNormalized) {
+      return res.status(400).json({ error: 'Nom invalide' });
+    }
+
+    if (!emailNormalized || !emailNormalized.includes('@')) {
+      return res.status(400).json({ error: 'Email invalide' });
+    }
+
+    if (String(password).length < 6) {
+      return res.status(400).json({ error: 'Le mot de passe doit contenir au moins 6 caractères' });
+    }
+
+    if (!Number.isFinite(parsedPoints) || parsedPoints < 0 || !Number.isInteger(parsedPoints)) {
+      return res.status(400).json({ error: 'Points invalides (entier >= 0 attendu)' });
+    }
+
+    try {
+      const exists = await prisma.user.findUnique({ where: { email: emailNormalized }, select: { id: true } });
+      if (exists) {
+        return res.status(409).json({ error: 'Un compte existe déjà avec cet email' });
+      }
+
+      const created = await prisma.user.create({
+        data: {
+          name: nameNormalized,
+          email: emailNormalized,
+          password: await hashPassword(String(password)),
+          phone: phoneNormalized || null,
+          role: 'CLIENT',
+          loyaltyPoints: parsedPoints,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          phone: true,
+          role: true,
+          loyaltyPoints: true,
+          createdAt: true,
+        },
+      });
+
+      logAction({
+        actorId: req.user?.userId,
+        actorRole: req.user?.role,
+        action: 'USER_CREATED',
+        target: created.name,
+        details: `Rôle: ${created.role}`,
+        req,
+      });
+
+      return res.status(201).json({
+        ...created,
+        email: isWebmaster ? created.email : maskEmail(created.email),
+        _count: { orders: 0, reservations: 0 },
+      });
+    } catch (error) {
+      return res.status(500).json({ error: 'Erreur création utilisateur' });
     }
   }
 

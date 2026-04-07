@@ -2,6 +2,7 @@ export const CONFIG_KEYS = {
   WEEKLY_MENU: 'WEEKLY_MENU',
   DELIVERY_ZONES: 'DELIVERY_ZONES',
   LOYALTY_CONFIG: 'LOYALTY_CONFIG',
+  MAINTENANCE_MODE: 'MAINTENANCE_MODE',
 } as const;
 
 export type WeeklyMenuItem = {
@@ -79,3 +80,5 @@ export const DEFAULT_LOYALTY_CONFIG: LoyaltyConfig = {
     { points: 500, label: 'Menu offert' },
   ],
 };
+
+export const DEFAULT_MAINTENANCE_MODE = false;

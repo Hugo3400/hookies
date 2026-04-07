@@ -7,7 +7,7 @@ import type {
 type DeliveryZone = { name: string; description: string; fee: number };
 type LoyaltyReward = { points: number; label: string };
 type LoyaltyConfig = { bonusPercent: number; bonusThreshold: number; referralEnabled: boolean; referralDiscount: number; referralPoints: number; nextRewardGoal: number; rewards: LoyaltyReward[] };
-type SettingsData = { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig };
+type SettingsData = { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig; maintenanceMode: boolean };
 
 async function apiFetch<T>(url: string, token: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
@@ -207,6 +207,19 @@ export function useAdmin(token: string | null) {
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur suppression'); }
   }, [token, showError, showSuccess, loadStats]);
 
+  const createUser = useCallback(async (payload: { name: string; email: string; password: string; phone?: string; loyaltyPoints?: number }) => {
+    if (!token) return;
+    try {
+      const created = await apiFetch<AdminUserEntry>('/api/admin/users', token, {
+        method: 'POST', body: JSON.stringify(payload),
+      });
+      setUsers(prev => [created, ...prev]);
+      await loadStats();
+      showSuccess('Client créé');
+      return created;
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur création client'); }
+  }, [token, showError, showSuccess, loadStats]);
+
   const saveWeeklyMenu = useCallback(async (payload: WeeklyMenuPayload) => {
     if (!token) return;
     try {
@@ -236,6 +249,7 @@ export function useAdmin(token: string | null) {
       });
       if (payload.deliveryZones && settingsData) setSettingsData(prev => prev ? { ...prev, deliveryZones: payload.deliveryZones! } : prev);
       if (payload.loyaltyConfig && settingsData) setSettingsData(prev => prev ? { ...prev, loyaltyConfig: payload.loyaltyConfig! } : prev);
+      if (typeof payload.maintenanceMode === 'boolean') setSettingsData(prev => prev ? { ...prev, maintenanceMode: payload.maintenanceMode! } : prev);
       showSuccess('Paramètres sauvegardés');
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur sauvegarde'); }
   }, [token, showError, showSuccess, settingsData]);
@@ -245,6 +259,6 @@ export function useAdmin(token: string | null) {
     loading, error, success,
     loadStats, loadOrders, loadReservations, loadMenu, loadUsers, loadWeeklyMenu, loadSettings,
     updateOrderStatus, deleteOrder, updateReservationStatus,
-    saveMenuItem, deleteMenuItem, updateUserRole, updateUserPoints, deleteUser, saveWeeklyMenu, saveSettings,
+    saveMenuItem, deleteMenuItem, updateUserRole, updateUserPoints, deleteUser, createUser, saveWeeklyMenu, saveSettings,
   };
 }

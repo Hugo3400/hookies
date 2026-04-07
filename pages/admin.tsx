@@ -249,6 +249,7 @@ export default function AdminPage() {
                   onRoleChange={admin.updateUserRole}
                   onPointsChange={admin.updateUserPoints}
                   onDelete={admin.deleteUser}
+                  onCreate={admin.createUser}
                 />
               )}
               {activeTab === 'weekly-menu' && (userRole === 'ADMIN' || userRole === 'WEBMASTER') && (
