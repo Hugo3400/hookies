@@ -9,7 +9,7 @@ type Props = {
   onRoleChange: (id: string, role: string) => Promise<void>;
   onPointsChange: (id: string, loyaltyPoints: number) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
-  onCreate: (payload: { name: string; email: string; password: string; phone?: string; loyaltyPoints?: number }) => Promise<void>;
+  onCreate: (payload: { name: string; email: string; password: string; phone?: string; loyaltyPoints?: number }) => Promise<unknown>;
 };
 
 export default function UsersTab({ users, loading, onLoad, onRoleChange, onPointsChange, onDelete, onCreate }: Props) {
