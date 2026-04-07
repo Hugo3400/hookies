@@ -1,5 +1,7 @@
 const { createServer } = require('http');
 const { parse } = require('url');
+const fs = require('fs');
+const path = require('path');
 const next = require('next');
 
 // Force production mode - always use the compiled .next build on this server.
@@ -13,10 +15,56 @@ const handle = app.getRequestHandler();
 const handleUpgrade = app.getUpgradeHandler();
 
 const PORT = process.env.PORT || 3000;
+const MAINTENANCE_FLAG = path.join(__dirname, '.maintenance-flag');
+
+function isMaintenanceEnabled() {
+  if (process.env.MAINTENANCE_MODE === 'true') return true;
+  try {
+    return fs.readFileSync(MAINTENANCE_FLAG, 'utf-8').trim() === 'true';
+  } catch {
+    return false;
+  }
+}
+
+const BYPASS_PREFIXES = [
+  '/maintenance',
+  '/admin',
+  '/_next',
+  '/images',
+  '/da',
+  '/api/admin/',
+  '/api/auth/',
+  '/api/public/',
+];
+const BYPASS_EXACT = new Set(['/favicon.ico', '/favicon.png', '/robots.txt', '/sitemap.xml']);
+
+function shouldBypass(pathname) {
+  if (BYPASS_EXACT.has(pathname)) return true;
+  for (const prefix of BYPASS_PREFIXES) {
+    if (pathname === prefix || pathname.startsWith(prefix)) return true;
+  }
+  return false;
+}
 
 app.prepare().then(() => {
   const server = createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
+    const pathname = parsedUrl.pathname || '/';
+
+    if (isMaintenanceEnabled() && !shouldBypass(pathname)) {
+      if (pathname.startsWith('/api')) {
+        res.writeHead(503, {
+          'Content-Type': 'application/json',
+          'Retry-After': '3600',
+        });
+        res.end(JSON.stringify({ error: 'Service indisponible pour maintenance', maintenance: true }));
+        return;
+      }
+      res.writeHead(302, { Location: '/maintenance' });
+      res.end();
+      return;
+    }
+
     handle(req, res, parsedUrl);
   });
 

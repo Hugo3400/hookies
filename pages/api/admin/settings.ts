@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import fs from 'fs';
+import path from 'path';
 import prisma from '@/lib/db/prisma';
 import { verifyToken } from '@/lib/auth/auth';
 import {
@@ -63,7 +65,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { deliveryZones, loyaltyConfig, maintenanceMode } = req.body;
       if (deliveryZones) await setConfig(CONFIG_KEYS.DELIVERY_ZONES, deliveryZones);
       if (loyaltyConfig) await setConfig(CONFIG_KEYS.LOYALTY_CONFIG, loyaltyConfig);
-      if (typeof maintenanceMode === 'boolean') await setConfig(CONFIG_KEYS.MAINTENANCE_MODE, maintenanceMode);
+      if (typeof maintenanceMode === 'boolean') {
+        await setConfig(CONFIG_KEYS.MAINTENANCE_MODE, maintenanceMode);
+        try {
+          fs.writeFileSync(path.join(process.cwd(), '.maintenance-flag'), String(maintenanceMode));
+        } catch (e) {
+          console.error('Failed to write maintenance flag file:', e);
+        }
+      }
       return res.json({ success: true });
     }
 
