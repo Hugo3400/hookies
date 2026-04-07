@@ -42,6 +42,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Données manquantes' });
       }
 
+      const parsedRating = parseInt(rating);
+      if (!Number.isFinite(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+        return res.status(400).json({ error: 'Note entre 1 et 5 requise' });
+      }
+
+      if (comment && (typeof comment !== 'string' || comment.length > 1000)) {
+        return res.status(400).json({ error: 'Commentaire trop long (max 1000)' });
+      }
+
       // Vérifier si l'utilisateur a déjà noté
       const existingReview = await prismaAny.itemReview.findUnique({
         where: { menuItemId_userId: { menuItemId, userId: decoded.userId } },
@@ -51,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Mettre à jour l'avis existant
         const updated = await prismaAny.itemReview.update({
           where: { id: existingReview.id },
-          data: { rating: parseInt(rating), comment: comment || null },
+          data: { rating: parsedRating, comment: comment || null },
         });
         return res.status(200).json(updated);
       }
@@ -61,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           menuItemId,
           userId: decoded.userId,
-          rating: parseInt(rating),
+          rating: parsedRating,
           comment: comment || null,
         },
       });

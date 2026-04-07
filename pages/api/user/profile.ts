@@ -32,9 +32,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Mettre à jour profil
       const { name, phone, newPassword, currentPassword } = req.body;
 
+      if (name && (typeof name !== 'string' || name.length > 100)) {
+        return res.status(400).json({ error: 'Nom invalide (max 100)' });
+      }
+
+      if (phone && (typeof phone !== 'string' || phone.length > 20)) {
+        return res.status(400).json({ error: 'Téléphone invalide' });
+      }
+
       // Vérifier les données
       if (newPassword && !currentPassword) {
         return res.status(400).json({ error: 'Mot de passe actuel requis' });
+      }
+
+      if (newPassword && (typeof newPassword !== 'string' || newPassword.length < 6 || newPassword.length > 200)) {
+        return res.status(400).json({ error: 'Nouveau mot de passe invalide (6-200 caractères)' });
       }
 
       // Si changement de mot de passe
