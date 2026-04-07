@@ -52,7 +52,8 @@ MAINTENANCE_MODE="false"
 Notes:
 - `JWT_SECRET` est obligatoire et doit contenir au minimum 32 caracteres.
 - Pour l'envoi d'emails, renseigner SMTP complet (`MAIL_HOST`, `MAIL_PORT`, `MAIL_USER`, `MAIL_PASS`) et idealement `MAIL_FROM`.
-- `MAINTENANCE_MODE=true` active le mode maintenance global: les pages web sont redirigees vers `/maintenance`, et les routes API renvoient `503` au format JSON.
+- Le mode maintenance est pilotable depuis `Admin > Paramètres` (`/admin#settings`), sans modifier le code.
+- `MAINTENANCE_MODE=true` reste disponible comme surcouche d'urgence (force la maintenance au niveau middleware).
 
 ## 📚 Structure du projet
 
