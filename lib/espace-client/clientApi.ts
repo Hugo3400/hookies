@@ -50,7 +50,7 @@ export async function fetchUserProfile(headers: HeadersInit) {
 }
 
 export async function fetchSettings() {
-  return requestJson<RestaurantSettings>('/api/settings');
+  return requestJson<RestaurantSettings>('/api/public/settings');
 }
 
 export async function authSubmit(mode: AuthMode, payload: Record<string, unknown>) {

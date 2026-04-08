@@ -95,6 +95,7 @@ export default function ProfileTab({
               value={profileForm.name}
               onChange={(e) => setProfileForm((prev) => ({ ...prev, name: e.target.value }))}
               placeholder="Nom"
+              autoComplete="name"
               className="w-full rounded-lg border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100"
             />
             <input
@@ -102,6 +103,7 @@ export default function ProfileTab({
               value={profileForm.phone}
               onChange={(e) => setProfileForm((prev) => ({ ...prev, phone: e.target.value }))}
               placeholder="Téléphone"
+              autoComplete="tel"
               className="w-full rounded-lg border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100"
             />
             <input
@@ -109,6 +111,7 @@ export default function ProfileTab({
               value={profileForm.currentPassword}
               onChange={(e) => setProfileForm((prev) => ({ ...prev, currentPassword: e.target.value }))}
               placeholder="Mot de passe actuel (si changement)"
+              autoComplete="current-password"
               className="w-full rounded-lg border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100"
             />
             <input
@@ -116,6 +119,7 @@ export default function ProfileTab({
               value={profileForm.newPassword}
               onChange={(e) => setProfileForm((prev) => ({ ...prev, newPassword: e.target.value }))}
               placeholder="Nouveau mot de passe"
+              autoComplete="new-password"
               className="w-full rounded-lg border border-amber-700/30 bg-black/20 px-4 py-3 text-slate-100"
             />
 
