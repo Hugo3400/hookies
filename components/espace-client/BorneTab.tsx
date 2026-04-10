@@ -116,8 +116,8 @@ export default function BorneTab({
 
                 return (
                   <div key={item.id} className="overflow-hidden rounded-xl border border-amber-700/30 bg-black/20">
-                    {item.image && (
-                      <img src={item.image} alt={item.name} className="h-40 w-full object-cover" />
+                    {typeof item.image === 'string' && item.image.trim() && (
+                      <img src={item.image.trim()} alt={item.name} className="h-40 w-full object-cover" />
                     )}
                     <div className="p-4">
                       <div className="flex items-start justify-between gap-3">

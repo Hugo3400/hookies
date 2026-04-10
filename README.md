@@ -41,6 +41,8 @@ DATABASE_URL="mysql://user:password@localhost:3306/hookies"
 NEXTAUTH_SECRET="change-me-with-a-long-random-secret"
 JWT_SECRET="change-me-with-at-least-32-random-chars"
 NEXTAUTH_URL="https://hookies.nexadev.fr"
+DISCORD_CLIENT_ID="your-discord-client-id"
+DISCORD_CLIENT_SECRET="your-discord-client-secret"
 MAIL_HOST="smtp.example.com"
 MAIL_PORT="587"
 MAIL_USER="smtp-user@example.com"
@@ -82,8 +84,9 @@ Accéder à: http://localhost:3000
 ## 📖 API Endpoints
 
 ### Authentification
-- `POST /api/auth/register` - Inscription
-- `POST /api/auth/login` - Connexion
+- `GET /api/auth/discord/start` - Demarrer la connexion Discord
+- `GET /api/auth/discord/callback` - Callback OAuth Discord
+- `POST /api/auth/discord/complete-profile` - Finaliser nom/prenom/telephone US apres premiere inscription
 
 ### Menu
 - `GET /api/menu` - Récupérer le menu

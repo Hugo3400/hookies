@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  authSubmit,
+  completeDiscordProfile,
   createAddress as apiCreateAddress,
   createOrder,
   createReservation as apiCreateReservation,
@@ -11,6 +11,7 @@ import {
   fetchReservations,
   fetchSettings,
   fetchUserProfile,
+  getDiscordLoginUrl,
   saveFavorite,
   saveReview,
   setDefaultAddress as apiSetDefaultAddress,
@@ -18,7 +19,6 @@ import {
   validatePromoCode,
 } from '@/lib/espace-client/clientApi';
 import type {
-  AuthMode,
   AuthUser,
   CartItem,
   MenuItem,
@@ -27,9 +27,18 @@ import type {
   TabKey,
 } from '@/components/espace-client/types';
 
-const MENU_IMAGE_FALLBACKS = ['/da/hero-bg-clean.png', '/da/logo.png', '/da/hero-bg-clean.png'];
-
 const VALID_TABS: TabKey[] = ['dashboard', 'borne', 'reservations', 'commandes', 'profil', 'fidelite', 'notifications'];
+
+function normalizeUsPhone(input: string): string | null {
+  const digits = input.replace(/\D/g, '');
+  if (digits.length === 10) {
+    return `+1${digits}`;
+  }
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+${digits}`;
+  }
+  return null;
+}
 
 function getInitialTab(): TabKey {
   if (typeof window === 'undefined') return 'dashboard';
@@ -38,7 +47,6 @@ function getInitialTab(): TabKey {
 }
 
 export function useEspaceClient() {
-  const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [activeTab, _setActiveTab] = useState<TabKey>(getInitialTab);
 
   const setActiveTab = useCallback((tab: TabKey) => {
@@ -58,9 +66,10 @@ export function useEspaceClient() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '', phone: '' });
   const [reservationForm, setReservationForm] = useState({ date: '', time: '', guestCount: 2, specialRequest: '' });
   const [profileForm, setProfileForm] = useState({ name: '', phone: '', currentPassword: '', newPassword: '' });
+  const [discordProfileForm, setDiscordProfileForm] = useState({ firstName: '', lastName: '', phone: '' });
+  const [needsDiscordProfileCompletion, setNeedsDiscordProfileCompletion] = useState(false);
   const [addressForm, setAddressForm] = useState({
     label: '',
     street: '',
@@ -96,12 +105,14 @@ export function useEspaceClient() {
     order: false,
     reservation: false,
     profile: false,
+    completeProfile: false,
     address: false,
     promo: false,
   });
 
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const discordLoginUrl = useMemo(() => getDiscordLoginUrl(), []);
 
   const authHeaders = useMemo(() => {
     if (!token) return undefined;
@@ -144,14 +155,11 @@ export function useEspaceClient() {
     }
   }, [settings]);
 
-  const hydrateMenu = useCallback((item: MenuItem, index: number): MenuItem => {
-    if (item.image) return item;
-    return { ...item, image: MENU_IMAGE_FALLBACKS[index % MENU_IMAGE_FALLBACKS.length] };
-  }, []);
-
   const handleLogout = useCallback(() => {
     setToken(null);
     setUser(null);
+    setNeedsDiscordProfileCompletion(false);
+    setDiscordProfileForm({ firstName: '', lastName: '', phone: '' });
     setCart([]);
     setOrders([]);
     setReservations([]);
@@ -168,7 +176,7 @@ export function useEspaceClient() {
     setLoading((prev) => ({ ...prev, menu: true }));
     try {
       const payload = await fetchMenuEnriched(authHeaders);
-      const data = (Array.isArray(payload) ? payload : []).map((item, index) => hydrateMenu(item, index));
+      const data = Array.isArray(payload) ? payload : [];
       setMenuItems(data);
       if (data.length > 0 && !selectedCategory) {
         setSelectedCategory(data[0].category || 'Autres');
@@ -178,7 +186,7 @@ export function useEspaceClient() {
     } finally {
       setLoading((prev) => ({ ...prev, menu: false }));
     }
-  }, [authHeaders, hydrateMenu, selectedCategory, showMessage]);
+  }, [authHeaders, selectedCategory, showMessage]);
 
   const loadUserData = useCallback(async (sessionToken: string, silent = false) => {
     if (!sessionToken) return;
@@ -242,22 +250,24 @@ export function useEspaceClient() {
     const urlParams = new URLSearchParams(window.location.search);
     const urlToken = urlParams.get('token');
     const urlError = urlParams.get('error');
+    const needsProfile = urlParams.get('needsProfile') === '1';
 
     if (urlError) {
-      window.history.replaceState({}, '', window.location.pathname);
+      window.history.replaceState({}, '', `${window.location.pathname}${window.location.hash || ''}`);
       setError(urlError);
       return;
     }
 
     if (urlToken) {
       // Clean URL
-      window.history.replaceState({}, '', window.location.pathname);
+      window.history.replaceState({}, '', `${window.location.pathname}${window.location.hash || ''}`);
       // Verify token via /api/auth/me
       fetch('/api/auth/me', { headers: { Authorization: `Bearer ${urlToken}` } })
         .then(r => r.ok ? r.json() : null)
         .then(data => {
           if (!cancelled && data?.user) {
             saveSession(urlToken, data.user);
+            setNeedsDiscordProfileCompletion(needsProfile);
           }
         })
         .catch(() => {});
@@ -317,23 +327,41 @@ export function useEspaceClient() {
     if (defaultAddress && !selectedAddressId) setSelectedAddressId(defaultAddress.id);
   }, [defaultAddress, selectedAddressId]);
 
-  const handleAuthSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
+  const submitDiscordProfileCompletion = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading((prev) => ({ ...prev, auth: true }));
-    try {
-      const payload = authMode === 'login'
-        ? { email: authForm.email, password: authForm.password }
-        : { ...authForm };
-      const data = await authSubmit(authMode, payload);
-      saveSession(data.token, data.user);
-      showMessage(authMode === 'login' ? 'Connexion réussie.' : 'Compte créé avec succès.');
-      if (authMode === 'register') setAuthMode('login');
-    } catch (err) {
-      showMessage(err instanceof Error ? err.message : 'Erreur authentification.', true);
-    } finally {
-      setLoading((prev) => ({ ...prev, auth: false }));
+    if (!authHeaders) return;
+
+    const firstName = discordProfileForm.firstName.trim();
+    const lastName = discordProfileForm.lastName.trim();
+    const normalizedPhone = normalizeUsPhone(discordProfileForm.phone);
+
+    if (!firstName || !lastName) {
+      showMessage('Nom et prenom requis.', true);
+      return;
     }
-  }, [authForm, authMode, saveSession, showMessage]);
+
+    if (!normalizedPhone) {
+      showMessage('Numero US invalide. Exemple attendu: +14155552671', true);
+      return;
+    }
+
+    setLoading((prev) => ({ ...prev, completeProfile: true }));
+    try {
+      const data = await completeDiscordProfile(authHeaders, {
+        firstName,
+        lastName,
+        phone: normalizedPhone,
+      });
+      setUser((prev) => (prev ? { ...prev, name: data.user.name, phone: data.user.phone } : prev));
+      setProfileForm((prev) => ({ ...prev, name: data.user.name || '', phone: data.user.phone || '' }));
+      setNeedsDiscordProfileCompletion(false);
+      showMessage('Profil complete. Bienvenue.');
+    } catch (err) {
+      showMessage(err instanceof Error ? err.message : 'Erreur completion profil.', true);
+    } finally {
+      setLoading((prev) => ({ ...prev, completeProfile: false }));
+    }
+  }, [authHeaders, discordProfileForm.firstName, discordProfileForm.lastName, discordProfileForm.phone, showMessage]);
 
   const addToCart = useCallback((item: MenuItem) => {
     setCart((prev) => {
@@ -509,12 +537,9 @@ export function useEspaceClient() {
   }, []);
 
   return {
-    authMode,
-    setAuthMode,
     activeTab,
     setActiveTab,
-    authForm,
-    setAuthForm,
+    discordLoginUrl,
     token,
     user,
     menuItems,
@@ -546,12 +571,15 @@ export function useEspaceClient() {
     loading,
     error,
     successMessage,
+    needsDiscordProfileCompletion,
+    discordProfileForm,
+    setDiscordProfileForm,
     categories,
     filteredMenu,
     cartTotal,
     finalTotal,
     openingStatus,
-    handleAuthSubmit,
+    submitDiscordProfileCompletion,
     handleLogout,
     addToCart,
     updateCartQuantity,

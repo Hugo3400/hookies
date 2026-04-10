@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import AuthPanel from '@/components/espace-client/AuthPanel';
 import BorneTab from '@/components/espace-client/BorneTab';
 import DashboardTab from '@/components/espace-client/DashboardTab';
+import DiscordProfileCompletion from '@/components/espace-client/DiscordProfileCompletion';
 import LoyaltyTab from '@/components/espace-client/LoyaltyTab';
 import NotificationsTab from '@/components/espace-client/NotificationsTab';
 import OrdersTab from '@/components/espace-client/OrdersTab';
@@ -27,12 +28,30 @@ export default function EspaceClientPage() {
           <AuthPanel
             error={state.error}
             successMessage={state.successMessage}
-            authMode={state.authMode}
-            setAuthMode={state.setAuthMode}
-            authForm={state.authForm}
-            setAuthForm={state.setAuthForm}
-            handleAuthSubmit={state.handleAuthSubmit}
-            loading={state.loading.auth}
+            discordLoginUrl={state.discordLoginUrl}
+          />
+          <Footer />
+        </main>
+      </>
+    );
+  }
+
+  if (state.needsDiscordProfileCompletion) {
+    return (
+      <>
+        <Head>
+          <title>Finaliser le profil | Hookies</title>
+        </Head>
+        <main className="text-white">
+          <Header />
+          <DiscordProfileCompletion
+            error={state.error}
+            successMessage={state.successMessage}
+            form={state.discordProfileForm}
+            setForm={state.setDiscordProfileForm}
+            onSubmit={state.submitDiscordProfileCompletion}
+            loading={state.loading.completeProfile}
+            onLogout={state.handleLogout}
           />
           <Footer />
         </main>

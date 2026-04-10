@@ -1,4 +1,4 @@
-import type { AuthMode, AuthUser, MenuItem, RestaurantSettings } from '@/components/espace-client/types';
+import type { AuthUser, MenuItem, RestaurantSettings } from '@/components/espace-client/types';
 
 type ApiError = Error & { status?: number };
 
@@ -53,11 +53,17 @@ export async function fetchSettings() {
   return requestJson<RestaurantSettings>('/api/public/settings');
 }
 
-export async function authSubmit(mode: AuthMode, payload: Record<string, unknown>) {
-  const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
-  return requestJson<{ token: string; user: AuthUser }>(endpoint, {
+export function getDiscordLoginUrl() {
+  return '/api/auth/discord/start';
+}
+
+export async function completeDiscordProfile(
+  headers: HeadersInit,
+  payload: { firstName: string; lastName: string; phone: string }
+) {
+  return requestJson<{ user: AuthUser; profileCompleted: boolean }>('/api/auth/discord/complete-profile', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
 }

@@ -75,8 +75,8 @@ export default function MenuTab({ items, loading, onLoad, onSave, onDelete }: Pr
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map(item => (
           <div key={item.id} className={`rounded-xl border p-4 ${item.isAvailable ? 'border-white/10 bg-white/5' : 'border-red-900/30 bg-red-900/10 opacity-60'}`}>
-            {item.image && (
-              <img src={item.image} alt={item.name} className="mb-3 h-28 w-full rounded-lg object-cover" />
+            {typeof item.image === 'string' && item.image.trim() && (
+              <img src={item.image.trim()} alt={item.name} className="mb-3 h-28 w-full rounded-lg object-cover" />
             )}
             <div className="mb-1 flex items-start justify-between">
               <div>
