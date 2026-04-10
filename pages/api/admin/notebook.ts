@@ -8,6 +8,7 @@ type NotebookNote = {
   id: string;
   title: string;
   content: string;
+  tags: string[];
   imageUrls: string[];
   updatedAt: string;
 };
@@ -33,6 +34,11 @@ function safeString(value: unknown, max = 20000): string {
 
 function normalizeNote(input: unknown): NotebookNote {
   const obj = input && typeof input === 'object' ? (input as Record<string, unknown>) : {};
+  const tagsRaw = Array.isArray(obj.tags) ? obj.tags : [];
+  const tags = tagsRaw
+    .map((item) => safeString(item, 30).trim())
+    .filter((item) => item.length > 0)
+    .slice(0, 8);
   const imageRaw = Array.isArray(obj.imageUrls) ? obj.imageUrls : [];
   const imageUrls = imageRaw
     .map((item) => safeString(item, 2000).trim())
@@ -44,7 +50,7 @@ function normalizeNote(input: unknown): NotebookNote {
   const content = safeString(obj.content, 50000);
   const updatedAt = safeString(obj.updatedAt, 80) || new Date().toISOString();
 
-  return { id, title, content, imageUrls, updatedAt };
+  return { id, title, content, tags, imageUrls, updatedAt };
 }
 
 function normalizeCategory(input: unknown): NotebookCategory {

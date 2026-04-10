@@ -108,6 +108,7 @@ export type AdminNotebookNote = {
   id: string;
   title: string;
   content: string;
+  tags: string[];
   imageUrls: string[];
   updatedAt: string;
 };
