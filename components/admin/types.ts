@@ -4,6 +4,7 @@ export type AdminTab =
   | 'dashboard'
   | 'orders'
   | 'reservations'
+  | 'notebook'
   | 'cash-register'
   | 'ingredients'
   | 'agenda'
@@ -101,6 +102,24 @@ export type WeeklyMenuPayload = {
   subtitle: string;
   weekLabel: string;
   items: WeeklyMenuItem[];
+};
+
+export type AdminNotebookNote = {
+  id: string;
+  title: string;
+  content: string;
+  imageUrls: string[];
+  updatedAt: string;
+};
+
+export type AdminNotebookCategory = {
+  id: string;
+  name: string;
+  notes: AdminNotebookNote[];
+};
+
+export type AdminNotebookData = {
+  categories: AdminNotebookCategory[];
 };
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
