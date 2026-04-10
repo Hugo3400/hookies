@@ -12,6 +12,7 @@ import {
   FaCalculator,
   FaCalendarAlt,
   FaFileInvoiceDollar,
+  FaBookOpen,
 } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 
@@ -21,6 +22,7 @@ const TABS: TabDef[] = [
   { key: 'dashboard', label: 'Dashboard', icon: FaChartPie },
   { key: 'orders', label: 'Commandes', icon: FaHamburger },
   { key: 'reservations', label: 'Réservations', icon: FaCalendarCheck },
+  { key: 'notebook', label: 'Bloc-notes', icon: FaBookOpen },
   { key: 'cash-register', label: 'Caisse', icon: FaCashRegister },
   { key: 'ingredients', label: 'Ingrédients', icon: FaCalculator },
   { key: 'agenda', label: 'Agenda', icon: FaCalendarAlt },
@@ -33,7 +35,7 @@ const TABS: TabDef[] = [
 ];
 
 const TAB_GROUPS: { title: string; keys: AdminTab[] }[] = [
-  { title: 'Pilotage', keys: ['dashboard', 'orders', 'reservations', 'cash-register', 'ingredients', 'agenda'] },
+  { title: 'Pilotage', keys: ['dashboard', 'orders', 'reservations', 'notebook', 'cash-register', 'ingredients', 'agenda'] },
   { title: 'Administration', keys: ['quotes', 'menu', 'users', 'weekly-menu', 'settings', 'logs'] },
 ];
 

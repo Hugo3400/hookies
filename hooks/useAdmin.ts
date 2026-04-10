@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type {
   AdminStats, AdminOrder, AdminReservation, AdminMenuItem,
-  AdminUserEntry, WeeklyMenuPayload, OrderStatus, ReservationStatus,
+  AdminUserEntry, WeeklyMenuPayload, OrderStatus, ReservationStatus, AdminNotebookData,
 } from '../components/admin/types';
 
 type DeliveryZone = { name: string; description: string; fee: number };
@@ -31,8 +31,9 @@ export function useAdmin(token: string | null) {
   const [menuItems, setMenuItems] = useState<AdminMenuItem[]>([]);
   const [users, setUsers] = useState<AdminUserEntry[]>([]);
   const [weeklyMenu, setWeeklyMenu] = useState<WeeklyMenuPayload | null>(null);
+  const [notebookData, setNotebookData] = useState<AdminNotebookData | null>(null);
   const [settingsData, setSettingsData] = useState<SettingsData | null>(null);
-  const [loading, setLoading] = useState({ stats: false, orders: false, reservations: false, menu: false, users: false, weekly: false, settings: false });
+  const [loading, setLoading] = useState({ stats: false, orders: false, reservations: false, menu: false, users: false, weekly: false, notebook: false, settings: false });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const mountedRef = useRef(true);
@@ -109,6 +110,16 @@ export function useAdmin(token: string | null) {
       if (mountedRef.current) setWeeklyMenu(data);
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur menu semaine'); }
     finally { if (mountedRef.current) setLoading(p => ({ ...p, weekly: false })); }
+  }, [token, showError]);
+
+  const loadNotebook = useCallback(async () => {
+    if (!token) return;
+    setLoading(p => ({ ...p, notebook: true }));
+    try {
+      const data = await apiFetch<AdminNotebookData>('/api/admin/notebook', token);
+      if (mountedRef.current) setNotebookData(data);
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur bloc-notes'); }
+    finally { if (mountedRef.current) setLoading(p => ({ ...p, notebook: false })); }
   }, [token, showError]);
 
   const updateOrderStatus = useCallback(async (id: string, status: OrderStatus) => {
@@ -231,6 +242,18 @@ export function useAdmin(token: string | null) {
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur sauvegarde'); }
   }, [token, showError, showSuccess]);
 
+  const saveNotebook = useCallback(async (payload: AdminNotebookData) => {
+    if (!token) return;
+    try {
+      const saved = await apiFetch<{ success: boolean; notebook: AdminNotebookData }>('/api/admin/notebook', token, {
+        method: 'PUT', body: JSON.stringify(payload),
+      });
+      if (saved?.notebook) setNotebookData(saved.notebook);
+      showSuccess('Bloc-notes sauvegarde');
+      return saved;
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur sauvegarde bloc-notes'); }
+  }, [token, showError, showSuccess]);
+
   const loadSettings = useCallback(async () => {
     if (!token) return;
     setLoading(p => ({ ...p, settings: true }));
@@ -255,10 +278,10 @@ export function useAdmin(token: string | null) {
   }, [token, showError, showSuccess, settingsData]);
 
   return {
-    stats, orders, reservations, menuItems, users, weeklyMenu, settingsData,
+    stats, orders, reservations, menuItems, users, weeklyMenu, notebookData, settingsData,
     loading, error, success,
-    loadStats, loadOrders, loadReservations, loadMenu, loadUsers, loadWeeklyMenu, loadSettings,
+    loadStats, loadOrders, loadReservations, loadMenu, loadUsers, loadWeeklyMenu, loadNotebook, loadSettings,
     updateOrderStatus, deleteOrder, updateReservationStatus,
-    saveMenuItem, deleteMenuItem, updateUserRole, updateUserPoints, deleteUser, createUser, saveWeeklyMenu, saveSettings,
+    saveMenuItem, deleteMenuItem, updateUserRole, updateUserPoints, deleteUser, createUser, saveWeeklyMenu, saveNotebook, saveSettings,
   };
 }

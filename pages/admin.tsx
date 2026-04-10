@@ -17,6 +17,7 @@ import CashRegisterTab from '@/components/admin/CashRegisterTab';
 import IngredientCalculatorTab from '@/components/admin/IngredientCalculatorTab';
 import AgendaTab from '@/components/admin/AgendaTab';
 import QuotesTab from '@/components/admin/QuotesTab';
+import NotebookTab from '@/components/admin/NotebookTab';
 import { useAdmin } from '@/hooks/useAdmin';
 import type { AdminTab } from '@/components/admin/types';
 
@@ -26,6 +27,7 @@ const VALID_ADMIN_TABS: AdminTab[] = [
   'dashboard',
   'orders',
   'reservations',
+  'notebook',
   'cash-register',
   'ingredients',
   'agenda',
@@ -90,6 +92,10 @@ export default function AdminPage() {
     if (activeTab === 'reservations') {
       loadReservations();
       loadStats();
+      return;
+    }
+    if (activeTab === 'notebook') {
+      admin.loadNotebook();
       return;
     }
     if (activeTab === 'menu') {
@@ -231,6 +237,14 @@ export default function AdminPage() {
               )}
               {activeTab === 'cash-register' && (
                 <CashRegisterTab token={token!} />
+              )}
+              {activeTab === 'notebook' && (
+                <NotebookTab
+                  data={admin.notebookData}
+                  loading={admin.loading.notebook}
+                  onLoad={admin.loadNotebook}
+                  onSave={admin.saveNotebook}
+                />
               )}
               {activeTab === 'ingredients' && (
                 <IngredientCalculatorTab />
