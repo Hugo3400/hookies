@@ -113,7 +113,10 @@ app.prepare().then(() => {
         res.end(JSON.stringify({ error: 'Service indisponible pour maintenance', maintenance: true }));
         return;
       }
-      res.writeHead(302, { Location: '/maintenance' });
+      const nextPath = pathname === '/maintenance'
+        ? '/'
+        : `${pathname}${parsedUrl.search || ''}`;
+      res.writeHead(302, { Location: `/maintenance?next=${encodeURIComponent(nextPath)}` });
       res.end();
       return;
     }

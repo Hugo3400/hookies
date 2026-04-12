@@ -169,6 +169,7 @@ export function useEspaceClient() {
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('hookies_token');
       window.localStorage.removeItem('hookies_user');
+      document.cookie = 'hookies_auth_token=; Path=/; Max-Age=0; SameSite=Lax';
     }
   }, []);
 

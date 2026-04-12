@@ -1,6 +1,55 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function MaintenancePage() {
+  const router = useRouter();
+  const [statusMessage, setStatusMessage] = useState('');
+
+  const nextPath = useMemo(() => {
+    const value = router.query.next;
+    if (typeof value !== 'string') return '/';
+    return value.startsWith('/') ? value : '/';
+  }, [router.query.next]);
+
+  useEffect(() => {
+    if (!router.isReady || typeof window === 'undefined') return;
+
+    const storedToken = window.localStorage.getItem('hookies_token');
+    if (!storedToken) return;
+
+    let cancelled = false;
+    setStatusMessage('Verification de votre acces staff...');
+
+    fetch('/api/auth/me', {
+      headers: { Authorization: `Bearer ${storedToken}` },
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.user) return;
+
+        if (data?.token) {
+          window.localStorage.setItem('hookies_token', data.token);
+        }
+
+        if (data.user.role === 'WEBMASTER') {
+          window.location.replace(nextPath || '/');
+          return;
+        }
+
+        setStatusMessage('Maintenance active. Acces reserve temporairement au webmaster.');
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setStatusMessage('Maintenance active.');
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [nextPath, router.isReady]);
+
   return (
     <>
       <Head>
@@ -35,6 +84,12 @@ export default function MaintenancePage() {
           <p className="mt-6 text-sm uppercase tracking-[0.2em] text-[#c9952b]">
             Merci pour votre patience
           </p>
+
+          {statusMessage ? (
+            <p className="mt-4 text-xs uppercase tracking-[0.14em] text-[#d8c39a]">
+              {statusMessage}
+            </p>
+          ) : null}
         </section>
       </main>
     </>
