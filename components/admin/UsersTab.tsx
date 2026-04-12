@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { FaUser, FaEnvelope, FaShieldAlt, FaCoins, FaShoppingCart, FaCalendarAlt, FaCalendarCheck, FaTrash, FaSave } from 'react-icons/fa';
 import type { AdminUserEntry } from './types';
 
@@ -54,7 +54,8 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange, onPoint
     setPointsDraft((prev) => ({ ...prev, [user.id]: String(parsed) }));
   };
 
-  const handleCreate = async () => {
+  const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const name = newClient.name.trim();
     const email = newClient.email.trim();
     const password = newClient.password;
@@ -84,53 +85,54 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange, onPoint
     <div>
       <div className="mb-5 rounded-xl border border-amber-500/25 bg-amber-900/10 p-4">
         <h3 className="mb-3 text-sm font-semibold uppercase tracking-widest text-amber-200">Créer un client</h3>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
-          <input
-            type="text"
-            value={newClient.name}
-            onChange={(e) => setNewClient((prev) => ({ ...prev, name: e.target.value }))}
-            placeholder="Nom"
-            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
-          />
-          <input
-            type="email"
-            value={newClient.email}
-            onChange={(e) => setNewClient((prev) => ({ ...prev, email: e.target.value }))}
-            placeholder="Email"
-            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
-          />
-          <input
-            type="password"
-            value={newClient.password}
-            onChange={(e) => setNewClient((prev) => ({ ...prev, password: e.target.value }))}
-            placeholder="Mot de passe"
-            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
-          />
-          <input
-            type="text"
-            value={newClient.phone}
-            onChange={(e) => setNewClient((prev) => ({ ...prev, phone: e.target.value }))}
-            placeholder="Téléphone (optionnel)"
-            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
-          />
-          <input
-            type="number"
-            min={0}
-            step={1}
-            value={newClient.loyaltyPoints}
-            onChange={(e) => setNewClient((prev) => ({ ...prev, loyaltyPoints: e.target.value }))}
-            placeholder="Points"
-            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
-          />
-        </div>
-        <button
-          type="button"
-          onClick={() => void handleCreate()}
-          disabled={creating}
-          className="mt-3 inline-flex items-center gap-2 rounded-lg border border-emerald-600/40 bg-emerald-900/25 px-4 py-2 text-sm font-semibold text-emerald-200 hover:bg-emerald-900/40 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {creating ? 'Création...' : 'Créer le client'}
-        </button>
+        <form onSubmit={(event) => void handleCreate(event)}>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
+            <input
+              type="text"
+              value={newClient.name}
+              onChange={(e) => setNewClient((prev) => ({ ...prev, name: e.target.value }))}
+              placeholder="Nom"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+            />
+            <input
+              type="email"
+              value={newClient.email}
+              onChange={(e) => setNewClient((prev) => ({ ...prev, email: e.target.value }))}
+              placeholder="Email"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+            />
+            <input
+              type="password"
+              value={newClient.password}
+              onChange={(e) => setNewClient((prev) => ({ ...prev, password: e.target.value }))}
+              placeholder="Mot de passe"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+            />
+            <input
+              type="text"
+              value={newClient.phone}
+              onChange={(e) => setNewClient((prev) => ({ ...prev, phone: e.target.value }))}
+              placeholder="Téléphone (optionnel)"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+            />
+            <input
+              type="number"
+              min={0}
+              step={1}
+              value={newClient.loyaltyPoints}
+              onChange={(e) => setNewClient((prev) => ({ ...prev, loyaltyPoints: e.target.value }))}
+              placeholder="Points"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={creating}
+            className="mt-3 inline-flex items-center gap-2 rounded-lg border border-emerald-600/40 bg-emerald-900/25 px-4 py-2 text-sm font-semibold text-emerald-200 hover:bg-emerald-900/40 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {creating ? 'Création...' : 'Créer le client'}
+          </button>
+        </form>
       </div>
 
       <p className="mb-4 text-sm text-slate-400">{users.length} client(s) enregistré(s)</p>
@@ -164,7 +166,6 @@ export default function UsersTab({ users, loading, onLoad, onRoleChange, onPoint
                     <option value="CLIENT">CLIENT</option>
                     <option value="EMPLOYEE">EMPLOYÉ</option>
                     <option value="ADMIN">ADMIN</option>
-                    <option value="WEBMASTER">WEBMASTER</option>
                   </select>
                 </td>
                 <td className="px-4 py-3 text-center">

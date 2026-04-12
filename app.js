@@ -37,13 +37,66 @@ const BYPASS_PREFIXES = [
   '/api/public/',
 ];
 const BYPASS_EXACT = new Set(['/favicon.ico', '/favicon.png', '/robots.txt', '/sitemap.xml']);
+const AUTH_COOKIE_NAME = 'hookies_auth_token';
+const AUTHENTICATED_READ_BYPASS = new Set([
+  '/api/menu-enriched',
+  '/api/orders',
+  '/api/reservations',
+  '/api/favorites',
+  '/api/user/profile',
+]);
 
-function shouldBypass(pathname) {
+function parseCookies(req) {
+  const raw = req.headers.cookie;
+  if (!raw) return {};
+
+  return raw.split(';').reduce((acc, item) => {
+    const separatorIndex = item.indexOf('=');
+    if (separatorIndex === -1) return acc;
+
+    const key = item.slice(0, separatorIndex).trim();
+    const value = item.slice(separatorIndex + 1).trim();
+    if (!key) return acc;
+
+    acc[key] = decodeURIComponent(value);
+    return acc;
+  }, {});
+}
+
+function isWebmasterRequest(req) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret || secret.trim().length < 32) return false;
+
+  const token = parseCookies(req)[AUTH_COOKIE_NAME];
+  if (!token) return false;
+
+  try {
+    const payload = require('jsonwebtoken').verify(token, secret);
+    return payload && typeof payload === 'object' && payload.role === 'WEBMASTER';
+  } catch {
+    return false;
+  }
+}
+
+function hasBearerToken(req) {
+  const authorization = req.headers.authorization;
+  return typeof authorization === 'string' && authorization.startsWith('Bearer ') && authorization.length > 7;
+}
+
+function shouldBypassAuthenticatedRead(pathname, req) {
+  const method = (req.method || 'GET').toUpperCase();
+  if (method !== 'GET' && method !== 'HEAD') return false;
+  if (!hasBearerToken(req)) return false;
+  return AUTHENTICATED_READ_BYPASS.has(pathname);
+}
+
+function shouldBypass(pathname, req) {
+  if (isWebmasterRequest(req)) return true;
   if (BYPASS_EXACT.has(pathname)) return true;
   for (const prefix of BYPASS_PREFIXES) {
     if (pathname === prefix || pathname.startsWith(prefix)) return true;
   }
-  return false;
+  return shouldBypassAuthenticatedRead(pathname, req);
 }
 
 app.prepare().then(() => {
@@ -51,7 +104,7 @@ app.prepare().then(() => {
     const parsedUrl = parse(req.url, true);
     const pathname = parsedUrl.pathname || '/';
 
-    if (isMaintenanceEnabled() && !shouldBypass(pathname)) {
+    if (isMaintenanceEnabled() && !shouldBypass(pathname, req)) {
       if (pathname.startsWith('/api')) {
         res.writeHead(503, {
           'Content-Type': 'application/json',

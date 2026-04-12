@@ -79,6 +79,18 @@ function clearStateCookie(res: NextApiResponse) {
   res.setHeader('Set-Cookie', 'discord_oauth_state=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
 }
 
+function buildAuthCookie(req: NextApiRequest, token: string) {
+  const forwardedProto = firstHeaderValue(req.headers['x-forwarded-proto']).toLowerCase();
+  const isHttps = forwardedProto === 'https';
+  return [
+    `hookies_auth_token=${encodeURIComponent(token)}`,
+    'Path=/',
+    'SameSite=Lax',
+    'Max-Age=86400',
+    ...(isHttps ? ['Secure'] : []),
+  ].join('; ');
+}
+
 function toErrorRedirect(baseUrl: string, message: string) {
   return `${baseUrl}/espace-client?error=${encodeURIComponent(message)}`;
 }
@@ -200,7 +212,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       params.set('needsProfile', '1');
     }
 
-    clearStateCookie(res);
+    res.setHeader('Set-Cookie', [
+      'discord_oauth_state=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0',
+      buildAuthCookie(req, token),
+    ]);
     return res.redirect(`${baseUrl}/espace-client?${params.toString()}`);
   } catch (error) {
     console.error('[discord callback] unexpected error', error);

@@ -266,7 +266,7 @@ export function useEspaceClient() {
         .then(r => r.ok ? r.json() : null)
         .then(data => {
           if (!cancelled && data?.user) {
-            saveSession(urlToken, data.user);
+            saveSession(data?.token || urlToken, data.user);
             setNeedsDiscordProfileCompletion(needsProfile);
           }
         })
@@ -287,7 +287,7 @@ export function useEspaceClient() {
         .then((data) => {
           if (cancelled) return;
           if (data?.user) {
-            saveSession(savedToken, data.user);
+            saveSession(data?.token || savedToken, data.user);
             setProfileForm((prev) => ({
               ...prev,
               name: data.user.name || parsedUser.name || '',

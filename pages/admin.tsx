@@ -135,9 +135,12 @@ export default function AdminPage() {
       .then(data => {
         const role = data?.user?.role;
         if (role === 'ADMIN' || role === 'EMPLOYEE' || role === 'WEBMASTER') {
-          setToken(stored);
+          setToken(data?.token || stored);
           setAdminName(data.user.name || 'Staff');
           setUserRole(role);
+          if (typeof window !== 'undefined' && data?.token) {
+            window.localStorage.setItem('hookies_token', data.token);
+          }
           setAuthStatus('allowed');
         } else {
           setAuthStatus('denied');
