@@ -32,7 +32,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     try {
       const client = await prisma.user.findUnique({
         where: { id: req.user?.userId },
-        select: { phone: true },
+        select: { phone: true, name: true },
       });
 
       if (!client?.phone?.trim()) {
@@ -142,7 +142,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
         sendOrderCreatedWebhook({
           orderNumber: order.orderNumber,
-          customerName: req.user.name || 'Client',
+          customerName: client.name || 'Client',
           customerPhone: client.phone || '',
           orderType: type || 'Non precise',
           total: finalPrice,
