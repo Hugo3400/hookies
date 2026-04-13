@@ -34,23 +34,23 @@ export const FEATURES_CONTENT = {
   cards: {
     freshSeafood: {
       title: 'Fruits de mer & poisson frais',
-      description: 'Chaque arrivage est prepare le jour meme: huitres, homard, langouste, moules frites et assiettes marines genereuses.',
+      description: 'Chaque arrivage est prepare le jour meme : huitres, homard, langouste, moules-frites et assiettes marines genereuses.',
     },
     burgers: {
       title: 'Fish burgers du capitaine',
-      description: 'Pain moelleux, filet croustillant, garniture bien dosee et sauces maison. Une recette franche, sans bla-bla.',
+      description: 'Pain moelleux, filet croustillant, garniture bien dosee et sauces maison. Une recette simple et efficace.',
     },
     drinks: {
       title: 'Boissons & Cocktails',
-      description: 'Cocktails signatures, softs frais, recettes maison et options sans alcool pour toute la table.',
+      description: 'Cocktails signatures, boissons fraiches, recettes maison et options sans alcool pour toute la table.',
     },
     events: {
       title: 'Soirees & Groupes',
-      description: 'Anniversaires, pots de depart et groupes: espace dedie sur demande avec organisation simple et rapide.',
+      description: 'Anniversaires, pots de depart et repas de groupe : un espace dedie sur demande, avec une organisation simple et rapide.',
     },
   },
   openingTitle: 'Ouvert tous les jours',
-  openingDescription: 'Midi : 11h30 - 14h30 - Soir : 18h30 - 23h30 - Happy hour de 17h a 19h du lundi au jeudi.',
+  openingDescription: 'Midi : 11h30 - 14h30. Soir : 18h30 - 23h30. Happy hour de 17h a 19h, du lundi au jeudi.',
 };
 
 export const MENU_CONTENT = {
