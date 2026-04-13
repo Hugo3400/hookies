@@ -38,7 +38,7 @@ export type AdminOrder = {
   notes?: string;
   scheduledFor?: string;
   createdAt: string;
-  user?: { id: string; name: string; email: string } | null;
+  user?: { id: string; name: string; email: string; phone?: string | null } | null;
   orderItems: Array<{
     id: string;
     quantity: number;

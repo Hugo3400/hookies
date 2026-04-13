@@ -81,7 +81,11 @@ export default function OrdersTab({ orders, loading, onLoad, onUpdateStatus, onD
               <div className="border-t border-white/10 px-4 py-3">
                 <div className="mb-3 grid grid-cols-2 gap-4 text-sm lg:grid-cols-4">
                   <div><p className="text-xs text-slate-400">Type</p><p className="text-slate-200">{order.type}</p></div>
-                  <div><p className="text-xs text-slate-400">Client</p><p className="text-slate-200">{order.user?.email || '—'}</p></div>
+                    <div>
+                      <p className="text-xs text-slate-400">Client</p>
+                      <p className="text-slate-200">{order.user?.email || '—'}</p>
+                      {order.user?.phone ? <p className="text-xs text-slate-400">{order.user.phone}</p> : null}
+                    </div>
                   {order.discountApplied > 0 && (
                     <div><p className="text-xs text-slate-400">Remise</p><p className="text-green-300">-{fmt(order.discountApplied)}</p></div>
                   )}
