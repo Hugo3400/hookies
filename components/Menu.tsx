@@ -45,6 +45,11 @@ function getCategoryLabel(category: string): string {
   return CATEGORY_LABELS[normalized as MenuCategory] || normalized || 'Autres';
 }
 
+function truncateDescription(description: string, maxLength: number): string {
+  if (description.length <= maxLength) return description;
+  return `${description.slice(0, maxLength).trimEnd()}...`;
+}
+
 export default function Menu() {
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,6 +65,7 @@ export default function Menu() {
 
   const categories = CATEGORY_ORDER.filter(cat => items.some(i => normalizeCategory(i.category) === cat));
   const filtered = filter === 'ALL' ? items : items.filter(i => normalizeCategory(i.category) === filter);
+  const isCompactView = filter === 'ALL';
 
   const fmt = (n: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
@@ -104,29 +110,35 @@ export default function Menu() {
           <p className="mt-10 text-center text-parchment/50">{MENU_CONTENT.emptyLabel}</p>
         )}
 
-        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className={`mt-10 grid grid-cols-1 ${isCompactView ? 'gap-3 md:grid-cols-2 xl:grid-cols-4' : 'gap-4 md:grid-cols-2 lg:grid-cols-3'}`}>
           {filtered.map(item => {
             const normalizedCategory = normalizeCategory(item.category);
             const Icon = CATEGORY_ICONS[normalizedCategory as MenuCategory] || FaUtensils;
+            const description = item.description
+              ? isCompactView
+                ? truncateDescription(item.description, 88)
+                : item.description
+              : '';
+
             return (
-              <div key={item.id} className="wood-card p-5">
+              <div key={item.id} className={`wood-card ${isCompactView ? 'p-4' : 'p-5'}`}>
                 {item.image && (
-                  <img src={item.image} alt={item.name} className="mb-4 h-40 w-full rounded-sm object-cover" />
+                  <img src={item.image} alt={item.name} className={`mb-4 w-full rounded-sm object-cover ${isCompactView ? 'h-28' : 'h-40'}`} />
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-xs text-gold/80">
+                  <span className={`flex items-center gap-1.5 text-gold/80 ${isCompactView ? 'text-[11px]' : 'text-xs'}`}>
                     <Icon className="text-[11px]" /> {getCategoryLabel(item.category)}
                   </span>
                   <span className="font-bold text-gold">{fmt(item.price)}</span>
                 </div>
-                <h3 className="mt-2 font-pirate text-xl text-parchment">{item.name}</h3>
-                {item.description && (
-                  <p className="mt-1.5 text-sm text-parchment/60">{item.description}</p>
+                <h3 className={`mt-2 font-pirate text-parchment ${isCompactView ? 'text-lg leading-tight' : 'text-xl'}`}>{item.name}</h3>
+                {description && (
+                  <p className={`mt-1.5 text-parchment/60 ${isCompactView ? 'text-xs leading-5' : 'text-sm'}`}>{description}</p>
                 )}
-                <div className="mt-4 flex justify-end">
+                <div className={`flex justify-end ${isCompactView ? 'mt-3' : 'mt-4'}`}>
                   <Link
                     href="/espace-client"
-                    className="rounded-sm border border-gold/40 bg-gold/10 px-4 py-1.5 text-xs font-bold text-gold transition hover:bg-gold/20"
+                    className={`rounded-sm border border-gold/40 bg-gold/10 font-bold text-gold transition hover:bg-gold/20 ${isCompactView ? 'px-3 py-1 text-[11px]' : 'px-4 py-1.5 text-xs'}`}
                   >
                     {MENU_CONTENT.orderCtaLabel}
                   </Link>
