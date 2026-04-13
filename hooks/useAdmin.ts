@@ -7,7 +7,19 @@ import type {
 type DeliveryZone = { name: string; description: string; fee: number };
 type LoyaltyReward = { points: number; label: string };
 type LoyaltyConfig = { bonusPercent: number; bonusThreshold: number; referralEnabled: boolean; referralDiscount: number; referralPoints: number; nextRewardGoal: number; rewards: LoyaltyReward[] };
-type SettingsData = { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig; maintenanceMode: boolean };
+type ReservationPageContent = {
+  heading: string;
+  intro: string;
+  services: string[];
+  formTitle: string;
+  submitLabel: string;
+};
+type SettingsData = {
+  deliveryZones: DeliveryZone[];
+  loyaltyConfig: LoyaltyConfig;
+  maintenanceMode: boolean;
+  reservationPageContent: ReservationPageContent;
+};
 
 async function apiFetch<T>(url: string, token: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
@@ -273,6 +285,9 @@ export function useAdmin(token: string | null) {
       if (payload.deliveryZones && settingsData) setSettingsData(prev => prev ? { ...prev, deliveryZones: payload.deliveryZones! } : prev);
       if (payload.loyaltyConfig && settingsData) setSettingsData(prev => prev ? { ...prev, loyaltyConfig: payload.loyaltyConfig! } : prev);
       if (typeof payload.maintenanceMode === 'boolean') setSettingsData(prev => prev ? { ...prev, maintenanceMode: payload.maintenanceMode! } : prev);
+      if (payload.reservationPageContent && settingsData) {
+        setSettingsData(prev => prev ? { ...prev, reservationPageContent: payload.reservationPageContent! } : prev);
+      }
       showSuccess('Paramètres sauvegardés');
     } catch (e) { showError(e instanceof Error ? e.message : 'Erreur sauvegarde'); }
   }, [token, showError, showSuccess, settingsData]);

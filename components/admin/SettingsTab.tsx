@@ -22,11 +22,29 @@ type LoyaltyConfig = {
   rewards: LoyaltyReward[];
 };
 
+type ReservationPageContent = {
+  heading: string;
+  intro: string;
+  services: string[];
+  formTitle: string;
+  submitLabel: string;
+};
+
 type Props = {
   loading: boolean;
   onLoad: () => void;
-  data: { deliveryZones: DeliveryZone[]; loyaltyConfig: LoyaltyConfig; maintenanceMode: boolean } | null;
-  onSave: (data: { deliveryZones?: DeliveryZone[]; loyaltyConfig?: LoyaltyConfig; maintenanceMode?: boolean }) => Promise<void>;
+  data: {
+    deliveryZones: DeliveryZone[];
+    loyaltyConfig: LoyaltyConfig;
+    maintenanceMode: boolean;
+    reservationPageContent: ReservationPageContent;
+  } | null;
+  onSave: (data: {
+    deliveryZones?: DeliveryZone[];
+    loyaltyConfig?: LoyaltyConfig;
+    maintenanceMode?: boolean;
+    reservationPageContent?: ReservationPageContent;
+  }) => Promise<void>;
 };
 
 export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
@@ -42,6 +60,13 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
   });
   const [saving, setSaving] = useState(false);
   const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [reservationPageContent, setReservationPageContent] = useState<ReservationPageContent>({
+    heading: 'Reserver une table',
+    intro: 'Choisissez votre creneau et le nombre de convives. On vous confirme ca rapidement.',
+    services: ['Service midi : 11h30 - 14h30', 'Service soir : 18h30 - 23h30', 'Groupes & privatisation : appelez-nous'],
+    formTitle: 'Formulaire',
+    submitLabel: 'Envoyer la demande',
+  });
 
   useEffect(() => { onLoad(); }, [onLoad]);
 
@@ -50,13 +75,19 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
       setZones(data.deliveryZones);
       setLoyalty(data.loyaltyConfig);
       setMaintenanceMode(Boolean(data.maintenanceMode));
+      setReservationPageContent(data.reservationPageContent);
     }
   }, [data]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await onSave({ deliveryZones: zones, loyaltyConfig: loyalty, maintenanceMode });
+      await onSave({
+        deliveryZones: zones,
+        loyaltyConfig: loyalty,
+        maintenanceMode,
+        reservationPageContent,
+      });
     } finally {
       setSaving(false);
     }
@@ -81,6 +112,63 @@ export default function SettingsTab({ loading, onLoad, data, onSave }: Props) {
           {maintenanceMode ? <FaToggleOn className="text-lg" /> : <FaToggleOff className="text-lg" />}
           {maintenanceMode ? 'Maintenance activée' : 'Maintenance désactivée'}
         </button>
+      </div>
+
+      <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+        <h2 className="mb-4 text-xl font-bold text-amber-100">Page publique reservation</h2>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-xs text-slate-400">Titre</label>
+            <input
+              type="text"
+              value={reservationPageContent.heading}
+              onChange={(e) => setReservationPageContent((prev) => ({ ...prev, heading: e.target.value }))}
+              className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-slate-400">Titre formulaire</label>
+            <input
+              type="text"
+              value={reservationPageContent.formTitle}
+              onChange={(e) => setReservationPageContent((prev) => ({ ...prev, formTitle: e.target.value }))}
+              className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <label className="mb-1 block text-xs text-slate-400">Texte intro</label>
+          <textarea
+            rows={3}
+            value={reservationPageContent.intro}
+            onChange={(e) => setReservationPageContent((prev) => ({ ...prev, intro: e.target.value }))}
+            className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="mb-1 block text-xs text-slate-400">Services (une ligne = un item)</label>
+          <textarea
+            rows={4}
+            value={reservationPageContent.services.join('\n')}
+            onChange={(e) => setReservationPageContent((prev) => ({
+              ...prev,
+              services: e.target.value.split('\n').map((line) => line.trim()).filter(Boolean),
+            }))}
+            className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="mb-1 block text-xs text-slate-400">Libelle bouton</label>
+          <input
+            type="text"
+            value={reservationPageContent.submitLabel}
+            onChange={(e) => setReservationPageContent((prev) => ({ ...prev, submitLabel: e.target.value }))}
+            className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-slate-100"
+          />
+        </div>
       </div>
 
       {/* Delivery zones */}
