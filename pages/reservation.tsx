@@ -34,9 +34,13 @@ export default function ReservationPage() {
 
             <form className="wood-card p-6 md:p-8">
               <h2 className="font-pirate text-2xl text-parchment">{RESERVATION_CONTENT.formTitle}</h2>
+              <div className="mt-4 rounded-sm border border-gold/30 bg-gold/10 px-4 py-3 text-sm text-parchment/80">
+                Le numero de telephone est obligatoire pour finaliser une reservation.
+              </div>
               <div className="mt-5 space-y-4">
                 <input type="text" placeholder="Nom" className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none placeholder:text-parchment/40" />
                 <input type="email" placeholder="Email" className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none placeholder:text-parchment/40" />
+                <input type="tel" required placeholder="Téléphone obligatoire" className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none placeholder:text-parchment/40" />
                 <input type="date" className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none" />
                 <input type="time" className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none" />
                 <input type="number" min={1} placeholder="Nombre de personnes" className="w-full rounded-sm border border-rope/30 bg-plank px-4 py-3 text-parchment outline-none placeholder:text-parchment/40" />
