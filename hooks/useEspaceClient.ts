@@ -119,6 +119,8 @@ export function useEspaceClient() {
     return { Authorization: `Bearer ${token}` };
   }, [token]);
 
+  const hasPhoneNumber = useMemo(() => Boolean(user?.phone?.trim()), [user?.phone]);
+
   const showMessage = useCallback((message: string, isError = false) => {
     if (isError) {
       setError(message);
@@ -428,6 +430,11 @@ export function useEspaceClient() {
     event.preventDefault();
     if (!authHeaders || cart.length === 0) return;
 
+    if (!hasPhoneNumber) {
+      showMessage('Le numero de telephone est obligatoire pour commander. Renseigne-le dans Profil.', true);
+      return;
+    }
+
     setLoading((prev) => ({ ...prev, order: true }));
     try {
       const selectedAddress = addresses.find((addr) => addr.id === selectedAddressId);
@@ -455,11 +462,17 @@ export function useEspaceClient() {
     } finally {
       setLoading((prev) => ({ ...prev, order: false }));
     }
-  }, [addresses, authHeaders, cart, clearPromoCode, loadUserData, promoState.code, promoState.valid, scheduledFor, selectedAddressId, selectedType, showMessage, token]);
+  }, [addresses, authHeaders, cart, clearPromoCode, hasPhoneNumber, loadUserData, promoState.code, promoState.valid, scheduledFor, selectedAddressId, selectedType, showMessage, token]);
 
   const createReservation = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!authHeaders) return;
+
+    if (!hasPhoneNumber) {
+      showMessage('Le numero de telephone est obligatoire pour reserver. Renseigne-le dans Profil.', true);
+      return;
+    }
+
     setLoading((prev) => ({ ...prev, reservation: true }));
     try {
       await apiCreateReservation(authHeaders, reservationForm);
@@ -471,7 +484,7 @@ export function useEspaceClient() {
     } finally {
       setLoading((prev) => ({ ...prev, reservation: false }));
     }
-  }, [authHeaders, loadUserData, reservationForm, showMessage, token]);
+  }, [authHeaders, hasPhoneNumber, loadUserData, reservationForm, showMessage, token]);
 
   const updateProfile = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -570,6 +583,7 @@ export function useEspaceClient() {
     addressForm,
     setAddressForm,
     loading,
+    hasPhoneNumber,
     error,
     successMessage,
     needsDiscordProfileCompletion,

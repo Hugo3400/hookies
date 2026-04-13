@@ -1,8 +1,9 @@
 import { FormEvent } from 'react';
-import { FaCalendarAlt, FaCheck, FaClock, FaUsers } from 'react-icons/fa';
+import { FaCalendarAlt, FaCheck, FaClock, FaPhone, FaUsers } from 'react-icons/fa';
 import type { Reservation } from './types';
 
 type ReservationsTabProps = {
+  hasPhone: boolean;
   loadingData: boolean;
   loadingReservation: boolean;
   reservationForm: {
@@ -27,6 +28,7 @@ type ReservationsTabProps = {
 };
 
 export default function ReservationsTab({
+  hasPhone,
   loadingData,
   loadingReservation,
   reservationForm,
@@ -40,6 +42,17 @@ export default function ReservationsTab({
         <h2 className="mb-4 flex items-center gap-2 font-display text-2xl font-bold text-amber-100">
           <FaCalendarAlt /> Nouvelle réservation
         </h2>
+
+        {!hasPhone && (
+          <div className="mb-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+            <p className="flex items-center gap-2 font-semibold">
+              <FaPhone className="text-amber-300" /> Numéro de téléphone obligatoire
+            </p>
+            <p className="mt-1 text-amber-100/80">
+              Ajoute ton numéro dans l'onglet Profil avant de réserver une table.
+            </p>
+          </div>
+        )}
 
         <form onSubmit={onSubmit} className="space-y-3">
           <div className="flex items-center gap-2">
@@ -89,10 +102,10 @@ export default function ReservationsTab({
 
           <button
             type="submit"
-            disabled={loadingReservation}
+            disabled={loadingReservation || !hasPhone}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500 py-3 font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-60"
           >
-            <FaCheck /> {loadingReservation ? 'Envoi...' : 'Réserver une table'}
+            <FaCheck /> {loadingReservation ? 'Envoi...' : !hasPhone ? 'Ajoute ton numéro dans Profil' : 'Réserver une table'}
           </button>
         </form>
       </div>

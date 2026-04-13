@@ -110,6 +110,7 @@ export default function EspaceClientPage() {
 
             {state.activeTab === 'borne' && (
               <BorneTab
+                hasPhone={state.hasPhoneNumber}
                 loadingMenu={state.loading.menu}
                 categories={state.categories}
                 selectedCategory={state.selectedCategory}
@@ -143,6 +144,7 @@ export default function EspaceClientPage() {
 
             {state.activeTab === 'reservations' && (
               <ReservationsTab
+                hasPhone={state.hasPhoneNumber}
                 loadingData={state.loading.data}
                 loadingReservation={state.loading.reservation}
                 reservationForm={state.reservationForm}

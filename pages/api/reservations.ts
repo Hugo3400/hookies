@@ -35,6 +35,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     const { date, time, guestCount, specialRequest } = req.body;
 
     try {
+      const client = await prisma.user.findUnique({
+        where: { id: req.user?.userId },
+        select: { name: true, email: true, phone: true },
+      });
+
+      if (!client?.phone?.trim()) {
+        return res.status(400).json({ error: 'Le numero de telephone est obligatoire pour reserver.' });
+      }
+
       const reservation = await prisma.reservation.create({
         data: {
           userId: req.user?.userId || '',
@@ -44,12 +53,6 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
           specialRequest,
         },
       });
-
-      const client = await prisma.user.findUnique({
-        where: { id: req.user?.userId },
-        select: { name: true, email: true },
-      });
-
       // Notification in-app
       if (req.user?.userId) {
         const resaDate = formatReservationDate(reservation.date);

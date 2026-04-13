@@ -29,6 +29,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     const { items, type, deliveryAddress, notes, promoCode, scheduledFor } = req.body;
 
     try {
+      const client = await prisma.user.findUnique({
+        where: { id: req.user?.userId },
+        select: { phone: true },
+      });
+
+      if (!client?.phone?.trim()) {
+        return res.status(400).json({ error: 'Le numero de telephone est obligatoire pour commander.' });
+      }
+
       if (!Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ error: 'Panier vide ou invalide' });
       }

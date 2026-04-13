@@ -4,6 +4,7 @@ import {
   FaCheck,
   FaClock,
   FaHeart,
+  FaPhone,
   FaMinus,
   FaPlus,
   FaShoppingCart,
@@ -15,6 +16,7 @@ import {
 import type { CartItem, MenuItem, PromoState, UserAddress } from './types';
 
 type BorneTabProps = {
+  hasPhone: boolean;
   loadingMenu: boolean;
   categories: string[];
   selectedCategory: string | null;
@@ -48,6 +50,7 @@ type BorneTabProps = {
 const STAR_VALUES = [1, 2, 3, 4, 5];
 
 export default function BorneTab({
+  hasPhone,
   loadingMenu,
   categories,
   selectedCategory,
@@ -209,6 +212,17 @@ export default function BorneTab({
             <FaShoppingCart /> Panier
           </h2>
 
+          {!hasPhone && (
+            <div className="mb-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+              <p className="flex items-center gap-2 font-semibold">
+                <FaPhone className="text-amber-300" /> Numéro de téléphone obligatoire
+              </p>
+              <p className="mt-1 text-amber-100/80">
+                Ajoute ton numéro dans l'onglet Profil avant de valider une commande.
+              </p>
+            </div>
+          )}
+
           <div className="mb-4 grid grid-cols-3 gap-2">
             {(['DINE_IN', 'TAKEAWAY', 'DELIVERY'] as const).map((value) => (
               <button
@@ -324,10 +338,10 @@ export default function BorneTab({
                 <form onSubmit={onSubmitOrder}>
                   <button
                     type="submit"
-                    disabled={loadingOrder}
+                    disabled={loadingOrder || !hasPhone}
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500 py-3 font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-60"
                   >
-                    <FaCheck /> {loadingOrder ? 'Envoi...' : 'Valider la commande'}
+                    <FaCheck /> {loadingOrder ? 'Envoi...' : !hasPhone ? 'Ajoute ton numéro dans Profil' : 'Valider la commande'}
                   </button>
                 </form>
               </div>
