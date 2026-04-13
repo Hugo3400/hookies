@@ -3,6 +3,7 @@ export const CONFIG_KEYS = {
   DELIVERY_ZONES: 'DELIVERY_ZONES',
   LOYALTY_CONFIG: 'LOYALTY_CONFIG',
   MAINTENANCE_MODE: 'MAINTENANCE_MODE',
+  RESERVATION_PAGE_CONTENT: 'RESERVATION_PAGE_CONTENT',
 } as const;
 
 export type WeeklyMenuItem = {
@@ -37,6 +38,14 @@ export type LoyaltyConfig = {
   referralPoints: number;
   nextRewardGoal: number;
   rewards: LoyaltyReward[];
+};
+
+export type ReservationPageContent = {
+  heading: string;
+  intro: string;
+  services: string[];
+  formTitle: string;
+  submitLabel: string;
 };
 
 export const DEFAULT_WEEKLY_MENU: WeeklyMenuPayload = {
@@ -82,3 +91,15 @@ export const DEFAULT_LOYALTY_CONFIG: LoyaltyConfig = {
 };
 
 export const DEFAULT_MAINTENANCE_MODE = false;
+
+export const DEFAULT_RESERVATION_PAGE_CONTENT: ReservationPageContent = {
+  heading: 'Reserver une table',
+  intro: 'Choisissez votre creneau et le nombre de convives. On vous confirme ca rapidement.',
+  services: [
+    'Service midi : 11h30 - 14h30',
+    'Service soir : 18h30 - 23h30',
+    'Groupes & privatisation : appelez-nous',
+  ],
+  formTitle: 'Formulaire',
+  submitLabel: 'Envoyer la demande',
+};

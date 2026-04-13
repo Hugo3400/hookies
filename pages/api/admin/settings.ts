@@ -8,8 +8,10 @@ import {
   DEFAULT_DELIVERY_ZONES,
   DEFAULT_LOYALTY_CONFIG,
   DEFAULT_MAINTENANCE_MODE,
+  DEFAULT_RESERVATION_PAGE_CONTENT,
   type DeliveryZone,
   type LoyaltyConfig,
+  type ReservationPageContent,
 } from '@/lib/config/siteDefaults';
 
 async function getAdmin(req: NextApiRequest) {
@@ -30,7 +32,7 @@ async function getAdmin(req: NextApiRequest) {
     : null;
 }
 
-export type { DeliveryZone, LoyaltyConfig } from '@/lib/config/siteDefaults';
+export type { DeliveryZone, LoyaltyConfig, ReservationPageContent } from '@/lib/config/siteDefaults';
 
 async function getConfig<T>(key: string, fallback: T): Promise<T> {
   const row = await prisma.configuration.findUnique({ where: { key } });
@@ -52,19 +54,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     if (req.method === 'GET') {
-      const [deliveryZones, loyaltyConfig, maintenanceMode] = await Promise.all([
+      const [deliveryZones, loyaltyConfig, maintenanceMode, reservationPageContent] = await Promise.all([
         getConfig(CONFIG_KEYS.DELIVERY_ZONES, DEFAULT_DELIVERY_ZONES),
         getConfig(CONFIG_KEYS.LOYALTY_CONFIG, DEFAULT_LOYALTY_CONFIG),
         getConfig(CONFIG_KEYS.MAINTENANCE_MODE, DEFAULT_MAINTENANCE_MODE),
+        getConfig<ReservationPageContent>(CONFIG_KEYS.RESERVATION_PAGE_CONTENT, DEFAULT_RESERVATION_PAGE_CONTENT),
       ]);
-      return res.json({ deliveryZones, loyaltyConfig, maintenanceMode: Boolean(maintenanceMode) });
+      return res.json({
+        deliveryZones,
+        loyaltyConfig,
+        maintenanceMode: Boolean(maintenanceMode),
+        reservationPageContent,
+      });
     }
 
     if (req.method === 'PUT') {
       if (admin.role !== 'ADMIN' && admin.role !== 'WEBMASTER') return res.status(403).json({ error: 'Réservé aux administrateurs' });
-      const { deliveryZones, loyaltyConfig, maintenanceMode } = req.body;
+      const { deliveryZones, loyaltyConfig, maintenanceMode, reservationPageContent } = req.body;
       if (deliveryZones) await setConfig(CONFIG_KEYS.DELIVERY_ZONES, deliveryZones);
       if (loyaltyConfig) await setConfig(CONFIG_KEYS.LOYALTY_CONFIG, loyaltyConfig);
+      if (reservationPageContent) await setConfig(CONFIG_KEYS.RESERVATION_PAGE_CONTENT, reservationPageContent);
       if (typeof maintenanceMode === 'boolean') {
         await setConfig(CONFIG_KEYS.MAINTENANCE_MODE, maintenanceMode);
         try {
