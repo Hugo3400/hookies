@@ -1,6 +1,6 @@
 export const SITE_BRAND = {
   name: 'Hookies',
-  tagline: 'Taverne & Fruits de mer',
+  tagline: '',
   legalLine: 'Tous droits reserves.',
   year: 2026,
 };
@@ -38,15 +38,15 @@ export const FEATURES_CONTENT = {
     },
     burgers: {
       title: 'Fish burgers du capitaine',
-      description: 'Fish burgers croustillants, filet de poisson pane, onion rings dores et sauces maison. Le classique du port, version Hookies.',
+      description: 'Fish burgers croustillants, filet de poisson pane, onion rings dores et sauces maison. Le grand classique du port, version Hookies.',
     },
     drinks: {
-      title: 'Rhums & Cocktails',
-      description: "Carte de 30 rhums arranges et cocktails tiki. Le Dark Storm, le Captain's Punch - ca se merite.",
+      title: 'Boissons & Cocktails',
+      description: "Cocktails signatures, boissons fraiches et creations maison a decouvrir.",
     },
     events: {
       title: 'Soirees & Groupes',
-      description: 'Anniversaires, pots de depart, enterrements de vie - on privatise une partie de la salle. Appelez-nous.',
+      description: 'Anniversaires, pots de depart, EVG/EVJF: on privatise une partie de la salle sur demande. Appelez-nous.',
     },
   },
   openingTitle: 'Ouvert tous les jours',
@@ -66,7 +66,7 @@ export const MENU_CONTENT = {
 
 export const EXPERIENCE_CONTENT = {
   pageTitle: "L'Aventure | Hookies",
-  pageDescription: "Decouvrez l'univers Hookies : fruits de mer, decor de taverne, rhums arranges et soirees pirates.",
+  pageDescription: "Decouvrez l'univers Hookies : fruits de mer, decor de taverne, cocktails maison et soirees pirates.",
   heading: "L'Aventure Hookies",
   intro: 'Decor de taverne, cuisine visible et soirees pirates. Voila ce qui vous attend.',
 };

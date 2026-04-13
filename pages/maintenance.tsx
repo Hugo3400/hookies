@@ -67,7 +67,7 @@ export default function MaintenancePage() {
 
         <section className="relative mx-auto max-w-2xl rounded-md border border-[rgba(201,149,43,0.45)] bg-[linear-gradient(165deg,rgba(61,37,18,0.88),rgba(28,18,9,0.92))] p-8 shadow-[0_16px_60px_rgba(0,0,0,0.45)] sm:p-12">
           <p className="font-subtitle text-xs tracking-[0.25em] text-[#dbb44a] sm:text-sm">
-            Hookies Taverne
+            Hookies Restaurant
           </p>
 
           <h1 className="mt-4 text-5xl leading-none text-[#f0e6d3] sm:text-6xl">

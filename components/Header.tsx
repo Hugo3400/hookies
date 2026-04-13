@@ -15,7 +15,9 @@ export default function Header() {
           <img src="/favicon.png" alt="Hookies" className="h-12 w-12 rounded-sm" />
           <div>
             <span className="font-pirate text-3xl text-gold md:text-4xl">{SITE_BRAND.name}</span>
-            <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">{SITE_BRAND.tagline}</p>
+            {SITE_BRAND.tagline ? (
+              <p className="font-subtitle text-[9px] tracking-[0.3em] text-parchment/60">{SITE_BRAND.tagline}</p>
+            ) : null}
           </div>
         </Link>
 
