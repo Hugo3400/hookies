@@ -4,6 +4,7 @@ import { withStaffAuth, AuthenticatedRequest } from '@/lib/auth/middleware';
 import { notifyReservationStatus } from '@/lib/notifications';
 import { maskEmail } from '@/lib/auth/auth';
 import { logAction } from '@/lib/admin/logger';
+import { sendReservationStatusWebhook } from '@/lib/discordWebhooks';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   const isWebmaster = req.user?.role === 'WEBMASTER';
@@ -57,6 +58,16 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         details: `Statut → ${status} | Client: ${(updated as any).user?.name ?? 'Anonyme'}`,
         req,
       });
+
+      const d = new Intl.DateTimeFormat('fr-FR').format(updated.date);
+      sendReservationStatusWebhook({
+        reservationId: `#${updated.id.slice(-6).toUpperCase()}`,
+        status,
+        customerName: (updated as any).user?.name ?? 'Anonyme',
+        date: d,
+        time: updated.time,
+        actorRole: req.user?.role ?? 'STAFF',
+      }).catch(() => {});
 
       return res.status(200).json(updated);
     } catch (error) {
