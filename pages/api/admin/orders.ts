@@ -5,6 +5,7 @@ import { AuthenticatedRequest } from '@/lib/auth/middleware';
 import { notifyOrderStatus } from '@/lib/notifications';
 import { maskEmail } from '@/lib/auth/auth';
 import { logAction } from '@/lib/admin/logger';
+import { sendOrderStatusWebhook } from '@/lib/discordWebhooks';
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   const isWebmaster = req.user?.role === 'WEBMASTER';
@@ -64,6 +65,13 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         notifyOrderStatus(oUser.id, (updatedOrder as any).orderNumber, status).catch(() => {});
       }
 
+      sendOrderStatusWebhook({
+        orderNumber: (updatedOrder as any).orderNumber,
+        status,
+        customerName: (updatedOrder as any).user?.name ?? 'Anonyme',
+        actorRole: req.user?.role ?? 'STAFF',
+      }).catch(() => {});
+
       res.status(200).json(updatedOrder);
     } catch (error) {
       res.status(500).json({ error: 'Erreur lors de la mise à jour' });
@@ -89,6 +97,13 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         details: `Statut: ${order.status} | Client: ${(order as any).user?.name ?? 'Anonyme'}`,
         req,
       });
+
+      sendOrderStatusWebhook({
+        orderNumber: (order as any).orderNumber,
+        status: 'DELETED',
+        customerName: (order as any).user?.name ?? 'Anonyme',
+        actorRole: req.user?.role ?? 'STAFF',
+      }).catch(() => {});
 
       return res.status(200).json({ success: true, id, orderNumber: (order as any).orderNumber });
     } catch (error) {

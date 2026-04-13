@@ -10,6 +10,7 @@ import {
 import { notifyReservationCreated } from '@/lib/notifications';
 import { logAction } from '@/lib/admin/logger';
 import { EMAIL_CONTENT, RESERVATION_API_CONTENT } from '@/lib/config/siteContent';
+import { sendReservationCreatedWebhook } from '@/lib/discordWebhooks';
 
 function formatReservationDate(value: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
@@ -57,6 +58,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       if (req.user?.userId) {
         const resaDate = formatReservationDate(reservation.date);
         notifyReservationCreated(req.user.userId, client?.name || '', resaDate, reservation.time, reservation.guestCount).catch(() => {});
+
+        sendReservationCreatedWebhook({
+          customerName: client?.name || 'Client',
+          customerPhone: client?.phone || '',
+          date: resaDate,
+          time: reservation.time,
+          guestCount: reservation.guestCount,
+          specialRequest: reservation.specialRequest || undefined,
+        }).catch(() => {});
       }
 
       if (client?.email) {

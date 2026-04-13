@@ -4,6 +4,7 @@ import { withAuth } from '@/lib/auth/middleware';
 import { AuthenticatedRequest } from '@/lib/auth/middleware';
 import { notifyOrderCreated } from '@/lib/notifications';
 import { logAction } from '@/lib/admin/logger';
+import { sendOrderCreatedWebhook } from '@/lib/discordWebhooks';
 
 const prismaAny = prisma as any;
 
@@ -138,6 +139,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         // Notification in-app
         const itemNames = order.orderItems.map((oi: any) => `${oi.quantity}x ${oi.menuItem.name}`);
         notifyOrderCreated(req.user.userId, order.orderNumber, finalPrice, itemNames).catch(() => {});
+
+        sendOrderCreatedWebhook({
+          orderNumber: order.orderNumber,
+          customerName: req.user.name || 'Client',
+          customerPhone: client.phone || '',
+          orderType: type || 'Non precise',
+          total: finalPrice,
+          itemsSummary: itemNames.join(', '),
+        }).catch(() => {});
       }
 
       logAction({
