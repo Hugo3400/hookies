@@ -30,7 +30,6 @@ export default function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-2 text-xs text-parchment/35 md:flex-row">
           <p>&copy; {SITE_BRAND.year} {SITE_BRAND.name}. {SITE_BRAND.legalLine}</p>
-          <p>{SITE_BRAND.tagline}.</p>
         </div>
       </div>
     </footer>
