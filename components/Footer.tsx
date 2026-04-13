@@ -9,9 +9,6 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
           <div>
             <span className="font-pirate text-3xl text-gold">{SITE_BRAND.name}</span>
-            <p className="mt-3 text-sm text-parchment/50">
-              Restaurant pirate &amp; fruits de mer. Ouvert 7j/7 de 11h30 a 23h30.
-            </p>
           </div>
 
           <div>

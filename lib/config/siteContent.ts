@@ -30,23 +30,23 @@ export const HERO_CONTENT = {
 };
 
 export const FEATURES_CONTENT = {
-  title: 'Pourquoi Hookies ?',
+  title: 'Pourquoi choisir Hookies ?',
   cards: {
     freshSeafood: {
       title: 'Fruits de mer & poisson frais',
-      description: 'Huitres, homard, langouste, moules frites, tartares de saumon et de crabe - tout arrive frais du port. Calamars grilles, soupe de poisson, paniers du pecheur - la mer dans votre assiette.',
+      description: 'Chaque arrivage est prepare le jour meme: huitres, homard, langouste, moules frites et assiettes marines genereuses.',
     },
     burgers: {
       title: 'Fish burgers du capitaine',
-      description: 'Fish burgers croustillants, filet de poisson pane, onion rings dores et sauces maison. Le grand classique du port, version Hookies.',
+      description: 'Pain moelleux, filet croustillant, garniture bien dosee et sauces maison. Une recette franche, sans bla-bla.',
     },
     drinks: {
       title: 'Boissons & Cocktails',
-      description: "Cocktails signatures, boissons fraiches et creations maison a decouvrir.",
+      description: 'Cocktails signatures, softs frais, recettes maison et options sans alcool pour toute la table.',
     },
     events: {
       title: 'Soirees & Groupes',
-      description: 'Anniversaires, pots de depart, EVG/EVJF: on privatise une partie de la salle sur demande. Appelez-nous.',
+      description: 'Anniversaires, pots de depart et groupes: espace dedie sur demande avec organisation simple et rapide.',
     },
   },
   openingTitle: 'Ouvert tous les jours',
